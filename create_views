@@ -1,0 +1,4 @@
+
+create view vw_fte_mapping as SELECT vw_staff_mapping.staff_name,tbl_workpackage.workpackage_name,tbl_fte_planning.forcasted_amount,tbl_fte_planning.startdate,tbl_fte_planning.enddate FROM `tbl_fte_planning`,vw_staff_mapping,tbl_workpackage 
+where vw_staff_mapping.staff_id=tbl_fte_planning.staff_id and tbl_workpackage.wp_id=tbl_fte_planning.wp_id
+

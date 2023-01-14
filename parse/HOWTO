@@ -1,0 +1,12 @@
+Generate insert statments for workpackages
+
+
+python parse.py
+Get list of staff and forecasts
+Copy that into new file called: staff_fte.txt
+
+Get insert statements for FTEs
+
+http://localhost:8888/FTE_planning/parse/insertFTE.php
+
+Copy and paste that into PHPMYADMIN
