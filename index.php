@@ -55,7 +55,7 @@ if(isset($_GET['currentYear']))
 #$output_str.="</tr>\n";
 #$output_str.="</table>\n";
 #$output_str.="</form>";
-$output_str=drop_down_year($conn);
+#$output_str=drop_down_year($conn);
 $query=get_all_ftes($currentYear);
 $result=mysqli_query($conn,$query);
 echo $output_str;

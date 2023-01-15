@@ -17,6 +17,92 @@ $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connectin
 
 
 
+function drop_down_year_with_group($conn)
+{
+#$currentYear=date("Y");
+
+$currentDate=strtotime($currentDate);
+$output_str="";
+#$output_str.="<form id='yearform' method='post'>";
+$output_str.="<form id='yearform' method='post' action=allftes.php>";
+#$output_str="<table width = '432' style='border:1px solid black;'>\n";
+$output_str.="<table style='border:1px solid black;'>\n";
+$output_str.="<tr bgcolor ='#C1C1E8'>\n";
+$output_str.="<td>\n";
+$query="SELECT distinct group_name FROM tbl_groups";
+$group_result=mysqli_query($conn,$query);
+$check_box_str="";
+
+
+
+if(isset($_POST["submit"]))
+{
+
+     if(isset($_POST['group_name']))
+     {
+        $group= $_POST['group_name'];
+     }
+     if(isset($_POST['year']))
+     {
+          $currentYear=$_POST['year'][0];
+     }
+     #print_r($_POST);
+     #echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';
+
+}
+while($row=mysqli_fetch_array($group_result))
+{
+      $group_value=$row[0];
+      if($group==$group_value)
+      {
+          $checkbox_str.="<input type='radio' id='$group_value' name=group_name value='$group_value' checked>";
+      }
+      else
+      {
+          $checkbox_str.="<input type='radio' id='$group_value' name=group_name value='$group_value' required='required'>";
+      }
+      #$checkbox_str.="<input type='radio' id='$group_value' name=group_name value='$group_value'>";
+      $checkbox_str.="<label for=$group_value>$group_value</label>";
+}
+
+$output_str.=$checkbox_str;
+$output_str.="</td>\n";
+
+$output_str.="<td valign='top'><b>View by Year</b></td>\n";
+$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
+$year_result=mysqli_query($conn,$query);
+$output_str.="<td width='200'>";
+#$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+$output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+$output_str.="<option value=''>Select</option>";
+while($row=mysqli_fetch_array($year_result))
+{
+   if($currentYear==$row[0])
+   {
+       $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
+   }
+   else
+   {
+       $output_str.="<option value=$row[0]>$row[0]</option>";
+   }
+}
+$output_str.="</select>";
+$output_str.="</td>";
+$output_str.="<td>";
+$output_str.="<a href='allftes.php?currentYear=$currentYear&group=$group'>";
+$output_str.="<input type='submit' name='submit' value='Display'>";
+$output_str.="</a>";
+
+$output_str.="</td>";
+$output_str.="</tr>\n";
+$output_str.="</table>\n";
+$output_str.="</form>";
+return $output_str;
+
+}
+
+
+
 function drop_down_year($conn)
 {
 $currentYear=date("Y");
@@ -132,6 +218,7 @@ function over_or_under_staff($conn,$currentYear,$group)
 
    }
    $query="SELECT staff_name,forcasted,round(difference,2) FROM `vw_staff_over_under` where YEAR(enddate)='$currentYear' and difference!=0 and group_name='$group'  ORDER BY vw_staff_over_under.difference ASC ";
+   #echo $query;
    $result=mysqli_query($conn,$query);
    $output_str="<font size='1'>\n";
    $output_str.="<table class='style1' style='border:1px solid black;'>\n";

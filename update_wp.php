@@ -4,17 +4,12 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_staff_fte($name)
+function get_workpackage_managers($name)
 {
    $currentYear=date("Y");
-   $query="";
-   if($name){
-   $query="SELECT fte_id,workpackage_name,forcasted_amount,startdate,enddate FROM vw_fte_mapping where staff_name LIKE '%$name' and YEAR(enddate)>=$currentYear order by enddate desc";
-   #echo $query;
-   }
+   $query="SELECT tbl_workpackage.wp_id, tbl_wp_manager.manager_name,tbl_workpackage.workpackage_name,tbl_workpackage.forcasted_fte_total FROM tbl_workpackage,tbl_wp_manager where tbl_workpackage.manager_id=tbl_wp_manager.manager_id and tbl_workpackage.workpackage_name='$name' and YEAR(tbl_workpackage.enddate)=$currentYear order by tbl_workpackage.enddate desc ";
    return $query;
 }
-
 
 
 ?>
@@ -46,7 +41,7 @@ function get_staff_fte($name)
     </div>
   </div>
   <script src="jquery.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script_workpackage.js"></script>
 
 
 
@@ -63,7 +58,7 @@ function get_staff_fte($name)
    {
      $name=$_GET['search'];
    }
-   $query=get_staff_fte($name);
+   $query=get_workpackage_managers($name);
    $result=mysqli_query($conn,$query);
 
 
@@ -85,7 +80,7 @@ function get_staff_fte($name)
 			$("#addmore").on("click",function(){
 				$.ajax({
 					type:'POST',
-					url:'action-form.ajax.php',
+					url:'action-form_updateWP.php',
 					data:{'action':'addDataRow'},
 					success: function(data){
 						$('#tb').append(data);
@@ -122,8 +117,8 @@ function get_staff_fte($name)
 			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
 			<input type="hidden" name="search" value="<?php echo $name;?>">
 <?php
-if($name!="")
-{
+#if($name!="")
+#{
    $termcount=0;
    $previousName="";
    $currentDate=date("Y/m/d");
@@ -132,76 +127,100 @@ if($name!="")
 
 
 
-   $output_str="<table><tr><td rowspan='4'>$name $currentYear Forcast</td></tr></table>";
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   $output_str.="<td valign='top'><b>Charge Code</b></td>\n";
-   $output_str.="<td valign='top'><b>Percent</b></td>\n";
-   $output_str.="<td valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td valign='top'><b>End Date</b></td>\n";
+   $output_str.="<td valign='top'><b>Workpackage</b></td>\n";
+   $output_str.="<td valign='top'><b>Manager</b></td>\n";
+   $output_str.="<td valign='top'><b>Total Allowed FTEs</b></td>\n";
+   #$output_str.="<td valign='top'><b>Start Date</b></td>\n";
+   #$output_str.="<td valign='top'><b>End Date</b></td>\n";
    $output_str.="</tr><tbody id='tb'>\n";
-
   $total=0;
    while($row=mysqli_fetch_array($result))
    {
-      $fte_id=$row[0];
-      $wp_name=$row[1];
-      $percent=$row[2];
-      $startdate=$row[3];
-      $enddate=$row[4];
+      $wp_id=$row[0];
+      $manager_name=$row[1];
+      $workpackage_name=$row[2];
+      #$startdate=$row[2];
+      #$enddate=$row[3];
+      $forcasted_fte_total=$row[3];
       $pass="T";
-      if(($previousName != $wp_name))
-      {
-          #This is the first display for this term, calculate the tr background color ??
-          $currentColor= ${'colour' .($termcount % 2)};
-          $termcount++;
-          $previousName = $wp_name;
-      }
-      #Change row color for records that are closed
-      if($currentDate>=strtotime($enddate))
-      {
-          $currentColor=$old_color;
-          $font_color=$change_font_color;
-          $pass="F";
-      }
-      else
-      {
+      #if(($previousName != $wp_name))
+      #{
+      #    #This is the first display for this term, calculate the tr background color ??
+      #    $currentColor= ${'colour' .($termcount % 2)};
+      #    $termcount++;
+      #    $previousName = $wp_name;
+      #}
+      ##Change row color for records that are closed
+      #if($currentDate>=strtotime($enddate))
+      #{
+      #    $currentColor=$old_color;
+      #    $font_color=$change_font_color;
+      #    $pass="F";
+      #}
+      #else
+      #{
 
-        $total+=$percent;
-      }
+      #  $total+=$percent;
+      #}
 
 
-      if($pass=="F")
-      {
-          $output_str.="<tr bgcolor='$currentColor'>\n<td width=350 valign='top'><font color='$font_color'>$wp_name</font></td>\n";
-          $output_str.="<td width=210 valign='top'><font color='$font_color'>$percent</font></td>\n";
-          $output_str.="<td valign='top'><font color='$font_color'>$startdate</font></td>\n";
-          $output_str.="<td valign='top'><font color='$font_color'>$enddate</font></td>\n";
-      }
-      else
-      {
-          $output_str.="<tr bgcolor='$currentColor'>\n<td width=350 valign='top'><input name='wp_txt[$fte_id]' type='text' value='$wp_name'></td>\n";
-          $output_str.="<td width=210 valign='top'><input name='forcast_txt[$fte_id]' type='text' value=$percent></td>\n";
-          $output_str.="<td valign='top'>$startdate</td>\n";
-          $output_str.="<td valign='top'>$enddate</td>\n";
-      }
+      #if($pass=="F")
+      #{
+      #    $output_str.="<tr bgcolor='$currentColor'>\n<td width=350 valign='top'><font color='$font_color'>$workkpackage_name</font></td>\n";
+      #    $output_str.="<td valign='top'><font color='$font_color'>$manager_name</font></td>\n";
+      #    $output_str.="<td valign='top'><font color='$font_color'>$forcasted_fte_total</font></td>\n";
+      #    $output_str.="<td valign='top'><font color='$font_color'>$startdate</font></td>\n";
+      #    $output_str.="<td valign='top'><font color='$font_color'>$enddate</font></td>\n";
+      #}
+      #else
+      #{
+      $output_str.="<tr bgcolor='$currentColor'>\n<td>$workpackage_name</td>\n";
+      $output_str.="<td valign='top'>$manager_name</td>\n";
+      $output_str.="<td valign='top'><input name='wp_txt[$wp_id]' type='text' value='$forcasted_fte_total'></td>\n";
+      #$output_str.="<td valign='top'>$startdate</td>\n";
+      #$output_str.="<td valign='top'>$enddate</td>\n";
+      #}
 
-      $pass="T";
+      #$pass="T";
 
       $output_str.="</tr>\n";
    }
    
       $output_str.="</tbody><tr>";
       $output_str.="<td colspan='6'>";
+
+      #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
+      #$output_str.="<tr bgcolor ='#C1C1E8'>\n";  
+      #$output_str.="<td>Workpacakge</td>";
+      #$output_str.="<td>Manager</td>";
+      #$output_str.="<td>FTEs</td>";
+      #$output_str.="</tr>";
       $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
       $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
       $output_str.="</td>";
       $output_str.="</tr>";
    $output_str.="</table>\n";
-   $output_str.="<table><tr><td rowspan='4'>Total FTEs $total</td></tr></table>";
+   #$output_str.="<table><tr><td rowspan='4'>Total FTEs $total</td></tr></table>";
    echo $output_str;
 
-}
+#}
+      
+      # $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+      # $output_str.="<tr bgcolor ='#C1C1E8'>\n";
+      # $output_str.="<td valign='top'><b>Workpackage</b></td>\n";
+      # $output_str.="<td valign='top'><b>Manager</b></td>\n";
+      # $output_str.="<td valign='top'><b>Total Allowed FTEs</b></td>\n";
+      #$output_str.="</tr>";
+      #$output_str.="</tr>";
+      #$output_str.="<td colspan='3'>";
+      #$output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
+      #$output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
+      #$output_str.="</td>";
+      #$output_str.="</tr>";
+      #$output_str.="</table>";
+      #echo $output_str;
 
    ?>
                 </form>
@@ -211,64 +230,36 @@ if($name!="")
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
-        foreach($wp as $key=>$wp_id){
-                $forcasted_value=$forcast[$key];
+        foreach($managers as $key=>$manager_id){
+                $forcasted=$forcast[$key];
+                $workpackage_name=$workpackage[$key];
                 #get wp_id
-                $staff_name = $_POST['staff_name'];
-                echo "<input type='hidden' name='search' value='$name'>";
-                $result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                while($val  =   $result->fetch_assoc())
-                {
-                    $staff_id=$val['staff_id'];
-                }
+                #$staff_name = $_POST['staff_name'];
+                #echo "<input type='hidden' name='search' value='$name'>";
+                #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
+                #while($val  =   $result->fetch_assoc())
+                #{
+                #    $staff_id=$val['staff_id'];
+                #}
                 $currentDate=date("Y-m-d");
-                $currentYear=date("Y");
-
-                $insert_query="INSERT INTO tbl_fte_planning (fte_id,staff_id,wp_id,forcasted_amount,startdate,enddate) VALUES (NULL, '$staff_id','$wp_id', $forcasted_value, '$currentDate', '$currentYear-10-12');";
-                echo "<br>$insert_query";
+                #$currentYear=date("Y");
+                $insert_query="INSERT INTO tbl_workpackage (wp_id,workpackage_name,startdate,enddate,manager_id,forcasted_fte_total) VALUES (NULL, '$workpackage_name','$currentDate','$currentYear-$endFYIDate',$manager_id,$forcasted);";
+                #echo "<br>$insert_query";
+#$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+#$txt=$insert_query;
+#fwrite($myfile, $txt);
+#fclose($myfile);
                 $db->query($insert_query);
 
         }
         #Refresh
         echo "<meta http-equiv='refresh' content='0'>";
-        foreach($wp_txt as $key=>$wp_name)
+        foreach($wp_txt as $key=>$forcasted)
         {
-           foreach($forcast_txt as $key2=>$for_value)
-           {
-            if($key==$key2){ 
-               $wp_result=$db->query("SELECT wp_id,fte_id,workpackage_name,forcasted_amount FROM vw_fte_mapping WHERE fte_id='$key'");
-               while($val  =   $wp_result->fetch_assoc())
-               {
-                   
-                       #$forcast_txt=$forcast_txt[$key];
-                       $wp_id=$val['wp_id'];
-                       $current_forcasted=$val['forcasted_amount'];
-                       if($for_value!=$current_forcasted)
-                       {
-                          #echo "Updating";
-                          #$update_query="UPDATE `tbl_fte_planning` SET `forcasted_amount` = '$for_value' WHERE `tbl_fte_planning`.`fte_id` = $key; ";
-                          $currentDate=date("Y-m-d");
-                          $currentYear=date("Y");
-                          $update_query="UPDATE tbl_fte_planning SET enddate = '$currentDate'  WHERE tbl_fte_planning.fte_id = $key; ";
-                          echo $update_query;
-                          $db->query($update_query);
+           $update_query="UPDATE tbl_workpackage SET forcasted_fte_total = '$forcasted'  WHERE wp_id = $key; ";
+           #echo $update_query;
+           $db->query($update_query);
                           
-                          if($for_value>0)
-                          {
-                              $staff_name = $_POST['staff_name'];
-                              $result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                              while($val  =   $result->fetch_assoc())
-                              {
-                                  $staff_id=$val['staff_id'];
-                              }
-                              $insert_query="INSERT INTO tbl_fte_planning (fte_id,staff_id,wp_id,forcasted_amount,startdate,enddate) VALUES (NULL, '$staff_id','$wp_id', $for_value, '$currentDate', '$currentYear-10-12');";
-                              echo $insert_query;
-                              $db->query($insert_query);
-                          }
-                        }
-                }
-           }
-          }
         }
 }
 

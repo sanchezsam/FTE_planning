@@ -166,11 +166,11 @@ if(isset($_POST['search']))
              $currentColor=$old_color;
              $font_color=$change_font_color;
           }
-          #else
-          #{
+          else
+          {
 
             $total+=$percent;
-          #}
+          }
           $output_str.="<tr bgcolor='$currentColor'>\n<td width=210 valign='top'><font color='$font_color'>$name</font></td>\n";
           $termcount++;
           $previousTeam = $name;
