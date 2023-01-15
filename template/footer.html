@@ -1,51 +1,76 @@
 
-                                                </div>
-                                        </div>
+                </div>
+        </div>
 
-                                <!-- Sidebar -->
+<!-- Sidebar -->
 
-					<div id="sidebar">
-						<div class="inner">
+	<div id="sidebar">
+		<div class="inner">
 
-							<!-- Search
-								<section id="search" class="alt">
-									<form method="post" action="#">
-										<input type="text" name="query" id="query" placeholder="Search" />
-									</form>
-								</section>
-							 -->
+			<!-- Search
+				<section id="search" class="alt">
+					<form method="post" action="#">
+						<input type="text" name="query" id="query" placeholder="Search" />
+					</form>
+				</section>
+			 -->
 
-							<!-- Menu -->
-								<nav id="menu">
-									<header class="major">
-										<h2>Menu</h2>
-									</header>
-									<ul>
-										<li><a href="#">Homepage</a></li>
-										<li><a href="Staff.php">Staff</a></li>
+			<!-- Menu -->
+<nav id="menu">
+	<header class="major">
+		<h2>Menu</h2>
+	</header>
+	<ul>
+		<li><a href="index.php">Homepage</a></li>
+		<li><a href="Staff.php">Staff</a></li>
 
-										<li>
-											<span class="opener">FTE Plannning</span>
-											<ul>
-										                <li><a href="allftesSYS.php">View SYS FTE's</a></li>
-										                <li><a href="allftesENV.php">View ENV FTE's</a></li>
-										                <li><a href="searchstaff.php">Search By Staff</a></li>
-										                <li><a href="searchworkpackage.php">Search By Workpackage</a></li>
-										                <li><a href="searchteam.php">Search By Team</a></li>
-										                <li><a href="update_wp.php">Update FTE</a></li>
-											</ul>
-										</li>
-										<li>
-											<span class="opener">Workpackages</span>
-											<ul>
-										                <li><a href="workpackage_managers.php">Workpackage Managers</a></li>
-										                <li><a href="#">Update Workpackage</a></li>
-										                <li><a href="#">Add Workpackage</a></li>
-											</ul>
-										</li>
-										<li><a href="teams.php">Teams</a></li>
-									</ul>
-								</nav>
+		<li>
+			<span class="opener">FTE Plannning</span>
+			<ul>
+		                <li><a href="allftesSYS.php">View SYS FTE's</a></li>
+		                <li><a href="allftesENV.php">View ENV FTE's</a></li>
+		                <li><a href="searchstaff.php">Search By Staff</a></li>
+		                <li><a href="searchworkpackage.php">Search By Workpackage</a></li>
+		                <li><a href="searchteam.php">Search By Team</a></li>
+		                <li><a href="update_wp.php">Update FTE</a></li>
+			</ul>
+		</li>
+		<li>
+			<span class="opener">Workpackages</span>
+			<ul>
+		                <li><a href="workpackage_managers.php">Workpackage Managers</a></li>
+		                <li><a href="#">Update Workpackage</a></li>
+		                <li><a href="#">Add Workpackage</a></li>
+			</ul>
+		</li>
+		<li><a href="teams.php">Teams</a></li>
+	</ul>
+</nav>
+
+
+<section>
+      <header class="major">
+              <h2> Under Or Over</h2>
+      </header>
+       <div class="mini-posts">
+               <article>
+                       <?php 
+
+                        $output_str=over_or_under($conn,$currentYear); 
+                        echo $output_str;
+                        ?>
+               </article>
+       </div>
+       <ul class="actions">
+               <li><a href="overunder.php" class="button">More</a></li>
+       </ul>
+</section>
+
+
+
+
+
+
 <!--
 								<section>
 									<header class="major">
