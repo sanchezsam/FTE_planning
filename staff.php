@@ -5,7 +5,7 @@ require 'template/header.html';
 
 function get_staff()
 {
-   $query="SELECT staff_name,team_name,group_name,startdate,enddate FROM vw_staff_mapping order by staff_name";
+   $query="SELECT staff_name,team_name,group_name,startdate,enddate FROM vw_staff_mapping order by group_name,staff_name";
    return $query;
 }
 
