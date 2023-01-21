@@ -5,7 +5,7 @@ require 'template/header.html';
 
 function get_teams()
 {
-   $query="SELECT team_name,group_name FROM vw_team_mapping ";
+   $query="SELECT team_name,group_name FROM vw_team_mapping order by group_name,team_name";
    return $query;
 }
 
@@ -28,14 +28,14 @@ while($row=mysqli_fetch_array($result))
 {
    $team_name=$row[0];
    $group_name=$row[1];
-   if(($previousTeam != $team_name))
-   {
+   #if(($previousTeam != $team_name))
+   #{
        #This is the first display for this term, calculate the tr background color ??
        $currentColor= ${'colour' .($termcount % 2)};
-       $output_str.="<tr bgcolor='$currentColor'>\n<td width=210 valign='top'>$team_name</td>\n";
        $termcount++;
-       $previousTeam = $team_name;
-   }
+       #$previousTeam = $team_name;
+   #}
+   $output_str.="<tr bgcolor='$currentColor'>\n<td width=210 valign='top'>$team_name</td>\n";
    $output_str.="<td valign='top'>$group_name</td>\n";
    $output_str.="</tr>\n";
 }
