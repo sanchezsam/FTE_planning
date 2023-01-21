@@ -5,8 +5,11 @@ require 'template/header.html';
 
 function get_team_fte($name,$currentYear)
 {
-   $query="SELECT * FROM `vw_team_forcast` where team_name='$name' and YEAR(enddate)=$currentYear order by workpackage_name, enddate desc";
-   #echo $query;
+   echo $name;
+   $pieces = explode("->", $name);
+   $group=$pieces[0];
+   $team=$pieces[1];
+   $query="SELECT * FROM `vw_team_forcast` where YEAR(enddate)=$currentYear and  team_name='$team' and group_name='$group' order by workpackage_name, enddate desc";
    return $query;
 }
 

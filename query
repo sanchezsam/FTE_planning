@@ -1,0 +1,54 @@
+SELECT staff_id
+ IF(
+     (SELECT COUNT(*) FROM vw_staff_mapping WHERE staff_name like '%Sa%' group by staff_name)>1,
+     (CONCAT(staff_name)),(CONCAT(staff_name,team_name))
+   ) 
+ AS "Staff Name"
+ FROM vw_staff_mapping;
+
+
+
+SELECT staff_id,
+ IF(
+     (SELECT COUNT(*) FROM vw_staff_mapping WHERE staff_name like '%Samuel%' group by staff_name)>1,
+     (CONCAT(staff_name,team_name)),(CONCAT(staff_name))
+   ) 
+ AS 'staff_name'
+ FROM vw_staff_mapping  WHERE staff_name like '%Samuel%'
+ORDER BY `Staff Name`  DESC
+
+
+
+SELECT staff_id,
+ IF(
+     (SELECT COUNT(*) FROM vw_staff_mapping WHERE staff_name like '%Samuel%' group by staff_name)>1,
+     (CONCAT(staff_name,"*",team_name)),(CONCAT(staff_name))
+   ) 
+ AS 'staff_name'
+ FROM vw_staff_mapping  WHERE staff_name like '%Samuel%'
+
+
+
+SELECT staff_id,
+             IF(
+                 (SELECT COUNT(*) FROM vw_staff_mapping WHERE staff_name like '%Sam' group by staff_name)>1,
+                 (CONCAT(staff_name,team_name)),(CONCAT(staff_name))
+               ) 
+             AS 'staff_name'
+             FROM vw_staff_mapping  WHERE staff_name like '%Sam'
+
+
+
+
+
+
+
+
+
+
+
+SELECT vw_fte_mapping.workpackage_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,vw_fte_mapping.enddate FROM `vw_fte_mapping`,vw_staff_mapping where vw_fte_mapping.staff_name='Samuel Sanchez' and YEAR(vw_fte_mapping.enddate)=2023 and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id and vw_staff_mapping.team_name='Platforms' and vw_staff_mapping.group_name='HPC-SYS' order by vw_fte_mapping.enddate desc 
+
+
+
+

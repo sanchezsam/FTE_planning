@@ -9,7 +9,14 @@ function get_staff_fte($name)
    $currentYear=date("Y");
    $query="";
    if($name){
-   $query="SELECT fte_id,workpackage_name,forcasted_amount,startdate,enddate FROM vw_fte_mapping where staff_name LIKE '%$name' and YEAR(enddate)>=$currentYear order by enddate desc";
+   $pieces = explode("->", $name);
+   $name=$pieces[0];
+   $team=$pieces[1];
+   $group=$pieces[2];
+   $query="SELECT vw_fte_mapping.fte_id,vw_fte_mapping.workpackage_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,vw_fte_mapping.enddate,vw_staff_mapping.staff_id FROM `vw_fte_mapping`,vw_staff_mapping where vw_fte_mapping.staff_name='$name' and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id and vw_staff_mapping.team_name='$team' and vw_staff_mapping.group_name='$group' order by vw_fte_mapping.enddate desc";
+
+
+   #$query="SELECT fte_id,workpackage_name,forcasted_amount,startdate,enddate FROM vw_fte_mapping where staff_name LIKE '%$name' and YEAR(enddate)>=$currentYear order by enddate desc";
    #echo $query;
    }
    return $query;
@@ -46,7 +53,7 @@ function get_staff_fte($name)
     </div>
   </div>
   <script src="jquery.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script_update_fte.js"></script>
 
 
 
@@ -117,7 +124,7 @@ function get_staff_fte($name)
 
 
 		<div id="msg"></div>
-		<form id="form" method="post" ACTION="update_wp.php?search=<?php echo $name?>">
+		<form id="form" method="post" ACTION="update_staff_fte.php?search=<?php echo $name?>">
 			<input type="hidden" name="action" value="saveAddMore">
 			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
 			<input type="hidden" name="search" value="<?php echo $name;?>">
@@ -149,6 +156,12 @@ if($name!="")
       $percent=$row[2];
       $startdate=$row[3];
       $enddate=$row[4];
+      $staff_id=$row[5];
+      #echo "<br>SELECT enddate FROM `tbl_staff` where staff_id=$staff_id";
+      $result_staff_id = $db->query("SELECT enddate FROM `tbl_staff` where staff_id=$staff_id");
+      while($val  =   $result_staff_id->fetch_assoc()){
+                     $staff_enddate = $val['enddate'];
+      }
       $pass="T";
       if(($previousName != $wp_name))
       {
@@ -158,7 +171,7 @@ if($name!="")
           $previousName = $wp_name;
       }
       #Change row color for records that are closed
-      if($currentDate>=strtotime($enddate))
+      if($currentDate>=strtotime($enddate) or $staff_enddate!="")
       {
           $currentColor=$old_color;
           $font_color=$change_font_color;
@@ -192,10 +205,13 @@ if($name!="")
    }
    
       $output_str.="</tbody><tr>";
+      if($staff_enddate=="")
+      {
       $output_str.="<td colspan='6'>";
       $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
       $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
       $output_str.="</td>";
+      }
       $output_str.="</tr>";
    $output_str.="</table>\n";
    $output_str.="<table><tr><td rowspan='4'>Total FTEs $total</td></tr></table>";
@@ -216,8 +232,15 @@ if(isset($_POST['save'])){
                 #get wp_id
                 $staff_name = $_POST['staff_name'];
                 echo "<input type='hidden' name='search' value='$name'>";
-                $result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                while($val  =   $result->fetch_assoc())
+                #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
+                $pieces = explode("->", $staff_name);
+                $name=$pieces[0];
+                $team=$pieces[1];
+                $group=$pieces[2];
+                #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
+                $result_id=$db->query("SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group_name='$group'");
+                #echo "<br>SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group_name='$group'";
+                while($val  =   $result_id->fetch_assoc())
                 {
                     $staff_id=$val['staff_id'];
                 }
@@ -225,7 +248,7 @@ if(isset($_POST['save'])){
                 $currentYear=date("Y");
 
                 $insert_query="INSERT INTO tbl_fte_planning (fte_id,staff_id,wp_id,forcasted_amount,startdate,enddate) VALUES (NULL, '$staff_id','$wp_id', $forcasted_value, '$currentDate', '$currentYear-10-12');";
-                echo "<br>$insert_query";
+                #echo "<br>$insert_query";
                 $db->query($insert_query);
 
         }
@@ -256,13 +279,21 @@ if(isset($_POST['save'])){
                           if($for_value>0)
                           {
                               $staff_name = $_POST['staff_name'];
-                              $result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                              while($val  =   $result->fetch_assoc())
+                              echo $staff_name;
+                              $pieces = explode("->", $staff_name);
+                              $name=$pieces[0];
+                              $team=$pieces[1];
+                              $group=$pieces[2];
+                              #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
+                              $result_id=$db->query("SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group_name='$group'");
+                              echo "<br>SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group='$group'";
+                              while($val  =   $result_id->fetch_assoc())
                               {
                                   $staff_id=$val['staff_id'];
                               }
                               $insert_query="INSERT INTO tbl_fte_planning (fte_id,staff_id,wp_id,forcasted_amount,startdate,enddate) VALUES (NULL, '$staff_id','$wp_id', $for_value, '$currentDate', '$currentYear-10-12');";
-                              echo $insert_query;
+                              #echo $insert_query;
+
                               $db->query($insert_query);
                           }
                         }

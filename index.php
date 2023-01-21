@@ -10,7 +10,7 @@ function get_all_ftes($currentYear)
    #$currentDate=date("Y-m-d");
    #$currentYear=date("Y");
    #$query="SELECT workpackage_name,staff_name,forcasted_amount,startdate,enddate FROM vw_fte_mapping where year(enddate)='$currentYear' ORDER BY workpackage_name ASC";
-   $query="SELECT vw_fte_mapping.workpackage_name,vw_fte_mapping.staff_name,vw_staff_mapping.team_name,vw_staff_mapping.group_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,.vw_fte_mapping.enddate FROM vw_fte_mapping,vw_staff_mapping where year(vw_fte_mapping.enddate)='$currentYear' and vw_staff_mapping.group_name='$group' and vw_fte_mapping.staff_name=vw_staff_mapping.staff_name ORDER BY workpackage_name asc ,enddate desc";
+   $query="SELECT vw_fte_mapping.workpackage_name,vw_fte_mapping.staff_name,vw_staff_mapping.team_name,vw_staff_mapping.group_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,.vw_fte_mapping.enddate FROM vw_fte_mapping,vw_staff_mapping where year(vw_fte_mapping.enddate)='$currentYear' and vw_staff_mapping.group_name='$group' and vw_fte_mapping.staff_id=vw_staff_mapping.staff_id ORDER BY workpackage_name asc ,enddate desc";
    #echo $query;
    return $query;
 }
@@ -78,7 +78,8 @@ echo "<br><strong>HPC</strong> Dashboard<br><br>";
 $query="SELECT group_name FROM tbl_groups";
 $group_result=mysqli_query($conn,$query);
 $output_str="<font size='1'>\n";
-$output_str.="<table class='style1' width='300' style='border:3px solid black;'>\n";
+#$output_str.="<table class='style1' width='150' style='border:3px solid black;'>\n";
+$output_str.="<table class='style1' style='border:3px solid black;'>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 $td_max=2;
 $td_count=0;

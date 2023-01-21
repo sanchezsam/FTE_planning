@@ -8,8 +8,14 @@ function get_staff_fte($name,$currentYear)
    #$currentYear=date("Y");
    $startYear=$currentYear-1;
    $endYear=$currentYear+1;
-   $query="SELECT workpackage_name,forcasted_amount,startdate,enddate FROM `vw_fte_mapping` where staff_name='$name' and YEAR(enddate)=$currentYear order by enddate desc";
-   #$query="SELECT workpackage_name,forcasted_amount,startdate,enddate FROM `vw_fte_mapping` where staff_name='$name' and (YEAR(startdate)>=$startYear and YEAR(startdate)<$currentYear) order by startdate desc";
+   $pieces = explode("->", $name); 
+   $name=$pieces[0];
+   $team=$pieces[1];
+   $group=$pieces[2];
+   ##$query="SELECT workpackage_name,forcasted_amount,startdate,enddate FROM `vw_fte_mapping` where staff_name='$name' and YEAR(enddate)=$currentYear order by enddate desc";
+
+   #WITH team and group
+   $query="SELECT vw_fte_mapping.workpackage_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,vw_fte_mapping.enddate FROM `vw_fte_mapping`,vw_staff_mapping where vw_fte_mapping.staff_name='$name' and YEAR(vw_fte_mapping.enddate)=$currentYear and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id and vw_staff_mapping.team_name='$team' and vw_staff_mapping.group_name='$group' order by vw_fte_mapping.enddate desc";
    #echo $query;
    return $query;
 }

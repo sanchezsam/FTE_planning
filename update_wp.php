@@ -22,7 +22,7 @@ function get_workpackage_managers($name)
     <div class="row mt-4">
       <div class="col-md-8 mx-auto bg-light rounded p-4">
         <hr class="my-1">
-        <h5 class="text-center text-secondary">Enter staff name in the search box</h5>
+        <h5 class="text-center text-secondary">Enter Workpackage name in the search box</h5>
         <form action="" method="post" class="p-3">
           <div class="input-group">
             <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
