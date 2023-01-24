@@ -138,6 +138,7 @@ $output_str.="</select>";
 $output_str.="</td>";
 $output_str.="</tr>\n";
 $output_str.="</table>\n";
+$output_str.="<input type='hidden' name='currentYear' value='$currentYear'>";
 $output_str.="</form>";
 return $output_str;
 
@@ -218,7 +219,7 @@ function over_or_under_staff($conn,$currentYear,$group)
 
    }
    $query="SELECT staff_name,forcasted,round(difference,2) FROM `vw_staff_over_under` where YEAR(enddate)='$currentYear' and difference!=0 and group_name='$group'  ORDER BY vw_staff_over_under.difference ASC ";
-   #echo $query;
+   echo $query;
    $result=mysqli_query($conn,$query);
    $output_str="<font size='1'>\n";
    $output_str.="<table class='style1' style='border:1px solid black;'>\n";
@@ -233,6 +234,10 @@ function over_or_under_staff($conn,$currentYear,$group)
       $forcasted=$row[1];
       $difference=$row[2];
       $font_color="black";
+      if($difference==0.00)
+      {
+        continue;
+      }
       if(($previousStaff != $staff))
       {
    
