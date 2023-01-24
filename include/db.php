@@ -219,7 +219,7 @@ function over_or_under_staff($conn,$currentYear,$group)
 
    }
    $query="SELECT staff_name,forcasted,round(difference,2) FROM `vw_staff_over_under` where YEAR(enddate)='$currentYear' and difference!=0 and group_name='$group'  ORDER BY vw_staff_over_under.difference ASC ";
-   echo $query;
+   #echo $query;
    $result=mysqli_query($conn,$query);
    $output_str="<font size='1'>\n";
    $output_str.="<table class='style1' style='border:1px solid black;'>\n";
