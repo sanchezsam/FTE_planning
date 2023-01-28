@@ -1,0 +1,7 @@
+Delete FROM `tbl_wp_activities`; Delete FROM `tbl_wp_info`;Delete FROM `tbl_wp_materials`; Delete FROM `tbl_wp_services`;Delete FROM `tbl_wp_staff`;
+
+ALTER TABLE tbl_wp_activities AUTO_INCREMENT = 1;
+ALTER TABLE tbl_wp_info AUTO_INCREMENT = 1;
+ALTER TABLE tbl_wp_materials AUTO_INCREMENT = 1;
+ALTER TABLE tbl_wp_services AUTO_INCREMENT = 1;
+ALTER TABLE tbl_wp_staff AUTO_INCREMENT = 1;
