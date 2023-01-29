@@ -83,6 +83,7 @@ $result=mysqli_query($conn,$query);
 
 $colour0 = '#E3E3E3';
 $colour1 = '#FFFFFF';
+$font_color="black";
 $termcount=0;
 $previousWP="";
 $currentDate=date("Y/m/d");
