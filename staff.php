@@ -3,55 +3,67 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_staff()
+function get_staff($currentYear)
 {
-   $query="SELECT staff_name,team_name,group_name,startdate,enddate FROM vw_staff_mapping order by group_name,staff_name";
+   $query="SELECT staff_name as 'Staff',
+                  team_name as 'Team',
+                  group_name as 'Group',
+                  startdate as 'Start Date',
+                  enddate as 'End Date'
+                  FROM vw_staff_mapping";
+   if($currentYear<date("Y"))
+   {
+        $query.=" WHERE YEAR(enddate)='$currentYear'";
+   }
+
+   $query.=" ORDER BY group_name,staff_name";
+
+   #echo $query;
    return $query;
 }
 
-$query=get_staff();
-$result=mysqli_query($conn,$query);
-
-$termcount=0;
-$previousName="";
-
-$output_str="<table width = '900' style='border:1px solid black;'>\n";
-$output_str.="<tr bgcolor='#C1C1E8'>\n";
-$output_str.="<td valign='top'><b>Name</b></td>\n";
-$output_str.="<td valign='top'><b>Team</b></td>\n";
-$output_str.="<td valign='top'><b>Group</b></td>\n";
-$output_str.="<td valign='top'><b>Start Date</b></td>\n";
-$output_str.="<td valign='top'><b>End Date</b></td>\n";
-$output_str.="</tr>\n";
-
-
-while($row=mysqli_fetch_array($result))
-{
-   $name=$row[0];
-   $team_name=$row[1];
-   $group_name=$row[2];
-   $startdate=$row[3];
-   $enddate=$row[4];
-   if(($previousName != $name))
-   {
-       #This is the first display for this term, calculate the tr background color ??
-       $currentColor= ${'colour' .($termcount % 2)};
-       $termcount++;
-       $previousName = $name;
-   }
-   $output_str.="<tr bgcolor='$currentColor'>\n<td valign='top'>$name</td>\n";
-   $output_str.="<td valign='top'>$team_name</td>\n";
-   $output_str.="<td valign='top'>$group_name</td>\n";
-   $output_str.="<td valign='top'>$startdate</td>\n";
-   $output_str.="<td valign='top'>$enddate</td>\n";
-   $output_str.="</tr>\n";
-}
-$output_str.="</table>\n";
-
 
 //TITLE
-echo "<br><strong>HPC</strong> Staff<br><br>";
-//CONTENTS
-echo $output_str;
+echo "<br><strong>Workpackage Managers</strong><br><br>";
+
+//Get drop down menu (Year selector)
+$currentYear=date("Y");
+$currentDate=date("Y/m/d");
+$currentYear=date("Y");
+if(isset($_GET['currentYear']))
+{
+     $currentYear=$_GET['currentYear'];
+}
+$drop_down_str=drop_down_year($conn);
+echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="staff.php?currentYear="+passValue
+}
+</script>
+
+<?php
+
+   if(isset($_GET['currentYear']))
+   {
+       $currentYear=$_GET['currentYear'];
+   }
+
+   #display staff info
+   $query=get_staff($currentYear);
+   $result=mysqli_query($conn,$query);
+
+   $output_str="<table width = '900' style='border:1px solid black;'>\n";
+   list($column_str,$columns)=get_mysql_columns($result);
+   $output_str.=$column_str;
+   $query=get_staff($currentYear);
+   $result=mysqli_query($conn,$query);
+   #$output_str.=get_mysql_values_with_old($currentYear,$result,$columns);
+   $output_str.=get_mysql_values($result);
+   $output_str.="</table>\n";
+   echo $output_str;
+//echo "</section>";
 
 require 'template/footer.html';
