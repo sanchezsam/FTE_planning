@@ -15,6 +15,10 @@ function get_staff($currentYear)
    {
         $query.=" WHERE YEAR(enddate)='$currentYear'";
    }
+   else
+   {
+        $query.=" WHERE YEAR(enddate)='$currentYear' or enddate IS NULL";
+   }
 
    $query.=" ORDER BY group_name,staff_name";
 
