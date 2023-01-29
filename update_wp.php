@@ -53,13 +53,22 @@ function get_workpackage_managers($name)
     	<hr>
 		<div class="clearfix"></div>
 		<?php
-   $name=$_POST['search'];
+   $name="";
+   $managers="";
+   if(isset($_POST['search'])){
+       $name=$_POST['search'];
+   }
    if($name=="")
    {
-     $name=$_GET['search'];
+     if(isset($_GET['search'])){
+         $name=$_GET['search'];
+     }
    }
-   $query=get_workpackage_managers($name);
-   $result=mysqli_query($conn,$query);
+   if($name!="")
+   {
+       $query=get_workpackage_managers($name);
+       $result=mysqli_query($conn,$query);
+   }
 
 
 
@@ -117,13 +126,15 @@ function get_workpackage_managers($name)
 			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
 			<input type="hidden" name="search" value="<?php echo $name;?>">
 <?php
-#if($name!="")
-#{
+if($name!="")
+{
    $termcount=0;
    $previousName="";
    $currentDate=date("Y/m/d");
    $currentYear=date("Y");
    $currentDate=strtotime($currentDate);
+   $output_str="";
+   $currentColor="";
 
 
 
@@ -135,7 +146,7 @@ function get_workpackage_managers($name)
    #$output_str.="<td valign='top'><b>Start Date</b></td>\n";
    #$output_str.="<td valign='top'><b>End Date</b></td>\n";
    $output_str.="</tr><tbody id='tb'>\n";
-  $total=0;
+   $total=0;
    while($row=mysqli_fetch_array($result))
    {
       $wp_id=$row[0];
@@ -205,7 +216,7 @@ function get_workpackage_managers($name)
    #$output_str.="<table><tr><td rowspan='4'>Total FTEs $total</td></tr></table>";
    echo $output_str;
 
-#}
+}
       
       # $output_str.="<table width = '900' style='border:1px solid black;'>\n";
       # $output_str.="<tr bgcolor ='#C1C1E8'>\n";
@@ -230,28 +241,31 @@ function get_workpackage_managers($name)
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
-        foreach($managers as $key=>$manager_id){
-                $forcasted=$forcast[$key];
-                $workpackage_name=$workpackage[$key];
-                #get wp_id
-                #$staff_name = $_POST['staff_name'];
-                #echo "<input type='hidden' name='search' value='$name'>";
-                #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                #while($val  =   $result->fetch_assoc())
-                #{
-                #    $staff_id=$val['staff_id'];
-                #}
-                $currentDate=date("Y-m-d");
-                #$currentYear=date("Y");
-                $insert_query="INSERT INTO tbl_workpackage (wp_id,workpackage_name,startdate,enddate,manager_id,forcasted_fte_total) VALUES (NULL, '$workpackage_name','$currentDate','$currentYear-$endFYIDate',$manager_id,$forcasted);";
-                #echo "<br>$insert_query";
-#$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$insert_query;
-#fwrite($myfile, $txt);
-#fclose($myfile);
-                $db->query($insert_query);
+        if (is_array($managers) || is_object($managers))
+        {
+            foreach($managers as $key=>$manager_id){
+                    $forcasted=$forcast[$key];
+                    $workpackage_name=$workpackage[$key];
+                    #get wp_id
+                    #$staff_name = $_POST['staff_name'];
+                    #echo "<input type='hidden' name='search' value='$name'>";
+                    #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
+                    #while($val  =   $result->fetch_assoc())
+                    #{
+                    #    $staff_id=$val['staff_id'];
+                    #}
+                    $currentDate=date("Y-m-d");
+                    #$currentYear=date("Y");
+                    $insert_query="INSERT INTO tbl_workpackage (wp_id,workpackage_name,startdate,enddate,manager_id,forcasted_fte_total) VALUES (NULL, '$workpackage_name','$currentDate','$currentYear-$endFYIDate',$manager_id,$forcasted);";
+                    #echo "<br>$insert_query";
+#$myfil    e = fopen("newfile.txt", "w") or die("Unable to open file!");
+#$txt=$    insert_query;
+#fwrite    ($myfile, $txt);
+#fclose    ($myfile);
+                    $db->query($insert_query);
 
-        }
+            }
+       }
         #Refresh
         echo "<meta http-equiv='refresh' content='0'>";
         foreach($wp_txt as $key=>$forcasted)
