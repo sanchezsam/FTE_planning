@@ -5,14 +5,13 @@ require 'template/header.html';
 
 function get_wp_info($name,$currentYear)
 {
-
-   $query="SELECT staff_name as 'Staff Name',forcasted_amount as 'Forcasted Amount',
-           startdate as 'Start Date',enddate as 'End Date'
-            FROM `vw_fte_mapping` where workpackage_name='$name'
-                  and YEAR(enddate)='$currentYear' order by enddate desc";
-   #echo $query;
+   $query="SELECT task as Task,task_name as 'Task Name',task_manager as 'Task Manager',task_description as 'Task Description',
+           burden_rate as 'Burden Rate',startdate as 'Start Date',enddate as 'End Date'
+           FROM tbl_wp_info where task='$name' and YEAR(enddate)='$currentYear' order by enddate desc";
    return $query;
 }
+
+
 
 
 //TITLE
@@ -40,7 +39,7 @@ echo $drop_down_str;
 <script>
 function refreshPage(passValue,search){
 //do something in this function with the value
- window.location="searchworkpackage.php?currentYear="+passValue
+ window.location="searchworkpackageinfo.php?currentYear="+passValue
 }
 </script>
 
@@ -68,7 +67,7 @@ function refreshPage(passValue,search){
     </div>
   </div>
   <script src="jquery.min.js"></script>
-  <script src="script_workpackage.js"></script>
+  <script src="script_workpackage_info.js"></script>
 
 
 <?php
@@ -91,7 +90,7 @@ if(isset($_POST['search']))
    $output_str.=$column_str;
    $query=get_wp_info($name,$currentYear);
    $result=mysqli_query($conn,$query);
-   $output_str.=get_mysql_values_with_old($currentYear,$result,$columns);
+   $output_str.=get_mysql_values($result);
    $output_str.="</table>\n";
    echo $output_str;
 }

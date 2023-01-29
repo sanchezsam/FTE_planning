@@ -5,85 +5,44 @@ require 'template/header.html';
 
 function get_staff_fte($name,$currentYear)
 {
-   #$currentYear=date("Y");
    $startYear=$currentYear-1;
    $endYear=$currentYear+1;
-   $pieces = explode("->", $name); 
+   $pieces = explode("->", $name);
    $name=$pieces[0];
    $team=$pieces[1];
    $group=$pieces[2];
-   ##$query="SELECT workpackage_name,forcasted_amount,startdate,enddate FROM `vw_fte_mapping` where staff_name='$name' and YEAR(enddate)=$currentYear order by enddate desc";
 
    #WITH team and group
-   $query="SELECT vw_fte_mapping.workpackage_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,vw_fte_mapping.enddate FROM `vw_fte_mapping`,vw_staff_mapping where vw_fte_mapping.staff_name='$name' and YEAR(vw_fte_mapping.enddate)=$currentYear and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id and vw_staff_mapping.team_name='$team' and vw_staff_mapping.group_name='$group' order by vw_fte_mapping.enddate desc";
-   #echo $query;
+   $query="SELECT vw_fte_mapping.workpackage_name as 'Workpackage',
+                  vw_fte_mapping.forcasted_amount as 'Forcasted Amount',
+                  vw_fte_mapping.startdate as 'Start Date',
+                  vw_fte_mapping.enddate as 'End Date'
+           FROM `vw_fte_mapping`,vw_staff_mapping 
+           WHERE vw_fte_mapping.staff_name='$name'
+                 and YEAR(vw_fte_mapping.enddate)=$currentYear
+                 and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id 
+                 and vw_staff_mapping.team_name='$team' 
+                 and vw_staff_mapping.group_name='$group'
+          ORDER BY vw_fte_mapping.enddate desc";
    return $query;
+
+
 }
-
-
 
 
 //TITLE
-echo "<br><strong>Search</strong> By Staff<br><br>";
+echo "<br><strong>Search</strong> Staff<br><br>";
 
-
-?>
-
-
-<?php
-#$arr = get_defined_vars();
-#print_r($arr);
-$name="";
-if(isset($_POST['search']))
+//Get drop down menu (Year selector)
+$currentYear=date("Y");
+$currentDate=date("Y/m/d");
+$currentYear=date("Y");
+if(isset($_GET['currentYear']))
 {
-   $name=$_POST['search'];
+     $currentYear=$_GET['currentYear'];
 }
-//CONTENTS
-//echo $output_str;
-   $currentYear=date("Y");
-
-   $termcount=0;
-   $previousName="";
-   $currentDate=date("Y/m/d");
-   $currentYear=date("Y");
-   if(isset($_GET['currentYear']))
-   {
-        $currentYear=$_GET['currentYear'];
-   }
-   if($name!=""){
-       $query=get_staff_fte($name,$currentYear);
-       $result=mysqli_query($conn,$query);
-   }
-
-
-   #$currentDate=strtotime($currentDate);
-   #$output_str.="<form id='yearform' method='post'>";
-   #$output_str="<table style='border:1px solid black;'>\n";
-   #$output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   #$output_str.="<td valign='top'><b>View by Year</b></td>\n";
-   #$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
-   #$year_result=mysqli_query($conn,$query);
-   #$output_str.="<td>";
-   #$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
-   #$output_str.="<option value=''>Select</option>";
-   #while($row=mysqli_fetch_array($year_result))
-   #{
-   #   if($currentYear==$row[0])
-   #   {
-   #       $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
-   #   }
-   #   else
-   #   {
-   #       $output_str.="<option value=$row[0]>$row[0]</option>";
-   #   }
-   #}
-   #$output_str.="</select>";
-   #$output_str.="</td>";
-   #$output_str.="</tr>\n";
-   #$output_str.="</table>\n";
-   #$output_str.="</form>";
-   $output_str=drop_down_year($conn);
-   echo $output_str;
+$drop_down_str=drop_down_year($conn);
+echo $drop_down_str;
 ?>
 <script>
 function refreshPage(passValue,search){
@@ -93,13 +52,11 @@ function refreshPage(passValue,search){
 </script>
 
 
-
-
 <div class="container">
     <div class="row mt-4">
       <div class="col-md-8 mx-auto bg-light rounded p-4">
         <hr class="my-1">
-        <h5 class="text-center text-secondary">Enter staff name in the search box</h5>
+        <h5 class="text-center text-secondary">Enter workpackage in the search box</h5>
         <form action="" method="post" class="p-3">
           <div class="input-group">
             <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
@@ -121,77 +78,28 @@ function refreshPage(passValue,search){
   <script src="script.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
-$font_color="black";
+
 if(isset($_POST['search']))
 {
    $name=$_POST['search'];
+   if(isset($_GET['currentYear']))
+   {
+       $currentYear=$_GET['currentYear'];
+   }
 
+   #display workpackage info
+   $query=get_staff_fte($name,$currentYear);
+   $result=mysqli_query($conn,$query);
 
-
-
-   
    $output_str="<table><tr><td rowspan='4'>$name $currentYear Forcast</td></tr></table>";
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
-   $output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   $output_str.="<td valign='top'><b>Charge Code</b></td>\n";
-   $output_str.="<td valign='top'><b>Percent</b></td>\n";
-   $output_str.="<td valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td valign='top'><b>End Date</b></td>\n";
-   $output_str.="</tr>\n";
-   
-   $total=0;
-   while($row=mysqli_fetch_array($result))
-   {
-      $name=$row[0];
-      $percent=$row[1];
-      $startdate=$row[2];
-      $enddate=$row[3];
-      $endFYI="$currentYear-$endFYIDate";
-      if(($previousName != $name))
-      {
-          #This is the first display for this term, calculate the tr background color ??
-          $currentColor= ${'colour' .($termcount % 2)};
-          #if($enddate!="")
-          #if($currentDate>strtotime($enddate) and date("Y")==$currentYear)
-          #if($currentDate>strtotime($enddate) and strtotime($enddate)<strtotime($endFYI))
-          if(strtotime($enddate)<strtotime($endFYI))
-          {
-             $currentColor=$old_color;
-             $font_color=$change_font_color;
-          }
-          else
-          {
-
-            $total+=$percent;
-          }
-          $output_str.="<tr bgcolor='$currentColor'>\n<td width=210 valign='top'><font color='$font_color'>$name</font></td>\n";
-          $termcount++;
-          $previousTeam = $name;
-      }
-      $output_str.="<td valign='top'><font color='$font_color'>$percent</font></td>\n";
-      $output_str.="<td valign='top'><font color='$font_color'>$startdate</font></td>\n";
-      $output_str.="<td valign='top'><font color='$font_color'>$enddate</font></td>\n";
-      $output_str.="</tr>\n";
-   }
+   list($column_str,$columns)=get_mysql_columns($result);
+   $output_str.=$column_str;
+   $query=get_staff_fte($name,$currentYear);
+   $result=mysqli_query($conn,$query);
+   $output_str.=get_mysql_values_with_old($currentYear,$result,$columns);
    $output_str.="</table>\n";
-   $output_str.="<table><tr><td rowspan='4'>Total FTEs $total</td></tr></table>";
    echo $output_str;
 }
 //echo "</section>";

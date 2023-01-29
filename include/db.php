@@ -7,7 +7,7 @@ $colour0 = '#E3E3E3';
 $colour1 = '#FFFFFF';
 $old_color='#787878';
 $change_font_color="white";
-$endFYIDate="10-01";
+$endFYIDate="9-30";
 #$colour0 = 'blue';
 #$colour1 = 'yellow';
 #$old_color='green';
@@ -16,6 +16,72 @@ $endFYIDate="10-01";
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());
 
 
+function get_mysql_columns($result)
+{
+   $return_str="";
+   $return_str.="<tr bgcolor ='#C1C1E8'>\n";
+   $values = $result->fetch_all(MYSQLI_ASSOC);
+   $columns = array();
+
+   if(!empty($values)){
+       $columns = array_keys($values[0]);
+   }
+   foreach($columns as $col){
+       $return_str.="<td valign='top'><b>$col</b></td>\n";
+   }
+   $return_str.="</tr>\n";
+   return array($return_str,$columns);
+}
+
+
+function get_mysql_values($result)
+{
+   global $colour0, $colour1;
+   $return_str="";
+   $termcount=0;
+   $previousRow="";
+   while($row=mysqli_fetch_row($result))
+   {
+      $currentColor= ${'colour' .($termcount % 2)};            
+      $return_str.="<tr bgcolor='$currentColor'>";
+      for($i=0;$i<count($row);$i++){
+        $return_str.="<td>$row[$i]</td>\n";
+      }
+      $termcount++;
+      $return_str.="</tr>\n";
+   }
+   return $return_str;
+}
+
+function get_mysql_values_with_old($currentYear,$result,$columns)
+{
+   global $colour0, $colour1,$old_color,$font_color,$change_font_color,$endFYIDate;
+   #$currentYear=$currentYear-1;
+   $endFYI="$currentYear-$endFYIDate";
+   $return_str="";
+   $termcount=0;
+   $previousRow="";
+   $end_date_key = array_search('End Date', $columns);
+   $row_count=0;
+   while($row=mysqli_fetch_row($result))
+   {
+      $currentColor= ${'colour' .($termcount % 2)};            
+      $enddate=$row[$end_date_key];
+      #if(strtotime($enddate)<strtotime($endFYI) || $currentYear<date("Y"))
+      if(strtotime($enddate)<strtotime($endFYI))
+      {
+         $currentColor=$old_color;
+         $font_color=$change_font_color;
+      }
+      $return_str.="<tr bgcolor='$currentColor'>";
+      for($i=0;$i<count($row);$i++){
+        $return_str.="<td><font color=$font_color>$row[$i]</font></td>\n";
+      }
+      $termcount++;
+      $return_str.="</tr>\n";
+   }
+   return $return_str;
+}
 
 function drop_down_year_with_group($conn)
 {
