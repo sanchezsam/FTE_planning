@@ -6,17 +6,11 @@ require 'template/header.html';
 
 function get_all_ftes($currentYear,$group)
 {
-   #$group="HPC-SYS";
-   #$currentDate=date("Y-m-d");
-   #$currentYear=date("Y");
-   #$query="SELECT workpackage_name,staff_name,forcasted_amount,startdate,enddate FROM vw_fte_mapping where year(enddate)='$currentYear' ORDER BY workpackage_name ASC";
    $query="SELECT vw_fte_mapping.workpackage_name,vw_fte_mapping.staff_name,vw_staff_mapping.team_name,vw_staff_mapping.group_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,.vw_fte_mapping.enddate FROM vw_fte_mapping,vw_staff_mapping where year(vw_fte_mapping.enddate)='$currentYear' and vw_staff_mapping.group_name='$group' and vw_fte_mapping.staff_id=vw_staff_mapping.staff_id ORDER BY workpackage_name asc ,enddate desc";
    return $query;
 }
 
 
-#$colour0 = '#E3E3E3';
-#$colour1 = '#FFFFFF';
 $termcount=0;
 $previousWP="";
 $currentDate=date("Y/m/d");
@@ -34,45 +28,10 @@ if(isset($_POST["submit"]))
      {
           $currentYear=$_POST['year'][0];
      }
-     #print_r($_POST);
-     #echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';
 
 }
 
 
-#$currentYear=date("Y");
-#if(isset($_GET['currentYear']))
-#{
-#     $currentYear=$_GET['currentYear'];
-#}
-#
-#$currentDate=strtotime($currentDate);
-#$output_str="";
-#$output_str.="<form id='yearform' method='post'>";
-#$output_str="<table width = '900' style='border:1px solid black;'>\n";
-#$output_str.="<tr bgcolor ='#C1C1E8'>\n";
-#$output_str.="<td valign='top'><b>View by Year</b></td>\n";
-#$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
-#$year_result=mysqli_query($conn,$query);
-#$output_str.="<td>";
-#$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
-#$output_str.="<option value=''>Select</option>";
-#while($row=mysqli_fetch_array($year_result))
-#{
-#   if($currentYear==$row[0])
-#   {
-#       $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
-#   }
-#   else
-#   {
-#       $output_str.="<option value=$row[0]>$row[0]</option>";
-#   }
-#}
-#$output_str.="</select>";
-#$output_str.="</td>";
-#$output_str.="</tr>\n";
-#$output_str.="</table>\n";
-#$output_str.="</form>";
 $output_str=drop_down_year_with_group($conn);
 $query=get_all_ftes($currentYear,$group);
 $result=mysqli_query($conn,$query);
@@ -118,11 +77,8 @@ while($row=mysqli_fetch_array($result))
        }
        #This is the first display for this term, calculate the tr background color ??
        $currentColor= ${'colour' .($termcount % 2)};
-       #if($currentDate>strtotime($enddate))
        if(strtotime($enddate)<strtotime($endFYI))
        {
-            #$currentColor="#787878";
-            #$font_color="white";
               $currentColor=$old_color;
               $font_color=$change_font_color;
        }
@@ -133,20 +89,12 @@ while($row=mysqli_fetch_array($result))
    }
    else
    {
-      //if($currentDate>strtotime($enddate) && (!isset($_GET['currentYear'])))
-      #if($currentDate>=strtotime($enddate))
       $prev_color=$currentColor;
       if(strtotime($enddate)<strtotime($endFYI))
       {
-              #$currentColor="#787878";
-              #$font_color="white";
               $currentColor=$old_color;
               $font_color=$change_font_color;
       }
-      //else
-      //{
-      //  $currentColor= ${'colour' .($termcount-1 % 2)};
-     // }
       $output_str.="<tr bgcolor=$currentColor>";
       $output_str.= "<td>&nbsp;</td>\n";
     }
@@ -167,21 +115,6 @@ $output_str.="</table>\n";
 //echo "<section>";
 //TITLE
 echo "<br><strong>$group</strong> $currentYear FTE's<br><br>";
-#$query="SELECT distinct group_name FROM tbl_groups";
-#$group_result=mysqli_query($conn,$query);
-#$check_box_str="";
-#if(isset($_POST['group_name']))
-#{
-#   $group= $_POST['group_name'];
-#   echo "group $group";
-#}
-#while($row=mysqli_fetch_array($group_result))
-#{
-#      $group=$row[0];
-#      $checkbox_str.="<input type='radio' id='$group' name=group_name value='$group'>";
-#      $checkbox_str.="<label for=$group>$group</label>";
-#}
-#echo $checkbox_str;
 ?>
 
 
