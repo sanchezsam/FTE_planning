@@ -54,8 +54,8 @@ for znumber,wp_dict in all_dict.iteritems():
             if key!="":
                 code_dict[key]=value  
     #print znumber,name
-    insert_staff="""INSERT INTO `tbl_staff` (`staff_id`, `znumber`, `staff_name`, `team_id`, `startdate`, `enddate`)
-                     VALUES (NULL, '%s','%s', '1', '%s', NULL);"""%(znumber,name,startdate)
+    insert_staff="""INSERT INTO `tbl_staff` (`staff_id`, `znumber`, `staff_name`, `team_id`, `startdate`, `enddate`,`fte_amount`)
+                     VALUES (NULL, '%s','%s', '1', '%s', NULL,'1');"""%(znumber,name,startdate)
     #print insert_staff
     output_str+="%s,%s"%(znumber,name)
     for wp,percent in code_dict.iteritems(): 

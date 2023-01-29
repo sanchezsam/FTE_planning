@@ -31,6 +31,9 @@ echo "<br><strong>Search</strong> By Staff<br><br>";
 
 
 <?php
+#$arr = get_defined_vars();
+#print_r($arr);
+$name="";
 if(isset($_POST['search']))
 {
    $name=$_POST['search'];
@@ -47,10 +50,10 @@ if(isset($_POST['search']))
    {
         $currentYear=$_GET['currentYear'];
    }
-
-   $query=get_staff_fte($name,$currentYear);
-   $result=mysqli_query($conn,$query);
-
+   if($name!=""){
+       $query=get_staff_fte($name,$currentYear);
+       $result=mysqli_query($conn,$query);
+   }
 
 
    #$currentDate=strtotime($currentDate);
@@ -135,6 +138,7 @@ function refreshPage(passValue,search){
 
 
 <?php
+$font_color="black";
 if(isset($_POST['search']))
 {
    $name=$_POST['search'];

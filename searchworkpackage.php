@@ -18,7 +18,7 @@ function get_staff_fte($name,$currentYear)
 echo "<br><strong>Search</strong> Workpackages<br><br>";
 
 
-
+$font_color="black";
 if(isset($_POST['search']))
 {
    $name=$_POST['search'];

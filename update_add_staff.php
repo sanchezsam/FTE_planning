@@ -9,9 +9,9 @@ function get_staff_details($name)
    $currentYear=date("Y");
    $query="";
    if($name){
-   $name=trim($name);
-   $query="SELECT * FROM vw_staff_mapping where staff_name LIKE '%$name'";
-   #echo $query;
+      $name=trim($name);
+      $query="SELECT * FROM vw_staff_mapping where staff_name LIKE '%$name%'";
+      #echo $query;
    }
    return $query;
 }
@@ -59,14 +59,20 @@ function get_staff_details($name)
     	<hr>
 		<div class="clearfix"></div>
 		<?php
-   $name=$_POST['search'];
+   $name="";
+   if(isset($_POST['search'])){
+       $name=$_POST['search'];
+   }
    if($name=="")
    {
-     $name=$_GET['search'];
+     if(isset($_GET['search'])){
+         $name=$_GET['search'];
+     }
    }
-   $query=get_staff_details($name);
-   $result=mysqli_query($conn,$query);
-
+   if($name){
+       $query=get_staff_details($name);
+       $result=mysqli_query($conn,$query);
+   }
 
 
 
@@ -123,8 +129,8 @@ function get_staff_details($name)
 			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
 			<input type="hidden" name="search" value="<?php echo $name;?>">
 <?php
-#if($name!="")
-#{
+if($name!="")
+{
    $termcount=0;
    $previousName="";
    $currentDate=date("Y/m/d");
@@ -195,7 +201,7 @@ function get_staff_details($name)
    $output_str.="</table>\n";
    echo $output_str;
 
-#}
+}
 
    ?>
                 </form>
@@ -206,22 +212,25 @@ if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
         echo "in save";
-        print_r($_POST);
-        foreach($staff_name as $key=>$staff_id){
-                $staff_name=$staff_name[$key];
-                $znum=$znumber[$key];
-                $team_id=$team_names[$key];
-                $start=$startdate[$key];
-                $forcasted_amount=$forcasted[$key];
-                #echo "<input type='hidden' name='search' value='$name'>";
-                $insert_query="INSERT INTO tbl_staff (staff_id,znumber,staff_name,team_id,startdate,enddate,fte_amount) VALUES (NULL,'$znum','$staff_name',$team_id, '$start',NULL,$forcasted_amount);";
-#$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$insert_query;
-#fwrite($myfile, $txt);
-#fclose($myfile);
-                echo "<br>$insert_query";
-                $db->query($insert_query);
+        #print_r($_POST);
+        if (is_array($staff_name) || is_object($staff_name))
+        {
+            foreach($staff_name as $key=>$staff_id){
+                    $staff_name=$staff_name[$key];
+                    $znum=$znumber[$key];
+                    $team_id=$team_names[$key];
+                    $start=$startdate[$key];
+                    $forcasted_amount=$forcasted[$key];
+                    #echo "<input type='hidden' name='search' value='$name'>";
+                    $insert_query="INSERT INTO tbl_staff (staff_id,znumber,staff_name,team_id,startdate,enddate,fte_amount) VALUES (NULL,'$znum','$staff_name',$team_id, '$start',NULL,$forcasted_amount);";
+#$myfile     = fopen("newfile.txt", "w") or die("Unable to open file!");
+#$txt=$i    nsert_query;
+#fwrite(    $myfile, $txt);
+#fclose(    $myfile);
+                    echo "<br>$insert_query";
+                    $db->query($insert_query);
 
+            }
         }
         #Refresh
         echo "<meta http-equiv='refresh' content='0'>";
@@ -232,7 +241,12 @@ if(isset($_POST['save'])){
            $update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";
            #echo "<br>$update_query";
            $db->query($update_query);
-           $update_query="UPDATE tbl_staff SET enddate = '$enddate'  WHERE staff_id = $key; ";
+           if($enddate==""){
+              $update_query="UPDATE tbl_staff SET enddate = NULL  WHERE staff_id = $key; ";
+           }
+           else{
+              $update_query="UPDATE tbl_staff SET enddate = '$enddate'  WHERE staff_id = $key; ";
+           }
            #echo "<br>$update_query";
            $db->query($update_query);
                           

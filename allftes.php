@@ -21,6 +21,7 @@ $termcount=0;
 $previousWP="";
 $currentDate=date("Y/m/d");
 $currentYear=date("Y");
+$group="";
 
 if(isset($_POST["submit"]))
 {
@@ -97,7 +98,7 @@ $output_str.="</tr>\n";
 
 $total=0;
 $grand_total=0;
-
+$prev_color="";
 while($row=mysqli_fetch_array($result))
 {
    $workpackage=$row[0];

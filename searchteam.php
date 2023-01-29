@@ -10,6 +10,7 @@ function get_team_fte($name,$currentYear)
    $group=$pieces[0];
    $team=$pieces[1];
    $query="SELECT * FROM `vw_team_forcast` where YEAR(enddate)=$currentYear and  team_name='$team' and group_name='$group' order by workpackage_name, enddate desc";
+   #echo $query;
    return $query;
 }
 
@@ -23,7 +24,7 @@ echo "<br><strong>Search</strong> By Team<br><br>";
 
 
 <?php
-
+$name="";
 if(isset($_POST['search']))
 {
    $name=$_POST['search'];
@@ -42,9 +43,10 @@ if(isset($_POST['search']))
    {
         $currentYear=$_GET['currentYear'];
    }
-
-   $query=get_team_fte($name,$currentYear);
-   $result=mysqli_query($conn,$query);
+   if($name!=""){
+       $query=get_team_fte($name,$currentYear);
+       $result=mysqli_query($conn,$query);
+   }
 
 
 
@@ -150,8 +152,8 @@ $output_str.="<td valign='top'><b>Start Date</b></td>\n";
 $output_str.="<td valign='top'><b>End Date</b></td>\n";
 $output_str.="</tr>\n";
 
-$total="";
-$grand_total="";
+$total=0;
+$grand_total=0;
 while($row=mysqli_fetch_array($result))
 {
    $staff_name=$row[1];
@@ -174,7 +176,7 @@ while($row=mysqli_fetch_array($result))
 
        #This is the first display for this term, calculate the tr background color ??
        $currentColor= ${'colour' .($termcount % 2)};
-       $total+=$percent/100;
+       #$total+=$percent/100;
        $output_str.="<tr bgcolor='$currentColor'>\n<td width=210 valign='top'>$workpackage</td>\n";
        $termcount++;
        $previousWP = $workpackage;

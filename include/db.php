@@ -21,7 +21,7 @@ function drop_down_year_with_group($conn)
 {
 #$currentYear=date("Y");
 
-$currentDate=strtotime($currentDate);
+#$currentDate=strtotime($currentDate);
 $output_str="";
 #$output_str.="<form id='yearform' method='post'>";
 $output_str.="<form id='yearform' method='post' action=allftes.php>";
@@ -32,12 +32,13 @@ $output_str.="<td>\n";
 $query="SELECT distinct group_name FROM tbl_groups";
 $group_result=mysqli_query($conn,$query);
 $check_box_str="";
+$currentYear="";
 
 
 
+$group="";
 if(isset($_POST["submit"]))
 {
-
      if(isset($_POST['group_name']))
      {
         $group= $_POST['group_name'];
@@ -50,6 +51,7 @@ if(isset($_POST["submit"]))
      #echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';
 
 }
+$checkbox_str="";
 while($row=mysqli_fetch_array($group_result))
 {
       $group_value=$row[0];
@@ -111,7 +113,7 @@ if(isset($_GET['currentYear']))
      $currentYear=$_GET['currentYear'];
 }
 
-$currentDate=strtotime($currentDate);
+#$currentDate=strtotime($currentDate);
 $output_str="";
 $output_str.="<form id='yearform' method='post'>";
 #$output_str="<table width = '432' style='border:1px solid black;'>\n";
@@ -213,6 +215,7 @@ function over_or_under_staff($conn,$currentYear,$group)
    $colour1 = '#FFFFFF';
    $termcount=0;
    $previousWP="";
+   $previousStaff="";
    if($currentYear=="")
    {
      $currentYear=date("Y");

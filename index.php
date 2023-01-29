@@ -20,6 +20,7 @@ function get_all_ftes($currentYear)
 #$colour1 = '#FFFFFF';
 $termcount=0;
 $previousWP="";
+$output_str="";
 $currentDate=date("Y/m/d");
 $currentYear=date("Y");
 #$currentYear=date("Y");

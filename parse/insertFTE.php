@@ -32,7 +32,7 @@ $lines = file($file_name);
 
 $count = 0;
 $startdate='2022-10-01';
-$enddate='2023-11-01';
+$enddate='2023-10-01';
 $timestamp = strtotime($startdate);
 $currentYear=date("Y", $timestamp);
 $error_str="";

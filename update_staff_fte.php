@@ -65,13 +65,20 @@ function get_staff_fte($name)
     	<hr>
 		<div class="clearfix"></div>
 		<?php
-   $name=$_POST['search'];
+   $name="";
+   if(isset($_POST['search'])){
+       $name=$_POST['search'];
+   }
    if($name=="")
    {
-     $name=$_GET['search'];
+     if(isset($_GET['search'])){
+         $name=$_GET['search'];
+     }
    }
-   $query=get_staff_fte($name);
-   $result=mysqli_query($conn,$query);
+   if($name!=""){
+       $query=get_staff_fte($name);
+       $result=mysqli_query($conn,$query);
+   }
 
 
 
