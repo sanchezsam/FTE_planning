@@ -6,10 +6,14 @@ require 'template/header.html';
 function get_wp_info($name,$currentYear)
 {
 
-   $query="SELECT staff_name as 'Staff Name',forcasted_amount as 'Forcasted Amount',
-           startdate as 'Start Date',enddate as 'End Date'
-            FROM `vw_fte_mapping` where workpackage_name='$name'
-                  and YEAR(enddate)='$currentYear' order by enddate desc";
+   $query="SELECT staff_name as 'Staff Name',
+                  forcasted_amount as 'Forcasted Amount',
+                  startdate as 'Start Date',
+                  enddate as 'End Date'
+            FROM `vw_fte_mapping`
+            WHERE workpackage_name='$name'
+                  and YEAR(enddate)='$currentYear'
+            ORDER BY enddate desc";
    #echo $query;
    return $query;
 }
@@ -89,8 +93,7 @@ if(isset($_POST['search']))
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
-   $query=get_wp_info($name,$currentYear);
-   $result=mysqli_query($conn,$query);
+   mysqli_data_seek($result,0);
    $output_str.=get_mysql_values_with_old($currentYear,$result,$columns);
    $output_str.="</table>\n";
    echo $output_str;

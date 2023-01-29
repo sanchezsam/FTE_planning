@@ -53,8 +53,9 @@ function refreshPage(passValue,search){
    $output_str="<table width = '900' style='border:1px solid black;'>\n";
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
-   $query=get_workpackage_managers($currentYear);
-   $result=mysqli_query($conn,$query);
+   mysqli_data_seek($result,0);
+   #$query=get_workpackage_managers($currentYear);
+   #$result=mysqli_query($conn,$query);
    #$output_str.=get_mysql_values_with_old($currentYear,$result,$columns);
    $output_str.=get_mysql_values($result);
    $output_str.="</table>\n";

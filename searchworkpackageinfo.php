@@ -5,7 +5,11 @@ require 'template/header.html';
 
 function get_wp_info($name,$currentYear)
 {
-   $query="SELECT task as Task,task_name as 'Task Name',task_manager as 'Task Manager',task_description as 'Task Description',
+   $query="SELECT wp_id,
+                  task as Task,
+                  task_name as 'Task Name',
+                  task_manager as 'Task Manager',
+                  task_description as 'Task Description',
            burden_rate as 'Burden Rate',startdate as 'Start Date',enddate as 'End Date'
            FROM tbl_wp_info where task='$name' and YEAR(enddate)='$currentYear' order by enddate desc";
    return $query;
@@ -88,8 +92,10 @@ if(isset($_POST['search']))
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
-   $query=get_wp_info($name,$currentYear);
-   $result=mysqli_query($conn,$query);
+   mysqli_data_seek($result,0);
+   $record_id=get_record_id('wp_id',$result);
+   echo $record_id;
+   mysqli_data_seek($result,0);
    $output_str.=get_mysql_values($result);
    $output_str.="</table>\n";
    echo $output_str;

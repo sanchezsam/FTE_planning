@@ -33,6 +33,11 @@ function get_mysql_columns($result)
    return array($return_str,$columns);
 }
 
+function get_record_id($rec_id,$result)
+{
+    $row = $result -> fetch_array(MYSQLI_ASSOC);
+    return $row[$rec_id];
+}
 
 function get_mysql_values($result)
 {
