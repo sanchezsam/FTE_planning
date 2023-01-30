@@ -10,7 +10,15 @@ function get_staff_details($name)
    $query="";
    if($name){
       $name=trim($name);
-      $query="SELECT * FROM vw_staff_mapping where staff_name LIKE '%$name%'";
+      $query="SELECT staff_id,
+                     staff_name as 'Name',
+                     znumber as 'Z#',
+                     team_name as 'Team',
+                     group_name as 'Group',
+                     fte_amount as 'Total FTEs',
+                     startdate as 'Start Date',
+                     enddate as 'End Date'
+              FROM vw_staff_mapping where staff_name LIKE '%$name%'";
       #echo $query;
    }
    return $query;
@@ -49,16 +57,49 @@ function get_staff_details($name)
   <script src="script_dir/jquery.min.js"></script>
   <script src="script_dir/script_add_staff.js"></script>
 
-
-
-
-
-
-
-
-    	<hr>
-		<div class="clearfix"></div>
-		<?php
+ <hr>
+<div class="clearfix"></div>
+<!--
+<script>
+$(document).ready(function(e) {
+	$('.selectpicker').selectpicker();
+	
+	$('body').on('mousemove',function(){
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+	
+	$("#addmore").on("click",function(){
+		$.ajax({
+			type:'POST',
+			url:'action-form_updateStaff.php',
+			data:{'action':'addDataRow'},
+			success: function(data){
+				$('#tb').append(data);
+				$('.selectpicker').selectpicker('refresh');
+				$('#save').removeAttr('hidden',true);
+			}
+		});
+	});
+	
+	$("#form").on("submit",function(){
+		$.ajax({
+			type:'POST',
+			url:'action-form_updateStaff.php',
+			data:$(this).serialize(),
+			success: function(data){
+				var a	=	data.split('|***|');
+				if(a[1]=="add"){
+					$('#mag').html(a[0]);
+					setTimeout(function(){location.reload();},1500);
+				}
+			}
+		});
+	});
+	
+});
+</script>
+-->
+<?php
    $name="";
    if(isset($_POST['search'])){
        $name=$_POST['search'];
@@ -76,58 +117,15 @@ function get_staff_details($name)
 
 
 
-		#$result	=	$db->query("SELECT workpackage_name,forcasted_amount FROM vw_fte_mapping WHERE staff_name='$name'");
-		#while($row  =   $result->fetch_assoc()){
-	#		$workpackage_name[$row['workpackage_name']]	=	$val['workpackage_name'];
-	#	}
-		?>
-		<script>
-		$(document).ready(function(e) {
-			$('.selectpicker').selectpicker();
-			
-			$('body').on('mousemove',function(){
-				$('[data-toggle="tooltip"]').tooltip();
-			});
-			
-			$("#addmore").on("click",function(){
-				$.ajax({
-					type:'POST',
-					url:'action-form_updateStaff.php',
-					data:{'action':'addDataRow'},
-					success: function(data){
-						$('#tb').append(data);
-						$('.selectpicker').selectpicker('refresh');
-						$('#save').removeAttr('hidden',true);
-					}
-				});
-			});
-			
-			$("#form").on("submit",function(){
-				$.ajax({
-					type:'POST',
-					url:'action-form_updateStaff.php',
-					data:$(this).serialize(),
-					success: function(data){
-						var a	=	data.split('|***|');
-						if(a[1]=="add"){
-							$('#mag').html(a[0]);
-							setTimeout(function(){location.reload();},1500);
-						}
-					}
-				});
-			});
-			
-		});
-		</script>
+?>
 
 
 
-
-		<div id="msg"></div>
-		<form id="form" method="post" ACTION="update_add_staff.php?search=<?php echo $name?>">
-			<input type="hidden" name="action" value="saveAddMore">
-			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
-			<input type="hidden" name="search" value="<?php echo $name;?>">
+<div id="msg"></div>
+<form id="form" method="post" ACTION="update_add_staff.php?search=<?php echo $name?>">
+	<input type="hidden" name="action" value="saveAddMore">
+	<input type="hidden" name="staff_name" value="<?php echo $name;?>">
+	<input type="hidden" name="search" value="<?php echo $name;?>">
 <?php
 if($name!="")
 {
@@ -142,16 +140,10 @@ if($name!="")
 
    $output_str="<table><tr><td rowspan='4'>$name information</td></tr></table>";
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
-   $output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   $output_str.="<td width='10' valign='top'><b>Staff ID</b></td>\n";
-   $output_str.="<td width='100' valign='top'><b>Name</b></td>\n";
-   $output_str.="<td width='10' valign='top'><b>Znumber</b></td>\n";
-   $output_str.="<td width='100' valign='top'><b>Team-Group</b></td>\n";
-   $output_str.="<td width='4' valign='top'><b>Forcasted Amount</b></td>\n";
-   #$output_str.="<td valign='top'><b>Group</b></td>\n";
-   $output_str.="<td valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td valign='top'><b>End Date</b></td>\n";
-   $output_str.="</tr><tbody id='tb'>\n";
+   list($column_str,$columns)=get_mysql_columns($result);
+   $output_str.=$column_str;
+   mysqli_data_seek($result,0);
+   #$output_str.="<tbody id='tb'>\n";
 
   $previousId=0;
    while($row=mysqli_fetch_array($result))
@@ -161,9 +153,9 @@ if($name!="")
       $znumber=$row[2];
       $team=$row[3];
       $group=$row[4];
-      $startdate=$row[5];
-      $enddate=$row[6];
-      $forcasted=$row[7];
+      $forcasted=$row[5];
+      $startdate=$row[6];
+      $enddate=$row[7];
       $pass="T";
       if(($previousId != $staff_id))
       {
@@ -179,12 +171,11 @@ if($name!="")
           #$output_str.="<td width=210 valign='top'><input name='team_txt[$staff_id]' type='text' value=$team></td>\n";
           #$output_str.="<td width=210 valign='top'><input name='group_txt[$staff_id]' type='text' value=$group></td>\n";
           #$output_str.="<td width=210 valign='top'><input name='startdate_txt[$staff_id]' type='text' value=$startdate></td>\n";
-          $output_str.="<td width=100 valign='top'>$staff_name</td>\n";
+          $output_str.="<td width=200 valign='top'>$staff_name</td>\n";
           $output_str.="<td width=10 valign='top'>$znumber</td>\n";
-          $output_str.="<td width=100 valign='top'>$team $group</td>\n";
+          $output_str.="<td width=100 valign='top'>$team</td>\n";
+          $output_str.="<td width=100 valign='top'>$group</td>\n";
           $output_str.="<td width=4 valign='top'><input name='forcasted_txt[$staff_id]' type='text' value=$forcasted></td>\n";
-          #$output_str.="<td valign='top'>$team</td>\n";
-          #$output_str.="<td valign='top'>$group</td>\n";
           $output_str.="<td width=100 valign='top'>$startdate</td>\n";
           $output_str.="<td width=100 valign='top'><input name='enddate_txt[$staff_id]' type='text' value=$enddate></td>\n";
 
@@ -192,16 +183,34 @@ if($name!="")
       $output_str.="</tr>\n";
    }
    
-      $output_str.="</tbody><tr>";
+      #$output_str.="</tbody><tr>";
+      $output_str.="</table>\n";
+      echo $output_str;
+}
+
+      $output_str="<table width = '900' style='border:1px solid black;'>\n";
+      $output_str.="<tbody id='tb'>\n";
+      $output_str.="<tr bgcolor ='#C1C1E8'>";
+      $output_str.="<td>&nbsp;</td>";
+      $output_str.="<td width='125'>Name</td>";
+      $output_str.="<td>Z Number</td>";
+      $output_str.="<td>Team-Group</td>";
+      $output_str.="<td width='4'>FTE</td>";
+      $output_str.="<td>Start Date</td>";
+      $output_str.="<td>&nbsp;</td>";
+      $output_str.="</tr>";
+      $output_str.="</tbody>";
+      $output_str.="<tr>";
       $output_str.="<td colspan='6'>";
       $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
       $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
       $output_str.="</td>";
       $output_str.="</tr>";
-   $output_str.="</table>\n";
-   echo $output_str;
+      $output_str.="</tbody>";
+      $output_str.="</table>\n";
 
-}
+      echo $output_str;
+###}
 
    ?>
                 </form>

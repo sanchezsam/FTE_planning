@@ -35,6 +35,7 @@ function get_mysql_columns($result)
 
 function get_record_id($rec_id,$result)
 {
+    #check if results has something
     $row = $result -> fetch_array(MYSQLI_ASSOC);
     return $row[$rec_id];
 }

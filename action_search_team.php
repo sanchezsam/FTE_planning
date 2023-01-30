@@ -9,10 +9,10 @@
     $stmt->execute(['team' => '%' . $inpText . '%']);
     $result = $stmt->fetchAll();
 
-#$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$sql;
-#fwrite($myfile, $sql);
-#fclose($myfile);
+$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+$txt=$sql;
+fwrite($myfile, $sql);
+fclose($myfile);
 
     if ($result) {
       foreach ($result as $row) {

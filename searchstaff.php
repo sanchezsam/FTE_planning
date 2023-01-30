@@ -29,6 +29,7 @@ function get_staff_fte($name,$currentYear)
                  and vw_staff_mapping.group_name='$group'
           ORDER BY vw_fte_mapping.enddate desc";
    }
+   #echo $query;
    return $query;
 
 
@@ -80,7 +81,7 @@ function refreshPage(passValue,search){
     </div>
   </div>
   <script src="script_dir/jquery.min.js"></script>
-  <script src="script_dir/script.js"></script>
+  <script src="script_dir/script_search_staff.js"></script>
 
 
 <?php
