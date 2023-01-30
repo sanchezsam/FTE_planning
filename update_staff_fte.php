@@ -156,6 +156,8 @@ if($name!="")
    $output_str.="</tr><tbody id='tb'>\n";
 
   $total=0;
+   $staff_enddate="";
+   $enddate="";
    while($row=mysqli_fetch_array($result))
    {
       $fte_id=$row[0];
@@ -166,8 +168,8 @@ if($name!="")
       $staff_id=$row[5];
       #echo "<br>SELECT enddate FROM `tbl_staff` where staff_id=$staff_id";
       $result_staff_id = $db->query("SELECT enddate FROM `tbl_staff` where staff_id=$staff_id");
-      while($val  =   $result_staff_id->fetch_assoc()){
-                     $staff_enddate = $val['enddate'];
+      while($val  =  $result_staff_id->fetch_assoc()){
+           $staff_enddate = $val['enddate'];
       }
       $pass="T";
       if(($previousName != $wp_name))
@@ -212,7 +214,8 @@ if($name!="")
    }
    
       $output_str.="</tbody><tr>";
-      if($staff_enddate=="")
+      #if($staff_enddate=="")
+      if($currentDate<=strtotime($enddate) or $staff_enddate=="")
       {
       $output_str.="<td colspan='6'>";
       $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
