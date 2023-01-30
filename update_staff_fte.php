@@ -52,8 +52,8 @@ function get_staff_fte($name)
       </div>
     </div>
   </div>
-  <script src="jquery.min.js"></script>
-  <script src="script_update_fte.js"></script>
+  <script src="script_dir/jquery.min.js"></script>
+  <script src="script_dir/script_update_fte.js"></script>
 
 
 

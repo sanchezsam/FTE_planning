@@ -5,11 +5,20 @@ require 'template/header.html';
 
 function get_team_fte($name,$currentYear)
 {
-   echo $name;
-   $pieces = explode("->", $name);
-   $group=$pieces[0];
-   $team=$pieces[1];
-   $query="SELECT * FROM `vw_team_forcast` where YEAR(enddate)=$currentYear and  team_name='$team' and group_name='$group' order by workpackage_name, enddate desc";
+   #echo $name;
+   $query="select ''";
+   if(str_contains($name,'->'))
+   {
+      $pieces = explode("->", $name);
+      $group=$pieces[0];
+      $team=$pieces[1];
+      $query="SELECT * 
+              FROM `vw_team_forcast`
+              WHERE YEAR(enddate)=$currentYear
+                    and  team_name='$team' 
+                    and group_name='$group'
+              ORDER BY workpackage_name, enddate desc";
+   }
    #echo $query;
    return $query;
 }
@@ -110,8 +119,8 @@ function refreshPage(passValue,search){
       </div>
     </div>
   </div>
-  <script src="jquery.min.js"></script>
-  <script src="script_team.js"></script>
+  <script src="script_dir/jquery.min.js"></script>
+  <script src="script_dir/script_team.js"></script>
 
 
 

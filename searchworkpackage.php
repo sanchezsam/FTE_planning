@@ -71,8 +71,8 @@ function refreshPage(passValue,search){
       </div>
     </div>
   </div>
-  <script src="jquery.min.js"></script>
-  <script src="script_workpackage.js"></script>
+  <script src="script_dir/jquery.min.js"></script>
+  <script src="script_dir/script_workpackage.js"></script>
 
 
 <?php

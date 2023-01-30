@@ -41,7 +41,7 @@ function get_workpackage_managers($name)
     </div>
   </div>
   <script src="script_dir/jquery.min.js"></script>
-  <script src="script_dir/script_workpackage.js"></script>
+  <script src="script_dir/script_workpackage_info.js"></script>
 
 
 
@@ -89,7 +89,7 @@ function get_workpackage_managers($name)
 			$("#addmore").on("click",function(){
 				$.ajax({
 					type:'POST',
-					url:'action-form_updateWP.php',
+					url:'action-form_update_workpackage.php',
 					data:{'action':'addDataRow'},
 					success: function(data){
 						$('#tb').append(data);

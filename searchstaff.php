@@ -7,13 +7,17 @@ function get_staff_fte($name,$currentYear)
 {
    $startYear=$currentYear-1;
    $endYear=$currentYear+1;
-   $pieces = explode("->", $name);
-   $name=$pieces[0];
-   $team=$pieces[1];
-   $group=$pieces[2];
+   $query="select ''";
+   if(str_contains($name,'->'))
+   {
+      $pieces = explode("->", $name);
+      $name=$pieces[0];
+      $team=$pieces[1];
+      $group=$pieces[2];
+   
 
-   #WITH team and group
-   $query="SELECT vw_fte_mapping.workpackage_name as 'Workpackage',
+      #WITH team and group
+      $query="SELECT vw_fte_mapping.workpackage_name as 'Workpackage',
                   vw_fte_mapping.forcasted_amount as 'Forcasted Amount',
                   vw_fte_mapping.startdate as 'Start Date',
                   vw_fte_mapping.enddate as 'End Date'
@@ -24,6 +28,7 @@ function get_staff_fte($name,$currentYear)
                  and vw_staff_mapping.team_name='$team' 
                  and vw_staff_mapping.group_name='$group'
           ORDER BY vw_fte_mapping.enddate desc";
+   }
    return $query;
 
 
@@ -74,8 +79,8 @@ function refreshPage(passValue,search){
       </div>
     </div>
   </div>
-  <script src="jquery.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script_dir/jquery.min.js"></script>
+  <script src="script_dir/script.js"></script>
 
 
 <?php

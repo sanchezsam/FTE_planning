@@ -2,8 +2,22 @@
   require_once 'config.php';
 
   if (isset($_POST['query'])) {
+    
+   $currentYear=date("Y");
+
+
+   if(isset($_POST['year']))
+   {
+       $currentYear=$_POST['year'];
+   }
+   if(isset($_GET['currentYear']))
+   {
+        $currentYear=$_GET['currentYear'];
+   }
+
     $inpText = $_POST['query'];
     $sql = 'SELECT staff_name,team_name,group_name FROM vw_staff_mapping WHERE staff_name LIKE :staff order by staff_name asc';
+    #$sql = "SELECT staff_name,team_name,group_name FROM vw_staff_mapping WHERE year(enddate)!='$currentYear' and staff_name LIKE :staff order by staff_name asc";
     #$sql="
     #        SELECT staff_id,
     #         IF(
@@ -14,10 +28,10 @@
     #         FROM vw_staff_mapping  WHERE staff_name like '%$inpText%'
     #        ";
 
-#$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$sql;
-#fwrite($myfile, $sql);
-#fclose($myfile);
+$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+fwrite($myfile, $currentYear);
+fwrite($myfile, "year");
+fclose($myfile);
 
     $stmt = $conn->prepare($sql);
     $stmt->execute(['staff' => '%' . $inpText . '%']);
