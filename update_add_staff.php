@@ -224,16 +224,17 @@ if(isset($_POST['save'])){
         #print_r($_POST);
         if (is_array($staff_name) || is_object($staff_name))
         {
+            print_r($staff_name);
             foreach($staff_name as $key=>$staff_id){
-                    $staff_name=$staff_name[$key];
+                    $staff=$staff_name[$key];
                     $znum=$znumber[$key];
                     $team_id=$team_names[$key];
                     $start=$startdate[$key];
                     $forcasted_amount=$forcasted[$key];
                     #echo "<input type='hidden' name='search' value='$name'>";
-                    $insert_query="INSERT INTO tbl_staff (staff_id,znumber,staff_name,team_id,startdate,enddate,fte_amount) VALUES (NULL,'$znum','$staff_name',$team_id, '$start',NULL,$forcasted_amount);";
+                    $insert_query="INSERT INTO tbl_staff (staff_id,znumber,staff_name,team_id,startdate,enddate,fte_amount) VALUES (NULL,'$znum','$staff',$team_id, '$start',NULL,$forcasted_amount);";
 #$myfile     = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$i    nsert_query;
+#$txt=$insert_query;
 #fwrite(    $myfile, $txt);
 #fclose(    $myfile);
                     echo "<br>$insert_query";
@@ -243,23 +244,25 @@ if(isset($_POST['save'])){
         }
         #Refresh
         echo "<meta http-equiv='refresh' content='0'>";
-        foreach($forcasted_txt as $key=>$forcasted)
-        {
-        
-           $enddate=$enddate_txt[$key];
-           $update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";
-           #echo "<br>$update_query";
-           $db->query($update_query);
-           if($enddate==""){
-              $update_query="UPDATE tbl_staff SET enddate = NULL  WHERE staff_id = $key; ";
-           }
-           else{
-              $update_query="UPDATE tbl_staff SET enddate = '$enddate'  WHERE staff_id = $key; ";
-           }
-           #echo "<br>$update_query";
-           $db->query($update_query);
-                          
-        }
+        if($forcast_txt){
+            foreach($forcasted_txt as $key=>$forcasted)
+            {
+            
+               $enddate=$enddate_txt[$key];
+               $update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";
+               #echo "<br>$update_query";
+               $db->query($update_query);
+               if($enddate==""){
+                  $update_query="UPDATE tbl_staff SET enddate = NULL  WHERE staff_id = $key; ";
+               }
+               else{
+                  $update_query="UPDATE tbl_staff SET enddate = '$enddate'  WHERE staff_id = $key; ";
+               }
+               #echo "<br>$update_query";
+               $db->query($update_query);
+                              
+            }
+       }
 }
 
 
