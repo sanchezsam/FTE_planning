@@ -7,19 +7,25 @@ require 'template/header.html';
 
 function get_wp_totals($wp_id)
 {
-    $query="SELECT round(sum(tbl_wp_staff.pct_fte),2) as 'Request FTE',
+    $query="SELECT tbl_info.burden_rate as 'Burden Rate',
+                   round(sum(tbl_wp_staff.pct_fte),2) as 'Request FTE',
                    round(sum(tbl_wp_staff.funded_percent),2) as 'Funded FTE',
-                  CONCAT('$',FORMAT(tbl_services.service_cost,0)) as 'Serivce Costs',
-                  CONCAT('$',FORMAT(tbl_materials.materials_cost,0)) as 'Hardware Inventory',
-                  CONCAT('$',FORMAT(tbl_materials.materials_cost,0)) as 'Hardware Costs',
-                  CONCAT('$', FORMAT(sum(tbl_wp_staff.total_cost) + tbl_services.service_cost+ tbl_materials.materials_cost,0)) as 'FY ALLOCATION'
+                   CONCAT('$',FORMAT(tbl_services.service_cost*tbl_info.burden_rate,0)) as 'Serivce Costs',
+                   CONCAT('$',FORMAT(tbl_materials.materials_cost,0)) as 'Hardware Inventory',
+                   CONCAT('$',FORMAT(tbl_materials.materials_cost*tbl_info.burden_rate,0)) as 'Hardware Costs',
+                   CONCAT('$', FORMAT(sum(tbl_wp_staff.total_cost) + 
+                                        (tbl_services.service_cost*tbl_info.burden_rate)+
+                                        (tbl_materials.materials_cost*tbl_info.burden_rate),0)) as 'FY ALLOCTIONS'
             FROM tbl_wp_staff, 
                  (SELECT sum(tbl_wp_services.total_cost) as 'service_cost'
                  FROM `tbl_wp_services`
                  WHERE tbl_wp_services.wp_id=$wp_id) as tbl_services,
                  (SELECT sum(tbl_wp_materials.total_cost)*1000 as 'materials_cost'
                  FROM `tbl_wp_materials`
-                 WHERE tbl_wp_materials.wp_id=$wp_id) as tbl_materials
+                 WHERE tbl_wp_materials.wp_id=$wp_id) as tbl_materials,
+                 (SELECT burden_rate 
+                 FROM tbl_wp_info
+                 WHERE wp_id=$wp_id) as tbl_info
            WHERE tbl_wp_staff.wp_id=$wp_id;";
    return $query;
 }
@@ -27,7 +33,7 @@ function get_wp_totals($wp_id)
 function get_totals_for_staff($wp_id)
 {
     $query="SELECT round(sum(pct_fte),2) as 'pct_fe',
-                   CONCAT('$', FORMAT(sum(cost), 2)) as 'Cost',
+                   CONCAT('$', FORMAT(sum(cost), 0)) as 'Cost',
                    round(sum(funded_percent),2) as 'Funded %',
                    CONCAT('$', FORMAT(sum(total_cost), 2)) as 'Totals Cost'
             FROM tbl_wp_staff
@@ -38,20 +44,24 @@ function get_totals_for_staff($wp_id)
 
 function get_totals_for_services($wp_id)
 {
-    $query="SELECT round(sum(pct_fous),2) as 'Percent of Fous',
-                   CONCAT('$', FORMAT(sum(cost), 2)) as 'Cost',
-                   CONCAT('$', FORMAT(sum(total_cost),2)) as 'Total Cost'
-            FROM tbl_wp_services
+    $query="SELECT CONCAT('$', FORMAT(sum(cost), 0)) as 'Cost',
+                   CONCAT('$', FORMAT(sum(total_cost)*tbl_info.burden_rate,2)) as 'Total Cost'
+            FROM tbl_wp_services,
+            (SELECT burden_rate 
+                 FROM tbl_wp_info
+                 WHERE wp_id=$wp_id) as tbl_info
             WHERE wp_id=$wp_id";
     return $query;
 }
 
 function get_totals_for_materials($wp_id)
 {
-    $query="SELECT round(sum(pct_fous),2) as 'Percent of Fous',
-                   CONCAT('$', FORMAT(sum(replacement_cost), 2)) as 'Replacement Cost',
-                   CONCAT('$', FORMAT(sum(total_cost), 2)) as 'Total Cost'
-            FROM tbl_wp_materials
+    $query="SELECT CONCAT('$', FORMAT(sum(replacement_cost), 0)) as 'Replacement Cost',
+                   CONCAT('$', FORMAT(sum(total_cost)*tbl_info.burden_rate, 0)) as 'Total Cost'
+            FROM tbl_wp_materials,
+            (SELECT burden_rate 
+                 FROM tbl_wp_info
+                 WHERE wp_id=$wp_id) as tbl_info
             WHERE wp_id=$wp_id";
     return $query;
 
@@ -84,10 +94,10 @@ function get_wp_staff($wp_id)
                    CONCAT('$', FORMAT(salary_max, 2)) as 'Salary Max',
                    group_name as 'Group Name',
                    org_code as 'ORG CODE',
-                   pct_fte as 'pct_fe',
+                   CONCAT(FORMAT(pct_fte*100,0),'%') as 'pct_fe',
                    CONCAT('$', FORMAT(cost, 2)) as 'Cost',
                    funded as 'Funded',
-                   funded_percent as 'Funded %',
+                   CONCAT(FORMAT(funded_percent*100,0),'%') as 'Funded %',
                    CONCAT('$', FORMAT(total_cost, 2)) as 'Totals Cost',
                    notes 'Notes'
             FROM tbl_wp_staff
@@ -103,7 +113,7 @@ function get_wp_materials($wp_id)
                    owner as 'Owner',
                    under_maintenance as 'Under Maint',
                    maintenance_po as 'Maint PO',
-             	   pct_fous as 'Percent of Fous',
+                   CONCAT(FORMAT(pct_fous*100,0),'%') as 'Percent of Fous',
         	   risk as 'Risk',
       	           replace_fund as 'Replace Fund',
   	           CONCAT('$', FORMAT(replacement_cost, 2)) as 'Replacement Cost',
@@ -121,7 +131,7 @@ function get_wp_services($wp_id)
                    enddate as 'End Date',
                    owner as 'Owner',
                    vendor as 'Vendor',
-                   pct_fous as 'Percent of Fous',
+                   CONCAT(FORMAT(pct_fous*100,0),'%') as 'Percent of Fous',
                    risk as 'Risk',
                    funded as 'Funded',
                    CONCAT('$', FORMAT(cost, 2)) as 'Cost',
