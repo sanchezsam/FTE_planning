@@ -1,0 +1,10 @@
+http://localhost:8888/FTE_planning/parse/Staff/parsestaff.php?wp=files
+Replace , in name with *
+
+Edit replace in excel
+
+
+
+cat job_class.csv | sort | uniq  > job_unique.csv
+
+

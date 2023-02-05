@@ -52,34 +52,23 @@ foreach($files as $file)
 
     if (str_starts_with($file, '1_')) {
       $insert_values="";
-      $table_name="tbl_wp_info";
-      $insert_descr="task,task_name,task_manager,task_description,burden_rate,startdate,enddate";
+      $table_name="tbl_job_class";
+      $insert_descr="title,pay_range,min_salary,max_salary,startdate,enddate";
     }
     elseif(str_starts_with($file, '2_')) {
-      $table_name="tbl_wp_activities";
-      $insert_values="'$wp_id',";
-      $insert_descr="wp_id,activity,startdate,enddate,members,description";
+      $table_name="tbl_staff_info";
+      $insert_values="";
+      $insert_descr="znumber,name,labor_pool,job_title,group_code,group_name,startdate,enddate";
     } 
     elseif(str_starts_with($file, '3_')) {
-      $table_name="tbl_wp_materials";
-      $insert_values="'$wp_id',";
-      $insert_descr="wp_id,property_number,description,service_entry,owner,under_maintenance,maintenance_po,pct_fous,risk,replace_fund,replacement_cost,total_cost,notes";
-    } 
-    elseif(str_starts_with($file, '4_')) {
-      $table_name="tbl_wp_services";
-      $insert_values="'$wp_id',";
-      $insert_descr="wp_id,description,startdate,enddate,owner,vendor,pct_fous,risk,funded,cost,total_cost,notes";
-    } 
-    elseif(str_starts_with($file, '5_')) {
-      $table_name="tbl_wp_staff";
+      $table_name="tbl_job_family";
       $insert_values="";
-      $insert_values="'$wp_id',";
-      $insert_descr="wp_id,znumber,name,startdate,enddate,title,salary_min,salary_max,group_name,org_code,pct_fte,cost,funded,funded_percent,total_cost,notes";
+      $insert_descr="labor_pool,job_title,job_class_desc,job_family_desc,job_function_desc,job_category_desc,startdate,	enddate ";
     } 
-    else{
-      $insert_values="'$wp_id',";
-      $insert_descr="wp_id,";
-    }
+    #else{
+    #  $insert_values="'$wp_id',";
+    #  $insert_descr="wp_id,";
+    #}
 
 
 
@@ -104,24 +93,28 @@ foreach($files as $file)
          else
          {
            $item = str_replace("'", "\'", $item);
+           
+          if(strpos($item, "*") !== false )
+          {
+              $myArray = explode('*', $item); 
+              $item="$myArray[1] $myArray[0]";
+          }
            $insert_values.="'$item',";
          }
       }
       if($count>0)
       {
           $file=str_replace(".csv","",$file);
-          #print "INSERT INTO tbl_$file ($insert_descr) values ($insert_values)<br>";
           $insert_values=substr($insert_values, 0, -1);
-          #$table_name=substr($file, 2);
           print "INSERT INTO $table_name ($insert_descr) values ($insert_values);<br><br>";
-          $insert_values="'$wp_id',";
-          if (str_starts_with($file, '1_')) {
-              echo "Get wp id\n<br>";
-              $task=$row[0];
-              $startdate=$row[5];
-              $enddate=$row[6];
-              $wp_id=get_wp_id($conn,$task,$startdate,$enddate);
-          }
+          $insert_values="";
+          #if (str_starts_with($file, '1_')) {
+          #    echo "Get wp id\n<br>";
+          #    $task=$row[0];
+          #    $startdate=$row[5];
+          #    $enddate=$row[6];
+          #    $wp_id=get_wp_id($conn,$task,$startdate,$enddate);
+          #}
       }
       $count++;
     

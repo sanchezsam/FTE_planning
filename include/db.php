@@ -6,7 +6,10 @@ $dbname = 'FTE_Planning';
 $colour0 = '#E3E3E3';
 $colour1 = '#FFFFFF';
 $old_color='#787878';
+$header_color='#ADD8E6';
 $change_font_color="white";
+$column_color='#C1C1E8';
+$totals_color='#C1C1E8';
 $endFYIDate="9-30";
 #$colour0 = 'blue';
 #$colour1 = 'yellow';
@@ -15,11 +18,22 @@ $endFYIDate="9-30";
 
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());
 
+function display_table_header($header_str)
+{  
+   global $header_color;
+   #$output_str="<table width = '900' style='border:1px solid black;'>\n";
+   $output_str="\n<tr bgcolor='$header_color'>\n<td colspan='100%'><b>$header_str</b></td>\n</tr>\n";
+   #$output_str.="</table>";
+   return $output_str;
+}
+
+
 
 function get_mysql_columns($result)
 {
+   global $column_color;
    $return_str="";
-   $return_str.="<tr bgcolor ='#C1C1E8'>\n";
+   $return_str.="<tr bgcolor ='$column_color'>\n";
    $values = $result->fetch_all(MYSQLI_ASSOC);
    $columns = array();
 
@@ -56,6 +70,45 @@ function get_mysql_values($result)
       $termcount++;
       $return_str.="</tr>\n";
    }
+   return $return_str;
+}
+
+function get_mysql_totals_values($result,$columns,$columns_totals)
+{
+   global $totals_color;
+   $return_str="";
+   $return_str.="<tr bgcolor='$totals_color'>";
+   #$return_str.="<tr bgcolor='yellow'>";
+   $found="F";
+   $row=$row = mysqli_fetch_array($result);
+   for($i=0;$i<count($columns);$i++)
+   {
+        for($j=0;$j<count($columns_totals);$j++)
+        {
+            if($columns[$i]==$columns_totals[$j])
+            {
+              $found="T";
+              $column_num=$j;
+            }
+        }
+        if($found=="T")
+        {
+            $return_str.="<td><b>$row[$column_num]</b></td>\n";
+            $found="F";
+        }
+        else
+        {
+            if($i==0)
+            {
+              $return_str.="<td><b>Totals:</b></td>\n";
+            }
+            else
+            {
+              $return_str.="<td>&nbsp;</td>\n";
+            }
+        }
+   }
+   $return_str.="</tr>\n";
    return $return_str;
 }
 
