@@ -59,32 +59,6 @@ if(isset($_POST['search']))
 
 
 
-   #$currentDate=strtotime($currentDate);
-   #$output_str.="<form id='yearform' method='post'>";
-   #$output_str="<table style='border:1px solid black;'>\n";
-   #$output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   #$output_str.="<td valign='top'><b>View by Year</b></td>\n";
-   #$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
-   #$year_result=mysqli_query($conn,$query);
-   #$output_str.="<td>";
-   #$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
-   #$output_str.="<option value=''>Select</option>";
-   #while($row=mysqli_fetch_array($year_result))
-   #{
-   #   if($currentYear==$row[0])
-   #   {
-   #       $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
-   #   }
-   #   else
-   #   {
-   #       $output_str.="<option value=$row[0]>$row[0]</option>";
-   #   }
-   #}
-   #$output_str.="</select>";
-   #$output_str.="</td>";
-   #$output_str.="</tr>\n";
-   #$output_str.="</table>\n";
-   #$output_str.="</form>";
    $output_str=drop_down_year($conn);
    echo $output_str;
 ?>
@@ -94,45 +68,13 @@ function refreshPage(passValue,search){
  window.location="searchteam.php?currentYear="+passValue
 }
 </script>
-
-
-
-<div class="container">
-    <div class="row mt-4">
-      <div class="col-md-8 mx-auto bg-light rounded p-4">
-        <hr class="my-1">
-        <h5 class="text-center text-secondary">Enter team name in the search box</h5>
-        <form action="" method="post" class="p-3">
-          <div class="input-group">
-            <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
-            <div class="input-group-append">
-              <input type="submit" name="submit" value="Search" class="btn btn-info btn-lg rounded-0">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-5" style="position: relative;margin-top: -72px;margin-left: 174px;">
-
-        <div class="list-group" id="show-list">
-          <!-- Here autocomplete list will be display -->
-        </div>
-      </div>
-    </div>
-  </div>
+  <?php
+    $search_str=display_search_box("Enter Team name in the search box");
+    echo $search_str;
+  ?>
   <script src="script_dir/script_team.js"></script>
 
-
-
-
 <?php
-
-
-
-
-
-
-
-
 
 if(isset($_POST['search']))
 {

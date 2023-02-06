@@ -32,73 +32,16 @@ function get_staff_details($name)
 
 <body>
 
-<div class="container">
-    <div class="row mt-4">
-      <div class="col-md-8 mx-auto bg-light rounded p-4">
-        <hr class="my-1">
-        <h5 class="text-center text-secondary">Enter staff name in the search box</h5>
-        <form action="" method="post" class="p-3">
-          <div class="input-group">
-            <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
-            <div class="input-group-append">
-              <input type="submit" name="submit" value="Search" class="btn btn-info btn-lg rounded-0">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-5" style="position: relative;margin-top: -72px;margin-left: 174px;">
+  <?php
+    $search_str=display_search_box("Enter Staff Name in the search box");
+    echo $search_str;
+  ?>
 
-        <div class="list-group" id="show-list">
-          <!-- Here autocomplete list will be display -->
-        </div>
-      </div>
-    </div>
-  </div>
   <script src="script_dir/jquery.min.js"></script>
   <script src="script_dir/script_add_staff.js"></script>
 
  <hr>
 <div class="clearfix"></div>
-<!--
-<script>
-$(document).ready(function(e) {
-	$('.selectpicker').selectpicker();
-	
-	$('body').on('mousemove',function(){
-		$('[data-toggle="tooltip"]').tooltip();
-	});
-	
-	$("#addmore").on("click",function(){
-		$.ajax({
-			type:'POST',
-			url:'action-form_updateStaff.php',
-			data:{'action':'addDataRow'},
-			success: function(data){
-				$('#tb').append(data);
-				$('.selectpicker').selectpicker('refresh');
-				$('#save').removeAttr('hidden',true);
-			}
-		});
-	});
-	
-	$("#form").on("submit",function(){
-		$.ajax({
-			type:'POST',
-			url:'action-form_updateStaff.php',
-			data:$(this).serialize(),
-			success: function(data){
-				var a	=	data.split('|***|');
-				if(a[1]=="add"){
-					$('#mag').html(a[0]);
-					setTimeout(function(){location.reload();},1500);
-				}
-			}
-		});
-	});
-	
-});
-</script>
--->
 <?php
    $name="";
    if(isset($_POST['search'])){
@@ -244,13 +187,13 @@ if(isset($_POST['save'])){
         }
         #Refresh
         echo "<meta http-equiv='refresh' content='0'>";
-        if($forcast_txt){
+        if($forcasted_txt){
             foreach($forcasted_txt as $key=>$forcasted)
             {
             
                $enddate=$enddate_txt[$key];
                $update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";
-               #echo "<br>$update_query";
+               echo "<br>$update_query";
                $db->query($update_query);
                if($enddate==""){
                   $update_query="UPDATE tbl_staff SET enddate = NULL  WHERE staff_id = $key; ";

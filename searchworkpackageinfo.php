@@ -187,29 +187,12 @@ function refreshPage(passValue,search){
 }
 </script>
 
+  <?php
+    $search_str=display_search_box("Enter workpackage in the search box");
+    echo $search_str;
+  ?>
 
-<div class="container">
-    <div class="row mt-4">
-      <div class="col-md-8 mx-auto bg-light rounded p-4">
-        <hr class="my-1">
-        <h5 class="text-center text-secondary">Enter workpackage in the search box</h5>
-        <form action="" method="post" class="p-3">
-          <div class="input-group">
-            <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
-            <div align='right' class="input-group-append">
-              <input type="submit" name="submit" value="Search" class="btn btn-info btn-lg rounded-0">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-5" style="position: relative;margin-top: -72px;margin-left: 174px;">
 
-        <div class="list-group" id="show-list">
-          <!-- Here autocomplete list will be display -->
-        </div>
-      </div>
-    </div>
-  </div>
   <!--<script src="script_dir/jquery.min.js"></script>-->
   <script src="script_dir/script_workpackage_info.js"></script>
 

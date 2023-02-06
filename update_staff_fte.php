@@ -30,38 +30,12 @@ function get_staff_fte($name)
 
 <body>
 
-<div class="container">
-    <div class="row mt-4">
-      <div class="col-md-8 mx-auto bg-light rounded p-4">
-        <hr class="my-1">
-        <h5 class="text-center text-secondary">Enter staff name in the search box</h5>
-        <form action="" method="post" class="p-3">
-          <div class="input-group">
-            <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
-            <div class="input-group-append">
-              <input type="submit" name="submit" value="Search" class="btn btn-info btn-lg rounded-0">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-5" style="position: relative;margin-top: -72px;margin-left: 174px;">
-
-        <div class="list-group" id="show-list">
-          <!-- Here autocomplete list will be display -->
-        </div>
-      </div>
-    </div>
-  </div>
+  <?php
+    $search_str=display_search_box("Enter Staff Name in the search box");
+    echo $search_str;
+  ?>
   <script src="script_dir/jquery.min.js"></script>
   <script src="script_dir/script_update_fte.js"></script>
-
-
-
-
-
-
-
-
     	<hr>
 		<div class="clearfix"></div>
 		<?php

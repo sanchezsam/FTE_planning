@@ -70,5 +70,5 @@ echo $drop_down_str;
 
 
 <?php
-require 'template/footer.html';
+#require 'template/footer.html';
 ?>

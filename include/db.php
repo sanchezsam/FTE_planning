@@ -9,7 +9,7 @@ $old_color='#787878';
 $header_color='#ADD8E6';
 $change_font_color="white";
 $column_color='#C1C1E8';
-$totals_color='#C1C1E8';
+$totals_color='#ff0000';
 $endFYIDate="9-30";
 #$colour0 = 'blue';
 #$colour1 = 'yellow';
@@ -78,7 +78,6 @@ function get_mysql_totals_values($result,$columns,$columns_totals)
    global $totals_color;
    $return_str="";
    $return_str.="<tr bgcolor='$totals_color'>";
-   #$return_str.="<tr bgcolor='yellow'>";
    $found="F";
    $row=$row = mysqli_fetch_array($result);
    for($i=0;$i<count($columns);$i++)
@@ -155,7 +154,6 @@ $output_str.="<table style='border:1px solid black;'>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 
 $output_str.="<td align='left' class='btn-group pull-left'>";
-#$output_str.="<button type='button' class='btn btn-primary btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
 $output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
 $output_str.="<ul class='dropdown-menu' role='menu'>\n";
 $output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
@@ -260,7 +258,6 @@ $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 
 
 $output_str.="<td align='left' class='btn-group pull-left'>";
-#$output_str.="<button type='button' class='btn btn-primary btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
 $output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
 $output_str.="<ul class='dropdown-menu' role='menu'>\n";
 $output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
@@ -423,6 +420,35 @@ function over_or_under_staff($conn,$currentYear,$group)
    return $output_str;
 }
 
+function display_search_box($title)
+{
+    $search_str="<div class='container'>";
+    $search_str.="<div class='row mt-4'>";
+    $search_str.="<div class='col-md-8 mx-auto bg-light rounded p-4'>";
+    $search_str.="<form action='' method='post' class='p-3'>";
+    $search_str.="<table>";
+    $search_str.="<tr>";
+    $search_str.="<td>";
+    $search_str.="<h5 class='text-center text-secondary'>$title</h5>";
+    $search_str.="</td>";
+    $search_str.="</tr>";
+    $search_str.="<tr>";
+    $search_str.="<td><input type='text' name='search' id='search' -control-lg rounded-0 border-info' placeholder='Search...' autocomplete='off' required></td>";
+    $search_str.="</tr>";
+    $search_str.="<tr>";
+    $search_str.="<td align='right'><input type='submit' name='submit' value='Search' class='btn btn-info btn-lg rounded-0'></td>";
+    $search_str.="</tr>";
+    $search_str.="</table>";
+    $search_str.="</form>";
+    $search_str.="</div>";
+    $search_str.="<div class='col-md-5' style='position: relative;margin-top: -153px;margin-left: 205px;'>";
+    $search_str.="<div class='list-group' id='show-list'>";
+    $search_str.="</div>";
+    $search_str.="</div>";
+    $search_str.="</div>";
+    $search_str.="</div>";
 
+    return $search_str;
+}
 
 ?>
