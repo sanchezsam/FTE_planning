@@ -119,7 +119,6 @@ function refreshPage(passValue,search){
       </div>
     </div>
   </div>
-  <script src="script_dir/jquery.min.js"></script>
   <script src="script_dir/script_team.js"></script>
 
 
@@ -152,7 +151,8 @@ $currentDate=date("Y/m/d");
 #$currentYear=date("Y");
 $currentDate=strtotime($currentDate);
 
-$output_str="<table width ='500' style='border:1px solid black;'>\n";
+$output_str="<table id='dataTable' width = '900' style='border:1px solid black;'>\n";
+#$output_str.="<tr><td>$name $currentYear Forcast</td></tr>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 $output_str.="<td valign='top' width='300'><b>Workpackage Name</b></td>\n";
 $output_str.="<td valign='top'><b>Staff Name</b></td>\n";
@@ -178,7 +178,13 @@ while($row=mysqli_fetch_array($result))
 
        if($total>0)
        {   
-           $output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
+           #$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
+           $output_str.="<tr bgcolor='#b1fefe'>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.="<td align='right'>WP Total :  $total</td></tr>\n";
            $total=0;
        }
 
@@ -210,8 +216,19 @@ while($row=mysqli_fetch_array($result))
    $currentColor=$prev_color;
    $output_str.="</tr>\n";
 }
-$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
-$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>Team Total :  $grand_total</td></tr>\n";
+$output_str.="<tr bgcolor='#b1fefe'>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.="<td align='right'>WP Total :  $total</td></tr>\n";
+
+$output_str.="<tr bgcolor='#b1fefe'>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.="<td align='right'>Team Total :  $grand_total</td></tr>\n";
 $total=0;
 $output_str.="</table>\n";
 

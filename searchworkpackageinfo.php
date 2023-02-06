@@ -3,6 +3,9 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
+#$file_name ="test.xls";
+#header("Content-type: application/vnd.ms-excel");
+#header("Content-Disposition: attachment; filename=$file_name");
 
 
 function get_wp_totals($wp_id)
@@ -193,7 +196,7 @@ function refreshPage(passValue,search){
         <form action="" method="post" class="p-3">
           <div class="input-group">
             <input type="text" name="search" id="search" class="form-control form-control-lg rounded-0 border-info" placeholder="Search..." autocomplete="off" required>
-            <div class="input-group-append">
+            <div align='right' class="input-group-append">
               <input type="submit" name="submit" value="Search" class="btn btn-info btn-lg rounded-0">
             </div>
           </div>
@@ -207,7 +210,7 @@ function refreshPage(passValue,search){
       </div>
     </div>
   </div>
-  <script src="script_dir/jquery.min.js"></script>
+  <!--<script src="script_dir/jquery.min.js"></script>-->
   <script src="script_dir/script_workpackage_info.js"></script>
 
 
@@ -220,30 +223,34 @@ if(isset($_POST['search']))
    {
        $currentYear=$_GET['currentYear'];
    }
+   #open of main table
+   $output_str="\n<table id='dataTable' class='table table-striped'>\n";
+   #$output_str.="<tr>\n";
+   #$output_str.="<td>\n";
 
    #display workpackage info
    $query=get_wp_info($name,$currentYear);
    $result=mysqli_query($conn,$query);
    
-   $header_str="$name $currentYear Forcast ";
-   $output_str=display_table_header($header_str); 
 
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   $header_str="$name $currentYear Forcast ";
+   $output_str.=display_table_header($header_str); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
    $record_id=get_record_id('wp_id',$result);
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_values($result);
-   $output_str.="</table>\n";
-   echo $output_str;
-   $output_str="";
+   $output_str.="<tr><td colspan='100%'></td></tr>";
+   #$output_str.="</table>\n";
 
 
    #display workpackage staff
    $query=get_wp_staff($record_id);
    $result=mysqli_query($conn,$query);
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table  width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Retained Team'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
@@ -256,14 +263,13 @@ if(isset($_POST['search']))
    list($column_totals_str,$columns_totals)=get_mysql_columns($result);
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_totals_values($result,$columns,$columns_totals);
-   $output_str.="</table>\n";
-   echo $output_str;
-   $output_str="";
+   $output_str.="<tr><td colspan='100%'></td></tr>";
+   ##$output_str.="</table>\n";
 
    #display Services 
    $query=get_wp_services($record_id);
    $result=mysqli_query($conn,$query);
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Service & Support Contracts'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
@@ -276,14 +282,13 @@ if(isset($_POST['search']))
    list($column_totals_str,$columns_totals)=get_mysql_columns($result);
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_totals_values($result,$columns,$columns_totals);
-   $output_str.="</table>\n";
-   echo $output_str;
-   $output_str="";
+   $output_str.="<tr><td colspan='100%'></td></tr>";
+   #$output_str.="</table>\n";
 
    #display Materials 
    $query=get_wp_materials($record_id);
    $result=mysqli_query($conn,$query);
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Systems & Materials'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
@@ -296,33 +301,36 @@ if(isset($_POST['search']))
    list($column_totals_str,$columns_totals)=get_mysql_columns($result);
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_totals_values($result,$columns,$columns_totals);
-   $output_str.="</table>\n";
-   echo $output_str;
-   $output_str="";
-
+   $output_str.="<tr><td colspan='100%'></td></tr>";
+   #$output_str.="</table>\n";
 
    #display Activities
    $query=get_wp_activities($record_id);
    $result=mysqli_query($conn,$query);
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Activity Descriptions'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_values($result);
-   $output_str.="</table>\n";
-   echo $output_str;
-   $output_str="";
+   $output_str.="<tr><td colspan='100%'></td></tr>";
+   #$output_str.="</table>\n";
 
    #display totals
    $query=get_wp_totals($record_id);
    $result=mysqli_query($conn,$query);
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Activity Descriptions');
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_values($result);
+   $output_str.="<tr><td colspan='100%'></td></tr>";
+   #$output_str.="</table>\n";
+  
+   #Close of main table
+   $output_str.="</td>\n";
+   $output_str.="</tr>\n";
    $output_str.="</table>\n";
    echo $output_str;
    $output_str="";

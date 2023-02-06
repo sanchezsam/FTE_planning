@@ -59,7 +59,7 @@ function refreshPage(passValue,search){
    $query=get_staff($currentYear);
    $result=mysqli_query($conn,$query);
 
-   $output_str="<table width = '900' style='border:1px solid black;'>\n";
+   $output_str="<table id='dataTable' class='table table-striped' width = '900' style='border:1px solid black;'>\n";
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    $query=get_staff($currentYear);

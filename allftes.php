@@ -46,7 +46,8 @@ function refreshPage(passValue){
 
 
 <?php
-$output_str="<table width = '900' style='border:1px solid black;'>\n";
+$output_str="<table id='dataTable' width = '900' style='border:1px solid black;'>\n";
+$output_str.="<tr><td><strong>$group</strong> $currentYear FTE's</td></tr>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 $output_str.="<td valign='top'><b>Workpackage Name</b></td>\n";
 $output_str.="<td valign='top'><b>Staff Name</b></td>\n";
@@ -72,7 +73,14 @@ while($row=mysqli_fetch_array($result))
 
        if($total>0)
        {
-           $output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
+           #$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
+           #$total=0;
+           $output_str.="<tr bgcolor='#b1fefe'>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.= "<td>&nbsp;</td>\n";
+           $output_str.="<td>WP Total :  $total</td></tr>\n";
            $total=0;
        }
        #This is the first display for this term, calculate the tr background color ??
@@ -107,14 +115,26 @@ while($row=mysqli_fetch_array($result))
    $output_str.="</tr>\n";
    $currentColor=$prev_color;
 }
-$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
-$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>Group Total :  $grand_total</td></tr>\n";
+#$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
+#$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>Group Total :  $grand_total</td></tr>\n";
+$output_str.="<tr bgcolor='#b1fefe'>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.="<td>WP Total :  $total</td></tr>\n";
+
+$output_str.="<tr bgcolor='#b1fefe'>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.= "<td>&nbsp;</td>\n";
+$output_str.="<td>Team Total :  $grand_total</td></tr>\n";
 $output_str.="</table>\n";
 
 
 //echo "<section>";
 //TITLE
-echo "<br><strong>$group</strong> $currentYear FTE's<br><br>";
 ?>
 
 

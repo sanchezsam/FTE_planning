@@ -71,7 +71,6 @@ function refreshPage(passValue,search){
       </div>
     </div>
   </div>
-  <script src="script_dir/jquery.min.js"></script>
   <script src="script_dir/script_workpackage.js"></script>
 
 
@@ -89,8 +88,8 @@ if(isset($_POST['search']))
    $query=get_wp_info($name,$currentYear);
    $result=mysqli_query($conn,$query);
 
-   $output_str="<table><tr><td rowspan='4'>$name $currentYear Forcast</td></tr></table>";
-   $output_str.="<table width = '900' style='border:1px solid black;'>\n";
+   $output_str="<table id='dataTable' width = '900' style='border:1px solid black;'>\n";
+   $output_str.="<tr><td>$name $currentYear Forcast</td></tr>\n";
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
