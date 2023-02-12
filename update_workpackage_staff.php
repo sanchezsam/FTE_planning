@@ -120,6 +120,7 @@ if($search_name!="")
 {
    $termcount=0;
    $previousName="";
+   $znumbers=array();
    $currentDate=date("Y/m/d");
    $currentYear=date("Y");
    $currentDate=strtotime($currentDate);
@@ -192,7 +193,7 @@ if($search_name!="")
       ####$output_str.="<td valign='top'><input name='group_name_txt[$wp_staff_id]' type='text' value='$group_name'></td>\n";
       #####$output_str.="<td valign='top'><input name='org_code_txt[$wp_staff_id]' type='text' value='$org_code'></td>\n";
      
-      $cost="$" . number_format($cost, 2, ".", ",");
+      $cost="$" . number_format(floatval($cost), 2, ".", ",");
       $output_str.="<td valign='top'><input name='cost_txt[$wp_staff_id]' type='text' value='$cost'></td>\n";
       #$output_str.="<td valign='top'><input name='funded_txt[$wp_staff_id]' type='text' value='$funded'></td>\n";
 
@@ -201,7 +202,7 @@ if($search_name!="")
       $output_str.=generate_select_list($db,$query,$funded,$drop_down_name);
 
       $output_str.="<td valign='top'><input name='funded_percent_txt[$wp_staff_id]' type='text' value='$funded_percent'></td>\n";
-      $total_cost="$" . number_format($total_cost, 2, ".", ",");
+      $total_cost="$" . number_format(floatval($total_cost), 2, ".", ",");
       $output_str.="<td valign='top'><input name='total_cost_txt[$wp_staff_id]' type='text' value='$total_cost'></td>\n";
       $output_str.="<td valign='top'><textarea name='notes_txt[$wp_staff_id]' rows='2'>$notes</textarea></td>\n";
       $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&delete_id=$wp_staff_id'>";
@@ -228,13 +229,66 @@ if($search_name!="")
 <?php
 if(isset($_GET['delete_id'])){
     $wp_staff_id=$_GET['delete_id'];
-echo "DELETE<br> $wp_staff_id";
+    $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
+    echo $delete_query;
+    $db->query($delete_query);
 }
+
+
+
+
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
         #Refresh
         #var_dump($_POST);
+
+
+       if (is_array($znumbers) || is_object($znumbers))
+       {
+            foreach($znumbers as $key=>$znumber){
+                    #get wp_id
+                    #$staff_name = $_POST['staff_name'];
+                    #echo "<input type='hidden' name='search' value='$name'>";
+                    $result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber'");
+                    while($val  =   $result->fetch_assoc())
+                    {
+                        $name=$val['name'];
+                        $labor_pool=$val['labor_pool'];
+                        $job_title=$val['job_title'];
+                        $group_code=$val['group_code'];
+                        $group_name=$val['group_name'];
+                    }
+                    $currentDate=date("Y-m-d");
+                    $currentYear=date("Y");
+                    $enddate="$currentYear-$endFYIDate";
+                    echo "<br>$znumber";
+                    echo "<br>$name";
+                    echo "<br>$labor_pool";
+                    echo "<br>$job_title";
+                    echo "<br>$group_code";
+                    echo "<br>$group_name";
+                    
+
+                    $insert_query="INSERT INTO tbl_wp_staff
+                                   (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
+                                   VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
+                    echo "<br>$insert_query<br>";
+                    $db->query($insert_query);
+
+            }
+       }
+
+
+
+
+
+
+
+
+
+
+
         echo "<meta http-equiv='refresh' content='0'>";
         if(isset($_POST['name_txt']))
         {

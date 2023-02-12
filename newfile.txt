@@ -1,8 +1,8 @@
 UPDATE tbl_wp_staff 
-                              SET pct_fte = '.3',
-                              cost = '103250',
+                              SET pct_fte = '.25',
+                              cost = '121875',
                               funded = 'Yes',
-                              funded_percent = '.3',
-                              total_cost = '103250',
-                              notes = 'Shasta/CSM Focus Team'
-                              WHERE wp_staff_id = 14; 
+                              funded_percent = '.25',
+                              total_cost = '121875',
+                              notes = 'new Record'
+                              WHERE wp_staff_id = 49; 
