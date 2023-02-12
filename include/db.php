@@ -18,6 +18,41 @@ $endFYIDate="9-30";
 
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());
 
+
+
+
+function generate_select_list($db,$query,$selected_value,$drop_down_name)
+{
+
+      $output_str="<td valign='top'>\n";
+      $output_str.=$drop_down_name;
+      $output_str.="<option value=''>Select</option>\n";
+      $result= $db->query($query);
+      while($row=mysqli_fetch_array($result))
+      {
+          if($selected_value==$row[0])
+          {
+              #echo $row[0],$selected_value;
+              $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
+          }
+          else
+          {
+              $output_str.="<option value='$row[0]'>$row[0]</option>\n";
+          }
+       }
+
+       $output_str.="</select>\n";
+       $output_str.="</td>\n";
+    return $output_str;
+
+}
+
+
+
+
+
+
+
 function display_table_header($header_str)
 {  
    global $header_color;

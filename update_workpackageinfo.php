@@ -89,24 +89,29 @@ if($name!="")
       $end_date=$row[7];
       $output_str.="<td valign='top'>$task</td>\n";
       $output_str.="<td valign='top'><textarea name='task_name_txt[$wp_id]' rows='3'>$task_name</textarea></td>\n";
-      $output_str.="<td valign='top'>\n";
-       $output_str.="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
-       $output_str.="<option value=''>Select</option>\n";
-       $result_managers= $db->query("SELECT manager_name FROM tbl_wp_manager order by manager_name asc ");
-       while($row=mysqli_fetch_array($result_managers))
-       {
-          if($task_manager==$row[0])
-          {
-              $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
-          }
-          else
-          {
-              $output_str.="<option value='$row[0]'>$row[0]</option>\n";
-          }
-       }
 
-       $output_str.="</select>\n";
-       $output_str.="</td>\n";
+      $query="SELECT manager_name FROM tbl_wp_manager order by manager_name asc;";
+      $drop_down_name="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
+      $output_str.=generate_select_list($db,$query,$task_manager,$drop_down_name);
+
+      #$output_str.="<td valign='top'>\n";
+      # $output_str.="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
+      # $output_str.="<option value=''>Select</option>\n";
+      # $result_managers= $db->query("SELECT manager_name FROM tbl_wp_manager order by manager_name asc ");
+      # while($row=mysqli_fetch_array($result_managers))
+      # {
+      #    if($task_manager==$row[0])
+      #    {
+      #        $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
+      #    }
+      #    else
+      #    {
+      #        $output_str.="<option value='$row[0]'>$row[0]</option>\n";
+      #    }
+      # }
+
+      # $output_str.="</select>\n";
+      # $output_str.="</td>\n";
 
       $output_str.="<td valign='top'><textarea name='task_description_txt[$wp_id]' rows='6'>$task_description</textarea></td>\n";
       $output_str.="<td valign='top'><input name='burden_rate_txt[$wp_id]' type='text' value='$burden_rate'></td>\n";

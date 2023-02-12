@@ -1024,7 +1024,7 @@ input[type="email"],
 input[type="tel"],
 input[type="search"],
 input[type="url"],
-select,
+/*select,*/
 textarea {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -1039,7 +1039,8 @@ textarea {
   outline: 0;
   padding: 0 1em;
   text-decoration: none;
-  width: 100%; }
+  width: 100%;
+  }
   input[type="text"]:invalid,
   input[type="password"]:invalid,
   input[type="email"]:invalid,

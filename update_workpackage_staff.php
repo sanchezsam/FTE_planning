@@ -14,8 +14,15 @@ function get_workpackage_staff($name)
                  and tbl_wp_staff.wp_id=tbl_wp_info.wp_id";
    return $query;
 }
+function cal_cost($salary_min,$salary_max,$percent)
+{
+  $average_salary=(floatval($salary_min)+floatval($salary_max))/2;
+  $percent_salary=$average_salary*$percent;
+  $cost=$average_salary-$percent_salary;
+  return round($cost,2);
+}
 
-function get_title_and_salary($conn,$znumber)
+function get_title_and_salary($conn,$znumber,$wp_staff_id)
 {
    $query="SELECT labor_pool,job_title FROM `tbl_staff_info` WHERE znumber='$znumber'";
    $result=mysqli_query($conn,$query);
@@ -28,19 +35,46 @@ function get_title_and_salary($conn,$znumber)
 
       if (preg_match($pattern, $str, $matches)) {
           $title="$matches[1] ($row[1])";
-          #$salary_min=$matches[2];
-          #$salary_max=$matches[4];
-          $salary_min="$" . number_format($matches[2], 2, ".", ",");
-          $salary_max="$" . number_format($matches[4], 2, ".", ",");
-          echo $title,$salary_min,$salary_max;
+          $salary_min=$matches[2];
+          $salary_max=$matches[4];
+          #$salary_min="$" . number_format($matches[2], 2, ".", ",");
+          #$salary_max="$" . number_format($matches[4], 2, ".", ",");
+          #echo $title,$salary_min,$salary_max;
       }
       #print_r($titleArray);
       $output_str="<td valign='top'>$title</td>\n";
-      $output_str.="<td valign='top'>$salary_min</td>\n";
-      $output_str.="<td valign='top'>$salary_max</td>\n";
+      $output_str.="<td valign='top'><input name='salary_min_txt[$wp_staff_id]' type='text' value='$salary_min'></td>\n";
+      $output_str.="<td valign='top'><input name='salary_max_txt[$wp_staff_id]' type='text' value='$salary_max'></td>\n";
    }
    return $output_str; 
 }
+
+
+#function generate_select_list($db,$query,$selected_value,$drop_down_name)
+#{
+#
+#      $output_str="<td valign='top'>\n";
+#      $output_str.=$drop_down_name;
+#      $output_str.="<option value=''>Select</option>\n";
+#      $result= $db->query($query);
+#      while($row=mysqli_fetch_array($result))
+#      {
+#          if($selected_value==$row[0])
+#          {
+#              #echo $row[0],$selected_value;
+#              $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
+#          }
+#          else
+#          {
+#              $output_str.="<option value='$row[0]'>$row[0]</option>\n";
+#          }
+#       }
+#
+#       $output_str.="</select>\n";
+#       $output_str.="</td>\n";
+#    return $output_str;
+#
+#}
 
 ?>
 <!doctype html>
@@ -58,31 +92,31 @@ function get_title_and_salary($conn,$znumber)
     	<hr>
 		<div class="clearfix"></div>
 		<?php
-   $name="";
+   $search_name="";
    $managers="";
    if(isset($_POST['search'])){
-       $name=$_POST['search'];
+       $search_name=$_POST['search'];
    }
-   if($name=="")
+   if($search_name=="")
    {
      if(isset($_GET['search'])){
-         $name=$_GET['search'];
+         $search_name=$_GET['search'];
      }
    }
-   if($name!="")
+   if($search_name!="")
    {
-       $query=get_workpackage_staff($name);
+       $query=get_workpackage_staff($search_name);
        $result=mysqli_query($conn,$query);
    }
 
 	?>
 
 <div id="msg"></div>
-<form id="form" method="post" ACTION="update_workpackagestaff.php?search=<?php echo $name?>">
+<form id="form" method="post" ACTION="update_workpackage_staff.php?search=<?php echo $search_name?>">
 <input type="hidden" name="action" value="saveAddMore">
-<input type="hidden" name="search" value="<?php echo $name;?>">
+<input type="hidden" name="search" value="<?php echo $search_name;?>">
 <?php
-if($name!="")
+if($search_name!="")
 {
    $termcount=0;
    $previousName="";
@@ -95,25 +129,25 @@ if($name!="")
    $output_str.="<table width = '900' border='1' style='border:1px solid black;'>\n";
    $row1_str="<tr bgcolor ='red'>\n";
    $row1_str.="<td valign='top'><b>Staff #</b></td>\n";
-   $row1_str.="<td valign='top'><b>znumber</b></td>\n";
+   #----$row1_str.="<td valign='top'><b>znumber</b></td>\n";
    $row1_str.="<td valign='top'><b>Name</b></td>\n";
-   $row1_str.="<td valign='top'><b>StartDate</b></td>\n";
-   $row1_str.="<td valign='top'><b>EndDate</b></td>\n";
+   #----$row1_str.="<td valign='top'><b>StartDate</b></td>\n";
+   #----$row1_str.="<td valign='top'><b>EndDate</b></td>\n";
    $row1_str.="<td valign='top'><b>Title</b></td>\n";
    $row1_str.="<td valign='top'><b>SalaryMin</b></td>\n";
    $row1_str.="<td valign='top'><b>SalaryMax</b></td>\n";
+   $row1_str.="<td valign='top'><b>PCT FTE</b></td>\n";
    $row1_str.="</tr>\n";
    
 
    $row2_str="<tr bgcolor ='#C1C1E8'>\n";
    #$row2_str.="<td valign='top'><b>Group</b></td>\n";
    #$row2_str.="<td valign='top'><b>ORG</b></td>\n";
-   $row2_str.="<td valign='top'><b>PCT FTE</b></td>\n";
    $row2_str.="<td valign='top'><b>Cost</b></td>\n";
    $row2_str.="<td valign='top'><b>Funded</b></td>\n";
    $row2_str.="<td valign='top'><b>Funded %</b></td>\n";
    $row2_str.="<td valign='top'><b>Total Cost</b></td>\n";
-   $row2_str.="<td valign='top'><b>Notes</b></td>\n";
+   $row2_str.="<td valign='top' colspan='2'><b>Notes</b></td>\n";
    $row2_str.="</tr>\n";
 
    #list($column_str,$columns)=get_mysql_columns($result);
@@ -144,43 +178,36 @@ if($name!="")
       $output_str.="<tr bgcolor='$currentColor'>\n";
       $output_str.="<td valign='top'>$wp_staff_id</td>\n";
       #$output_str.="<td valign='top'>$wp_id</td>\n";
-      $output_str.="<td valign='top'><input name='znumber_txt[$wp_staff_id]' type='text' value='$znumber'></td>\n";
+      #----$output_str.="<td valign='top'><input name='znumber_txt[$wp_staff_id]' type='text' value='$znumber' readonly></td>\n";
       $output_str.="<td valign='top'><input name='name_txt[$wp_staff_id]' type='text' value='$name'></td>\n";
-      $output_str.="<td valign='top'><input name='start_date_txt[$wp_staff_id]' type='text' value='$startdate'></td>\n";
-      $output_str.="<td valign='top'><input name='end_date_txt[$wp_staff_id]' type='text' value='$enddate'></td>\n";
+      #----$output_str.="<td valign='top'><input name='start_date_txt[$wp_staff_id]' type='text' value='$startdate'></td>\n";
+      #----$output_str.="<td valign='top'><input name='end_date_txt[$wp_staff_id]' type='text' value='$enddate'></td>\n";
       #----$output_str.="<td valign='top'><input name='title_txt[$wp_staff_id]' type='text' value='$title'></td>\n";
       #----$output_str.="<td valign='top'><input name='salary_min_txt[$wp_staff_id]' type='text' value='$salary_min'></td>\n";
       #----$output_str.="<td valign='top'><input name='salary_max_txt[$wp_staff_id]' type='text' value='$salary_max'></td>\n";
-      $output_str.=get_title_and_salary($conn,$znumber);
+      $output_str.=get_title_and_salary($conn,$znumber,$wp_staff_id);
+      $output_str.="<td valign='top'><input name='pct_fte_txt[$wp_staff_id]' type='text' value='$pct_fte'></td>\n";
       $output_str.="</tr>";
       $output_str.=$row2_str;
       ####$output_str.="<td valign='top'><input name='group_name_txt[$wp_staff_id]' type='text' value='$group_name'></td>\n";
       #####$output_str.="<td valign='top'><input name='org_code_txt[$wp_staff_id]' type='text' value='$org_code'></td>\n";
-      $output_str.="<td valign='top'><input name='pct_fte_txt[$wp_staff_id]' type='text' value='$pct_fte'></td>\n";
+     
+      $cost="$" . number_format($cost, 2, ".", ",");
       $output_str.="<td valign='top'><input name='cost_txt[$wp_staff_id]' type='text' value='$cost'></td>\n";
-      $output_str.="<td valign='top'><input name='funded_txt[$wp_staff_id]' type='text' value='$funded'></td>\n";
-      $output_str.="<td valign='top'><input name='funded_percent_txt[$wp_staff_id]' type='text' value='$funded_percent'></td>\n";
-      $output_str.="<td valign='top'><input name='total_cost_txt[$wp_staff_id]' type='text' value='$total_cost'></td>\n";
-      $output_str.="<td valign='top'><textarea name='notes_txt[$wp_id]' rows='3'>$notes</textarea></td>\n";
-      $output_str.="</tr>\n";
-      #$output_str.="<td valign='top'>\n";
-      # $output_str.="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
-      # $output_str.="<option value=''>Select</option>\n";
-      # $result_managers= $db->query("SELECT manager_name FROM tbl_wp_manager order by manager_name asc ");
-      # while($row=mysqli_fetch_array($result_managers))
-      # {
-      #    if($task_manager==$row[0])
-      #    {
-      #        $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
-      #    }
-      #    else
-      #    {
-      #        $output_str.="<option value='$row[0]'>$row[0]</option>\n";
-      #    }
-      # }
+      #$output_str.="<td valign='top'><input name='funded_txt[$wp_staff_id]' type='text' value='$funded'></td>\n";
 
-      # $output_str.="</select>\n";
-      # $output_str.="</td>\n";
+      $query="SELECT 'Yes' UNION ALL SELECT 'No';";
+      $drop_down_name="<select name='funded_txt[$wp_staff_id]' id='funded' width='4' required='required'>\n";
+      $output_str.=generate_select_list($db,$query,$funded,$drop_down_name);
+
+      $output_str.="<td valign='top'><input name='funded_percent_txt[$wp_staff_id]' type='text' value='$funded_percent'></td>\n";
+      $total_cost="$" . number_format($total_cost, 2, ".", ",");
+      $output_str.="<td valign='top'><input name='total_cost_txt[$wp_staff_id]' type='text' value='$total_cost'></td>\n";
+      $output_str.="<td valign='top'><textarea name='notes_txt[$wp_staff_id]' rows='2'>$notes</textarea></td>\n";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&delete_id=$wp_staff_id'>";
+      #$output_str.="<button type='button' data-toggle='tooltip' data-placement='right' onclick='if(confirm(\"Are you sure to remove?\")){$(this).closest('tr').remove();}'";
+      $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></td>";
+      $output_str.="</tr>\n";
 
    }
       $output_str.="</tbody><tr>";
@@ -199,36 +226,65 @@ if($name!="")
                 <div class="clearfix"></div>
 
 <?php
+if(isset($_GET['delete_id'])){
+    $wp_staff_id=$_GET['delete_id'];
+echo "DELETE<br> $wp_staff_id";
+}
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
         #Refresh
         #var_dump($_POST);
         echo "<meta http-equiv='refresh' content='0'>";
-        if(isset($_POST['task_name_txt']))
+        if(isset($_POST['name_txt']))
         {
-            foreach($task_name_txt as $key=>$task_name)
+            foreach($name_txt as $key=>$name)
             {
-               $task_manager=$task_manager_txt[$key];
-               $task_description=$task_description_txt[$key];
-               $burden_rate=$burden_rate_txt[$key];
-               $startdate=$start_date_txt[$key];
-               $startdate=$start_date_txt[$key];
-               $enddate=$end_date_txt[$key];
-               $update_query="UPDATE tbl_wp_info 
-                              SET task_name = '$task_name',
-                              task_manager = '$task_manager',
-                              task_description = '$task_description',
-                              burden_rate = '$burden_rate',
-                              startdate = '$startdate',
-                              enddate = '$enddate'
-                              WHERE wp_id = $key; ";
-               echo $update_query;
+               if(isset($salary_min_txt[$key]))
+               {
+                   $salary_min=$salary_min_txt[$key];
+               }
+               if(isset($salary_min_txt[$key]))
+               {
+                   $salary_max=$salary_max_txt[$key];
+               }
+               $pct_fte=$pct_fte_txt[$key];
+               $funded=$funded_txt[$key];
+               
+               $funded_percent=$funded_percent_txt[$key];
+               if($pct_fte==0)
+               {
+                   $cost=0;
+               }
+               else
+               {
+                   $cost=cal_cost($salary_min,$salary_max,$pct_fte);
+               }
+               if($funded=='Yes')
+               {
+                  $total_cost=cal_cost($salary_min,$salary_max,$funded_percent);
+               }
+               else
+               {
+                   $total_cost="0";
+               }
+               #$cost=$cost_txt[$key];
+               #$total_cost=$total_cost_txt[$key];
+               $notes=$notes_txt[$key];
+               $update_query="UPDATE tbl_wp_staff 
+                              SET pct_fte = '$pct_fte',
+                              cost = '$cost',
+                              funded = '$funded',
+                              funded_percent = '$funded_percent',
+                              total_cost = '$total_cost',
+                              notes = '$notes'
+                              WHERE wp_staff_id = $key; ";
+               echo "$update_query<br>";
                $db->query($update_query);
-               #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-               #$txt=$update_query;
-               #fwrite($myfile, $txt);
-               #fclose($myfile);
+               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+               $txt=$update_query;
+               fwrite($myfile, $txt);
+               fclose($myfile);
                               
             }
        }
