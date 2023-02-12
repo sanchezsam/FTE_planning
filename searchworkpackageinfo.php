@@ -303,7 +303,7 @@ if(isset($_POST['search']))
    $query=get_wp_totals($record_id);
    $result=mysqli_query($conn,$query);
    #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
-   $output_str.=display_table_header('Activity Descriptions');
+   $output_str.=display_table_header('Workpackage Info');
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
