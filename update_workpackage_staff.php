@@ -198,8 +198,16 @@ if($search_name!="")
       #$output_str.="<td valign='top'><input name='funded_txt[$wp_staff_id]' type='text' value='$funded'></td>\n";
 
       $query="SELECT 'Yes' UNION ALL SELECT 'No';";
-      $drop_down_name="<select name='funded_txt[$wp_staff_id]' id='funded' width='4' required='required'>\n";
+      $drop_down_name="<select name='funded_txt[$wp_staff_id]' id='funded' width='4'>\n";
+      #echo "<br>$funded";
       $output_str.=generate_select_list($db,$query,$funded,$drop_down_name);
+
+
+
+
+
+
+
 
       $output_str.="<td valign='top'><input name='funded_percent_txt[$wp_staff_id]' type='text' value='$funded_percent'></td>\n";
       $total_cost="$" . number_format(floatval($total_cost), 2, ".", ",");
@@ -207,7 +215,7 @@ if($search_name!="")
       $output_str.="<td valign='top'><textarea name='notes_txt[$wp_staff_id]' rows='2'>$notes</textarea></td>\n";
       $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&delete_id=$wp_staff_id'>";
       #$output_str.="<button type='button' data-toggle='tooltip' data-placement='right' onclick='if(confirm(\"Are you sure to remove?\")){$(this).closest('tr').remove();}'";
-      $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></td>";
+      $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
       $output_str.="</tr>\n";
 
    }
@@ -227,12 +235,13 @@ if($search_name!="")
                 <div class="clearfix"></div>
 
 <?php
-if(isset($_GET['delete_id'])){
-    $wp_staff_id=$_GET['delete_id'];
-    $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
-    echo $delete_query;
-    $db->query($delete_query);
-}
+
+  if(isset($_GET['delete_id'])){
+      $wp_staff_id=$_GET['delete_id'];
+      $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
+      #echo $delete_query;
+      $db->query($delete_query);
+  }
 
 
 
@@ -262,18 +271,18 @@ if(isset($_POST['save'])){
                     $currentDate=date("Y-m-d");
                     $currentYear=date("Y");
                     $enddate="$currentYear-$endFYIDate";
-                    echo "<br>$znumber";
-                    echo "<br>$name";
-                    echo "<br>$labor_pool";
-                    echo "<br>$job_title";
-                    echo "<br>$group_code";
-                    echo "<br>$group_name";
+                    #echo "<br>$znumber";
+                    #echo "<br>$name";
+                    #echo "<br>$labor_pool";
+                    #echo "<br>$job_title";
+                    #echo "<br>$group_code";
+                    #echo "<br>$group_name";
                     
 
                     $insert_query="INSERT INTO tbl_wp_staff
                                    (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
                                    VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
-                    echo "<br>$insert_query<br>";
+                    #echo "<br>$insert_query<br>";
                     $db->query($insert_query);
 
             }
@@ -289,7 +298,6 @@ if(isset($_POST['save'])){
 
 
 
-        echo "<meta http-equiv='refresh' content='0'>";
         if(isset($_POST['name_txt']))
         {
             foreach($name_txt as $key=>$name)
@@ -333,20 +341,18 @@ if(isset($_POST['save'])){
                               total_cost = '$total_cost',
                               notes = '$notes'
                               WHERE wp_staff_id = $key; ";
-               echo "$update_query<br>";
+               #echo "$update_query<br>";
                $db->query($update_query);
-               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-               $txt=$update_query;
-               fwrite($myfile, $txt);
-               fclose($myfile);
+               #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+               #$txt=$update_query;
+               #fwrite($myfile, $txt);
+               #fclose($myfile);
                               
             }
        }
+       echo "<meta http-equiv='refresh' content='0'>";
 }
 
-
-?>
-<?php
 require 'template/footer.html';
 ?>
 
