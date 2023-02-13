@@ -140,7 +140,6 @@ if(isset($_POST['save'])){
         extract($_POST);
         #Refresh
         #var_dump($_POST);
-        echo "<meta http-equiv='refresh' content='0'>";
         if(isset($_POST['task_name_txt']))
         {
             foreach($task_name_txt as $key=>$task_name)
@@ -167,6 +166,8 @@ if(isset($_POST['save'])){
                #fclose($myfile);
                               
             }
+        echo "<meta http-equiv='refresh' content='0'>";
+        echo "<script>window.open('update_workpackageinfo.php?search=$name','_self') </script>";
        }
 }
 

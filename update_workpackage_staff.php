@@ -351,6 +351,7 @@ if(isset($_POST['save'])){
             }
        }
        echo "<meta http-equiv='refresh' content='0'>";
+       echo "<script>window.open('update_workpackage_staff.php?search=$search_name','_self') </script>"; 
 }
 
 require 'template/footer.html';
