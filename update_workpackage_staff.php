@@ -17,7 +17,7 @@ function get_workpackage_staff($name)
 function cal_cost($salary_min,$salary_max,$percent)
 {
   $average_salary=(floatval($salary_min)+floatval($salary_max))/2;
-  $percent_salary=$average_salary*$percent;
+  $percent_salary=$average_salary*floatval($percent);
   $cost=$average_salary-$percent_salary;
   return round($cost,2);
 }
@@ -241,6 +241,7 @@ if($search_name!="")
       $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
       #echo $delete_query;
       $db->query($delete_query);
+      echo "<script>window.open('update_workpackage_staff.php?search=$search_name','_self') </script>";
   }
 
 
