@@ -1,5 +1,1 @@
-UPDATE tbl_wp_activities
-                              SET activity = 'Cray Systems Administration',
-                              members = 'Graham Van Heule',
-                              description = 'Systems administration on-call support and SYS integration for HPE/Cray Shasta platforms (Chicoma & pals) test',
-                              WHERE activity_id = 10; 
+SELECT team_name,group_name FROM vw_team_mapping WHERE team_name LIKE :team order by team_name asc

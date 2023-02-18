@@ -9,7 +9,7 @@ $old_color='#787878';
 $header_color='#ADD8E6';
 $change_font_color="white";
 $column_color='#C1C1E8';
-$totals_color='#ff0000';
+$totals_color='#33ffce';
 $endFYIDate="9-30";
 #$colour0 = 'blue';
 #$colour1 = 'yellow';
@@ -58,9 +58,7 @@ function generate_select_list($db,$query,$selected_value,$drop_down_name)
 function display_table_header($header_str)
 {  
    global $header_color;
-   #$output_str="<table width = '900' style='border:1px solid black;'>\n";
    $output_str="\n<tr bgcolor='$header_color'>\n<td colspan='100%'><b>$header_str</b></td>\n</tr>\n";
-   #$output_str.="</table>";
    return $output_str;
 }
 
@@ -78,7 +76,7 @@ function get_mysql_columns($result)
        $columns = array_keys($values[0]);
    }
    foreach($columns as $col){
-       $return_str.="<td valign='top'><b>$col</b></td>\n";
+       $return_str.="<td width='100%'  valign='top'><b>$col</b></td>\n";
    }
    $return_str.="</tr>\n";
    return array($return_str,$columns);

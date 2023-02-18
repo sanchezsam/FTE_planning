@@ -207,7 +207,7 @@ if(isset($_POST['search']))
        $currentYear=$_GET['currentYear'];
    }
    #open of main table
-   $output_str="\n<table id='dataTable' class='table table-striped'>\n";
+   $output_str="\n<table id='dataTable' class='table table-striped' width='100%'>\n";
    #$output_str.="<tr>\n";
    #$output_str.="<td>\n";
 

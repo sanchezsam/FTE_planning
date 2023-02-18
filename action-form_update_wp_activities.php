@@ -19,7 +19,7 @@ $currentYear=date("Y");
 
  <tr>
 
-                <td valign='top'><input type="activity" name="activity[]" class="form-control" required="required"></td>
+                <td valign='top' width='400'><input type="activity" name="activity[]" class="form-control" required="required"></td>
 
                 <td valign='top'>
                 <select name="members[]" id="members" data-size="10" required="required">
@@ -34,7 +34,7 @@ $currentYear=date("Y");
                 </td>
 
 
-                <td width='700' valign='top'><textarea name="description[]" class="form-control" required="required"></textarea></td>
+                <td width='500' valign='top'><textarea name="description[]" class="form-control" required="required"></textarea></td>
 
                 <td align="center" class="text-danger"><button type="button" data-toggle="tooltip" data-placement="right" onclick="if(confirm('Are you sure to remove?')){$(this).closest('table').remove();}" class="btn btn-danger"><i class="fa fa-fw fa-trash-alt"></i></button></td>
         </tr>
