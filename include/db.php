@@ -15,6 +15,7 @@ $endFYIDate="9-30";
 #$colour1 = 'yellow';
 #$old_color='green';
 #$change_font_color="red";
+$new_column_color='#90EE90';
 
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());
 

@@ -64,7 +64,9 @@ if($name!="")
    $currentDate=strtotime($currentDate);
    $output_str="";
    $currentColor="";
-
+   $header="Update Workpackage: $name";
+   $display_str=display_table_header($header); 
+   echo $display_str;
    $output_str.="<table width = '900' border='1' style='border:1px solid black;'>\n";
    $output_str.="<tr bgcolor ='#C1C1E8'>\n";
    $output_str.="<td valign='top'><b>Task</b></td>\n";
