@@ -9,7 +9,7 @@ function get_workpackage_info($name)
    $currentYear=date("Y");
    $query="SELECT * 
            FROM tbl_wp_info
-           WHERE task='$name'
+           WHERE concat(Project,' ', task)='$name'
                  and YEAR(enddate)=$currentYear";
    return $query;
 }
@@ -69,11 +69,14 @@ if($name!="")
    echo $display_str;
    $output_str.="<table width = '900' border='1' style='border:1px solid black;'>\n";
    $output_str.="<tr bgcolor ='#C1C1E8'>\n";
+   $output_str.="<td valign='top'><b>Program</b></td>\n";
+   $output_str.="<td valign='top'><b>Project</b></td>\n";
    $output_str.="<td valign='top'><b>Task</b></td>\n";
    $output_str.="<td valign='top'><b>Task Name</b></td>\n";
    $output_str.="<td valign='top'><b>Task Manager</b></td>\n";
    $output_str.="<td valign='top'><b>Task Description</b></td>\n";
    $output_str.="<td valign='top'><b>Burden Rate</b></td>\n";
+   $output_str.="<td valign='top'><b>Target $$$</b></td>\n";
    $output_str.="<td valign='top'><b>Start Date</b></td>\n";
    $output_str.="<td valign='top'><b>End Date</b></td>\n";
    $output_str.="</tr>\n";
@@ -82,13 +85,21 @@ if($name!="")
    while($row=mysqli_fetch_array($result))
    {
       $wp_id=$row[0];
-      $task=$row[1];
-      $task_name=$row[2];
-      $task_manager=$row[3];
-      $task_description=$row[4];
-      $burden_rate=$row[5];
-      $start_date=$row[6];
-      $end_date=$row[7];
+      $program=$row[1];
+      $project=$row[2];
+      $task=$row[3];
+      $task_name=$row[4];
+      $task_manager=$row[5];
+      $task_description=$row[6];
+      $burden_rate=$row[7];
+      $target=$row[8];
+      $start_date=$row[9];
+      $end_date=$row[10];
+      $query="SELECT DISTINCT program_name FROM tbl_program_info;";
+      $drop_down_name="<select name='program_txt[$wp_id]' id='program' width='4'>\n";
+      $output_str.=generate_select_list($db,$query,$program,$drop_down_name);
+
+      $output_str.="<td valign='top'><input name='project_txt[$wp_id]' type='text' value='$project'></td>\n";
       $output_str.="<td valign='top'>$task</td>\n";
       $output_str.="<td valign='top'><textarea name='task_name_txt[$wp_id]' rows='3'>$task_name</textarea></td>\n";
 
@@ -96,27 +107,9 @@ if($name!="")
       $drop_down_name="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
       $output_str.=generate_select_list($db,$query,$task_manager,$drop_down_name);
 
-      #$output_str.="<td valign='top'>\n";
-      # $output_str.="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
-      # $output_str.="<option value=''>Select</option>\n";
-      # $result_managers= $db->query("SELECT manager_name FROM tbl_wp_manager order by manager_name asc ");
-      # while($row=mysqli_fetch_array($result_managers))
-      # {
-      #    if($task_manager==$row[0])
-      #    {
-      #        $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
-      #    }
-      #    else
-      #    {
-      #        $output_str.="<option value='$row[0]'>$row[0]</option>\n";
-      #    }
-      # }
-
-      # $output_str.="</select>\n";
-      # $output_str.="</td>\n";
-
       $output_str.="<td valign='top'><textarea name='task_description_txt[$wp_id]' rows='6'>$task_description</textarea></td>\n";
       $output_str.="<td valign='top'><input name='burden_rate_txt[$wp_id]' type='text' value='$burden_rate'></td>\n";
+      $output_str.="<td valign='top'><input name='target_txt[$wp_id]' type='text' value='$target'></td>\n";
       $output_str.="<td valign='top'><input name='start_date_txt[$wp_id]' type='text' value='$start_date'></td>\n";
       $output_str.="<td valign='top'><input name='end_date_txt[$wp_id]' type='text' value='$end_date'></td>\n";
    }
@@ -146,17 +139,24 @@ if(isset($_POST['save'])){
         {
             foreach($task_name_txt as $key=>$task_name)
             {
+               $program=$program_txt[$key];
+               $project=$project_txt[$key];
                $task_manager=$task_manager_txt[$key];
                $task_description=$task_description_txt[$key];
                $burden_rate=$burden_rate_txt[$key];
+               $target=$target_txt[$key];
                $startdate=$start_date_txt[$key];
                $startdate=$start_date_txt[$key];
                $enddate=$end_date_txt[$key];
                $update_query="UPDATE tbl_wp_info 
-                              SET task_name = '$task_name',
+                              SET
+                              program= '$program',
+                              project = '$project',
+                              task_name = '$task_name',
                               task_manager = '$task_manager',
                               task_description = '$task_description',
                               burden_rate = '$burden_rate',
+                              target = '$target',
                               startdate = '$startdate',
                               enddate = '$enddate'
                               WHERE wp_id = $key; ";

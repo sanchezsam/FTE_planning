@@ -9,10 +9,10 @@ function get_workpackage_staff($name)
    $currentYear=date("Y");
    $query="SELECT tbl_wp_staff.*  
            FROM tbl_wp_info,tbl_wp_staff
-           WHERE tbl_wp_info.task='$name'
+           WHERE concat(tbl_wp_info.project,' ', tbl_wp_info.task)='$name'
                  and YEAR(tbl_wp_info.enddate)=$currentYear
                  and tbl_wp_staff.wp_id=tbl_wp_info.wp_id
-           ORDER by tbl_wp_staff.name";
+           ORDER by tbl_wp_staff.startdate";
    return $query;
 }
 function cal_cost($salary_min,$salary_max,$percent)

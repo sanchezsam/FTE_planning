@@ -72,6 +72,8 @@ function get_totals_for_materials($wp_id)
 function get_wp_info($name,$currentYear)
 {
    $query="SELECT wp_id,
+                  program as Program,
+                  project as Project,
                   task as Task,
                   task_name as 'Task Name',
                   task_manager as 'Task Manager',
@@ -80,7 +82,7 @@ function get_wp_info($name,$currentYear)
                   startdate as 'Start Date',
                   enddate as 'End Date'
            FROM tbl_wp_info 
-           WHERE task='$name' and
+           WHERE concat(Project,' ', task)='$name' and
                  YEAR(enddate)='$currentYear'
            ORDER BY enddate desc";
    return $query;

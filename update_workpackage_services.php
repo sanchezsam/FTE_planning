@@ -9,7 +9,7 @@ function get_workpackage_services($name)
    $currentYear=date("Y");
    $query="SELECT tbl_wp_services.*  
            FROM tbl_wp_info,tbl_wp_services
-           WHERE tbl_wp_info.task='$name'
+           WHERE concat(tbl_wp_info.project,' ', tbl_wp_info.task)='$name'
                  and YEAR(tbl_wp_info.enddate)=$currentYear
                  and tbl_wp_services.wp_id=tbl_wp_info.wp_id";
    return $query;
