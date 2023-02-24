@@ -111,7 +111,13 @@ function get_mysql_values($result)
       $currentColor= ${'colour' .($termcount % 2)};            
       $return_str.="<tr bgcolor='$currentColor'>";
       for($i=0;$i<count($row);$i++){
-        $return_str.="<td>$row[$i]</td>\n";
+        if($row[$i]=="")
+        {
+              $return_str.="<td>&nbsp;</td>\n";
+        }
+        else{
+            $return_str.="<td>$row[$i]</td>\n";
+        }
       }
       $termcount++;
       $return_str.="</tr>\n";
@@ -123,7 +129,6 @@ function get_mysql_totals_values($result,$columns,$columns_totals)
 {
    global $totals_color;
    $return_str="";
-   #echo $totals_color;
    $return_str.="<tr bgcolor='$totals_color'>";
    $found="F";
    $row= mysqli_fetch_array($result);
