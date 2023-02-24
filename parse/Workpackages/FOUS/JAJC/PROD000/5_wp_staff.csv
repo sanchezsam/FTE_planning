@@ -1,23 +1,23 @@
 ﻿Z #,Name,Start Date,End Date,Title,Salary Min,Salary Max,Group,Org Code,Pct FTE,Cost,Funded?,Funded % FTE,Total Cost,Notes
-349837,Thomas Bertschinger,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0,0,Yes,0,0,added per SYS request on 6/14
-349563,Cory Blount,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.1,47027,Yes,0.1,47027,
-331698,Travis Cotton,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.4,190144,Yes,0.4,190144,PERCEUS on-call work and deploying/enhancing NHC for monitoring and reporting.
-108912,Gabe De La Cruz,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.05,21224,Yes,0.05,21224,TechOps TL but also does CTS on-call
-181909,Jennifer Gonzales,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.5,237681,Yes,0.5,237681,
-105861,Kathleen Kelly,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.9,574191,Yes,0.9,574191,
-351032,Thomas Mackell,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.15,70540,Yes,0.15,70540,
-116901,Thomas Moxley,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.05,18439,Yes,0.05,18439,TechOps but also does CTS on-call
-340915,Johnathan Nielsen,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.3,142608,Yes,0.3,142608,
-104960,Donald Olivas,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.2,117370,Yes,0.2,117370,
-219561,Conor Robinson,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.25,118840,Yes,0.25,118840,
-220350,Samuel Sanchez,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.55,350895,Yes,0.55,350895,
-340718,Alden Stradling,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.25,132317,Yes,0.3,132317,RM:Per Jennings email 7/11
-236120,Graham Van Huele,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0.4,190144,Yes,0.4,190144,
-352830,Conner Whitefield,10/1/22,9/30/23,,,,HPC-SYS,3V020A,0,0,Yes,0,16106,
-246185,James Willams,10/1/22,9/30/23,,,,HPC-SYS,3V020A,1,529268,Yes,1,529268,
-315804,Michael Jennings,10/1/22,9/30/23,,,,HPC-DES,3V050A,0.05,31900,No,0,0,This is a recommendation/rough estimate to help w/prod support RM removed based on Mngmt meeting 7/13
-,Unspecified,10/1/22,9/30/23,Sci / Eng,110000,124999.99,HPC-SYS,3V020A,0.8,349765,Yes,0.8,349765,Jeb Baxley replacement
-,Unspecified,10/1/22,9/30/23,Sci / Eng,110000,124999.99,HPC-SYS,3V020A,0.3,131162,Yes,0.3,131162,M. Jennings Replacement
-,Unspecified,10/1/22,9/30/23,Sci / Eng,110000,124999.99,HPC-SYS,3V020A,0.8,349765,Yes,0.8,349765,K. Paschke replacement
-,Unspecified ,10/1/22,9/30/23,Professional,110000,124999.99,HPC-SYS,3V020A,0.5,216262,Yes,0.5,216262,M. Murillo Replacement
-,Students,10/1/22,9/30/23, M&S ,,,,,,,,,,
+349837,Thomas Bertschinger,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0,0,Yes,0,0,added per SYS request on 6/14
+349563,Cory Blount,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.1,47027,Yes,0.1,47027,
+331698,Travis Cotton,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.4,190144,Yes,0.4,190144,PERCEUS on-call work and deploying/enhancing NHC for monitoring and reporting.
+108912,Gabe De La Cruz,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.05,21224,Yes,0.05,21224,TechOps TL but also does CTS on-call
+181909,Jennifer Gonzales,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.5,237681,Yes,0.5,237681,
+105861,Kathleen Kelly,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.9,574191,Yes,0.9,574191,
+351032,Thomas Mackell,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.15,70540,Yes,0.15,70540,
+116901,Thomas Moxley,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.05,18439,Yes,0.05,18439,TechOps but also does CTS on-call
+340915,Johnathan Nielsen,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.3,142608,Yes,0.3,142608,
+104960,Donald Olivas,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.2,117370,Yes,0.2,117370,
+219561,Conor Robinson,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.25,118840,Yes,0.25,118840,
+220350,Samuel Sanchez,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.55,350895,Yes,0.55,350895,
+340718,Alden Stradling,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.25,132317,Yes,0.3,132317,RM:Per Jennings email 7/11
+236120,Graham Van Huele,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0.4,190144,Yes,0.4,190144,
+352830,Conner Whitefield,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,0,0,Yes,0,16106,
+246185,James Willams,2022-10-01,2023-09-30,,,,HPC-SYS,3V020A,1,529268,Yes,1,529268,
+315804,Michael Jennings,2022-10-01,2023-09-30,,,,HPC-DES,3V050A,0.05,31900,No,0,0,This is a recommendation/rough estimate to help w/prod support RM removed based on Mngmt meeting 7/13
+,Unspecified,2022-10-01,2023-09-30,Sci / Eng,110000,124999.99,HPC-SYS,3V020A,0.8,349765,Yes,0.8,349765,Jeb Baxley replacement
+,Unspecified,2022-10-01,2023-09-30,Sci / Eng,110000,124999.99,HPC-SYS,3V020A,0.3,131162,Yes,0.3,131162,M. Jennings Replacement
+,Unspecified,2022-10-01,2023-09-30,Sci / Eng,110000,124999.99,HPC-SYS,3V020A,0.8,349765,Yes,0.8,349765,K. Paschke replacement
+,Unspecified ,2022-10-01,2023-09-30,Professional,110000,124999.99,HPC-SYS,3V020A,0.5,216262,Yes,0.5,216262,M. Murillo Replacement
+,Students,2022-10-01,2023-09-30, M&S ,,,,,,,,,,

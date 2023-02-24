@@ -4,9 +4,9 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_workpackage_services($name)
+function get_workpackage_services($name,$currentYear)
 {
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $query="SELECT tbl_wp_services.*  
            FROM tbl_wp_info,tbl_wp_services
            WHERE concat(tbl_wp_info.project,' ', tbl_wp_info.task)='$name'
@@ -22,6 +22,24 @@ function get_workpackage_services($name)
 <body>
 
   <?php
+     #drop down
+     $currentYear=date("Y");
+     if(isset($_GET['currentYear']))
+     {
+          $currentYear=$_GET['currentYear'];
+     }
+     $drop_down_str=drop_down_year_basic($conn);
+     echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="update_workpackage_services.php?currentYear="+passValue
+}
+</script>
+
+
+  <?php
     $search_str=display_search_box("Enter workpackage in the search box");
     echo $search_str;
   ?>
@@ -35,6 +53,10 @@ function get_workpackage_services($name)
    $managers="";
    if(isset($_POST['search'])){
        $search_name=$_POST['search'];
+       if(isset($_GET['currentYear']))
+       {
+          $currentYear=$_GET['currentYear'];
+       }
    }
    if($search_name=="")
    {
@@ -44,16 +66,17 @@ function get_workpackage_services($name)
    }
    if($search_name!="")
    {
-       $query=get_workpackage_services($search_name);
+       $query=get_workpackage_services($search_name,$currentYear);
        $result=mysqli_query($conn,$query);
    }
 
 	?>
 
 <div id="msg"></div>
-<form id="form" method="post" ACTION="update_workpackage_services.php?search=<?php echo $search_name?>">
+<form id="form" method="post" ACTION="update_workpackage_services.php?search=<?php echo $search_name?>&currentYear=<?php echo $currentYear?>">
 <input type="hidden" name="action" value="saveAddMore">
 <input type="hidden" name="search" value="<?php echo $search_name;?>">
+<input type="hidden" name="currentYear" value="<?php echo $currentYear;?>">
 <?php
 if($search_name!="")
 {
@@ -61,7 +84,7 @@ if($search_name!="")
    $previousRow="";
    $znumbers=array();
    $currentDate=date("Y/m/d");
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $currentDate=strtotime($currentDate);
    $output_str="";
    $currentColor="";
@@ -127,7 +150,7 @@ if($search_name!="")
       $output_str.="<td valign='top' width='150'><input name='cost_txt[$service_id]' type='text' value='$cost'></td>\n";
       $output_str.="<td valign='top' width='150'><input name='total_cost_txt[$service_id]' type='text' value='$total_cost'></td>\n";
       $output_str.="<td valign='top' width='250'><textarea name='notes_txt[$service_id]' rows='4'>$notes</textarea></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_services.php?search=$search_name&delete_id=$service_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_services.php?search=$search_name&currentYear=$currentYear&delete_id=$service_id'>";
      
       #$query="SELECT 'Yes' UNION ALL SELECT 'No';";
       #$drop_down_name="<select name='funded_txt[$wp_staff_id]' id='funded' width='4'>\n";
@@ -160,7 +183,7 @@ if($search_name!="")
       $delete_query="DELETE from tbl_wp_services where service_id='$service_id'";
       #echo $delete_query;
       $db->query($delete_query);
-      echo "<script>window.open('update_workpackage_services.php?search=$search_name','_self') </script>";
+      echo "<script>window.open('update_workpackage_services.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 
 
@@ -176,9 +199,10 @@ if(isset($_POST['save'])){
        if (is_array($description) || is_object($description))
        {
             foreach($description as $key=>$desc){
-                    $currentYear=date("Y");
+                    #$currentYear=date("Y");
                     $startdate=date("Y-m-d");
-                    $enddate="$currentYear-$endFYIDate";
+                    #$enddate="$endFYIDate";
+                    $enddate="$currentYear-$endMonth";
                     $owners=$owners[$key];
                     $vendor=$vendor[$key];
                     $pct_fous=$pct_fous[$key];
@@ -205,7 +229,7 @@ if(isset($_POST['save'])){
 
             }
             echo "<meta http-equiv='refresh' content='0'>";
-            echo "<script>window.open('update_workpackage_services.php?search=$search_name','_self') </script>"; 
+            echo "<script>window.open('update_workpackage_services.php?search=$search_name&currentYear=$currentYear','_self') </script>"; 
        }
 
         if(isset($_POST['description_txt']))
@@ -262,7 +286,7 @@ if(isset($_POST['save'])){
                               
             }
        echo "<meta http-equiv='refresh' content='0'>";
-       echo "<script>window.open('update_workpackage_services.php?search=$search_name','_self') </script>"; 
+       echo "<script>window.open('update_workpackage_services.php?search=$search_name&currentYear=$currentYear','_self') </script>"; 
        }
 }
 

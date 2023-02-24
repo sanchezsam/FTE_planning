@@ -52,7 +52,7 @@ function validate_manager($conn,$manager)
       #echo"Error No record in tbl_wp_manager  $manager<br>";
       $insert_query="INSERT INTO tbl_wp_manager ( manager_name, startdate) VALUES ('$manager','$startFYDate');";
       echo "$insert_query<br>";
-      #mysqli_query($conn,$insert_query);
+      mysqli_query($conn,$insert_query);
    }
    return;
 }
@@ -173,12 +173,19 @@ foreach($files as $path =>$file)
           #print "INSERT INTO tbl_$file ($insert_descr) values ($insert_values)<br>";
           $insert_values=substr($insert_values, 0, -1);
           #$table_name=substr($file, 2);
-          $insert_query="INSERT INTO $table_name ($insert_descr) values ($insert_values);<br><br>";
-          print $insert_query;
-          #mysqli_query($conn,$insert_query);
+          $insert_query="INSERT INTO $table_name ($insert_descr) values ($insert_values);";
+          print "$insert_query<br>";
+          try { 
+          mysqli_query($conn,$insert_query);
+          }
+          catch (mysqli_sql_exception $e) { 
+             var_dump($e);
+             exit; 
+          } 
           $insert_values="'$wp_id',";
-          if (str_starts_with($file, '1_')) {
-              #echo "Get wp id\n<br>";
+          #if (str_starts_with($file, '1_')) {
+          if (str_contains($file, '1_')) {
+              echo "Get wp id\n<br>";
               $program=$row[0];
               $project=$row[1];
               $task=$row[2];
@@ -186,6 +193,7 @@ foreach($files as $path =>$file)
               $startdate=$row[8];
               $enddate=$row[9];
               $wp_id=get_wp_id($conn,$task,$startdate,$enddate);
+              echo "<br>$wp_id<br>";
               #check if task manager is in tbl_wp_manager
               $result=validate_manager($conn,$task_manager);   
           }

@@ -1,6 +1,6 @@
 <?php
 require '../../include/db.php';
-#DELETE FROM `tbl_wp_info` WHERE `wp_id` >= 32
+#DELETE FROM `tbl_wp_info` WHERE `wp_id` >= 32;
 #DELETE FROM `tbl_wp_materials` WHERE `wp_id` >= 32;
 #DELETE FROM `tbl_wp_staff` WHERE `wp_id` >= 32;
 #DELETE FROM `tbl_wp_services` WHERE `wp_id` >= 32;

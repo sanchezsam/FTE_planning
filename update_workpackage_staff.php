@@ -4,9 +4,8 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_workpackage_staff($name)
+function get_workpackage_staff($name,$currentYear)
 {
-   $currentYear=date("Y");
    $query="SELECT tbl_wp_staff.*  
            FROM tbl_wp_info,tbl_wp_staff
            WHERE concat(tbl_wp_info.project,' ', tbl_wp_info.task)='$name'
@@ -86,6 +85,23 @@ function get_title_and_salary($conn,$znumber,$wp_staff_id)
 
 <body>
 
+ <?php
+     #drop down
+     $currentYear=date("Y");
+     if(isset($_GET['currentYear']))
+     {   
+          $currentYear=$_GET['currentYear'];
+     }
+     $drop_down_str=drop_down_year_basic($conn);
+     echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="update_workpackage_staff.php?currentYear="+passValue
+}
+</script>
+
   <?php
     $search_str=display_search_box("Enter workpackage in the search box");
     echo $search_str;
@@ -100,6 +116,10 @@ function get_title_and_salary($conn,$znumber,$wp_staff_id)
    $managers="";
    if(isset($_POST['search'])){
        $search_name=$_POST['search'];
+       if(isset($_GET['currentYear']))
+       {
+          $currentYear=$_GET['currentYear'];
+       }
    }
    if($search_name=="")
    {
@@ -109,16 +129,17 @@ function get_title_and_salary($conn,$znumber,$wp_staff_id)
    }
    if($search_name!="")
    {
-       $query=get_workpackage_staff($search_name);
+       $query=get_workpackage_staff($search_name,$currentYear);
        $result=mysqli_query($conn,$query);
    }
 
 	?>
 
 <div id="msg"></div>
-<form id="form" method="post" ACTION="update_workpackage_staff.php?search=<?php echo $search_name?>">
+<form id="form" method="post" ACTION="update_workpackage_staff.php?search=<?php echo $search_name?>&currentYear=<?php echo $currentYear?>">
 <input type="hidden" name="action" value="saveAddMore">
 <input type="hidden" name="search" value="<?php echo $search_name;?>">
+<input type="hidden" name="currentYear" value="<?php echo $currentYear;?>">
 <?php
 if($search_name!="")
 {
@@ -126,7 +147,7 @@ if($search_name!="")
    $previousName="";
    $znumbers=array();
    $currentDate=date("Y/m/d");
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $currentDate=strtotime($currentDate);
    $output_str="";
    $currentColor="";
@@ -232,7 +253,7 @@ if($search_name!="")
       $output_str.="<td valign='top'><input name='funded_percent_txt[$wp_staff_id]' type='text' value='$funded_percent'></td>\n";
       $total_cost="$" . number_format(floatval($total_cost), 2, ".", ",");
       $output_str.="<td valign='top'><input name='total_cost_txt[$wp_staff_id]' type='text' value='$total_cost'></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&delete_id=$wp_staff_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&currentYear=$currentYear&delete_id=$wp_staff_id'>";
       #$output_str.="<button type='button' data-toggle='tooltip' data-placement='right' onclick='if(confirm(\"Are you sure to remove?\")){$(this).closest('tr').remove();}'";
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
       $output_str.="</tr>\n";
@@ -262,7 +283,7 @@ if($search_name!="")
       $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
       #echo $delete_query;
       $db->query($delete_query);
-      echo "<script>window.open('update_workpackage_staff.php?search=$search_name','_self') </script>";
+      echo "<script>window.open('update_workpackage_staff.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 
 
@@ -291,8 +312,8 @@ if(isset($_POST['save'])){
                         $group_name=$val['group_name'];
                     }
                     $currentDate=date("Y-m-d");
-                    $currentYear=date("Y");
-                    $enddate="$currentYear-$endFYIDate";
+                    #$currentY=date("Y");
+                    $enddate="$currentYear-$endMonth";
                     #echo "<br>$znumber";
                     #echo "<br>$name";
                     #echo "<br>$labor_pool";
@@ -304,7 +325,11 @@ if(isset($_POST['save'])){
                     $insert_query="INSERT INTO tbl_wp_staff
                                    (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
                                    VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
-                    #echo "<br>$insert_query<br>";
+                    echo "<br>$insert_query<br>";
+               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+               $txt=$insert_query;
+               fwrite($myfile, $txt);
+               fclose($myfile);
                     $db->query($insert_query);
 
             }
@@ -373,7 +398,7 @@ if(isset($_POST['save'])){
             }
        }
        echo "<meta http-equiv='refresh' content='0'>";
-       echo "<script>window.open('update_workpackage_staff.php?search=$search_name','_self') </script>"; 
+       echo "<script>window.open('update_workpackage_staff.php?search=$search_name&currentYear=$currentYear','_self') </script>"; 
 }
 
 require 'template/footer.html';

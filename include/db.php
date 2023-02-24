@@ -12,6 +12,7 @@ $column_color='#C1C1E8';
 $totals_color='#33ffce';
 $startFY="2022";
 $endFY="2023";
+$endMonth='10-01';
 $startFYDate="2022-10-01";
 $endFYIDate="2023-9-30";
 $nextStartFYDate="2023-10-01";
@@ -80,7 +81,12 @@ function get_mysql_columns($result)
    if(!empty($values)){
        $columns = array_keys($values[0]);
    }
+   else
+   {
+      $return_str.="<td>&nbsp;</td>\n";
+   }
    foreach($columns as $col){
+       #echo "in foreach $col<br>";
        $return_str.="<td width='100%'  valign='top'><b>$col</b></td>\n";
    }
    $return_str.="</tr>\n";
@@ -117,9 +123,14 @@ function get_mysql_totals_values($result,$columns,$columns_totals)
 {
    global $totals_color;
    $return_str="";
+   #echo $totals_color;
    $return_str.="<tr bgcolor='$totals_color'>";
    $found="F";
-   $row=$row = mysqli_fetch_array($result);
+   $row= mysqli_fetch_array($result);
+   $size=count($columns);
+   if(count($columns)==0){
+     return;
+   } 
    for($i=0;$i<count($columns);$i++)
    {
         for($j=0;$j<count($columns_totals);$j++)
@@ -148,6 +159,7 @@ function get_mysql_totals_values($result,$columns,$columns_totals)
         }
    }
    $return_str.="</tr>\n";
+   #echo htmlspecialchars($return_str);
    return $return_str;
 }
 
@@ -306,11 +318,9 @@ $output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";
 $output_str.="</ul>";
 $output_str.="</td>";
 
-
-
-
 $output_str.="<td valign='top'><b>View by Year</b></td>\n";
-$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
+#$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
+$query="SELECT year(enddate) FROM tbl_wp_info group by year(enddate)";
 $year_result=mysqli_query($conn,$query);
 $output_str.="<td width='200'>";
 $output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
@@ -489,6 +499,52 @@ function display_search_box($title)
     $search_str.="</div>";
 
     return $search_str;
+}
+
+
+
+function drop_down_year_basic($conn)
+{
+$currentYear=date("Y");
+if(isset($_GET['currentYear']))
+{
+     $currentYear=$_GET['currentYear'];
+}
+
+#$currentDate=strtotime($currentDate);
+$output_str="";
+$output_str.="<form id='yearform' method='post'>";
+#$output_str="<table width = '432' style='border:1px solid black;'>\n";
+$output_str="<table style='border:1px solid black;'>\n";
+$output_str.="<tr bgcolor ='#C1C1E8'>\n";
+
+
+$output_str.="<td valign='top'><b>View by Year</b></td>\n";
+#$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
+$query="SELECT year(enddate) FROM tbl_wp_info group by year(enddate)";
+$year_result=mysqli_query($conn,$query);
+$output_str.="<td width='200'>";
+$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+$output_str.="<option value=''>Select</option>";
+while($row=mysqli_fetch_array($year_result))
+{
+   if($currentYear==$row[0])
+   {
+       $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
+   }
+   else
+   {
+       $output_str.="<option value=$row[0]>$row[0]</option>";
+   }
+}
+$output_str.="</select>";
+$output_str.="</td>";
+$output_str.="</tr>\n";
+$output_str.="</table>\n";
+$output_str.="<input type='hidden' name='currentYear' value='$currentYear'>";
+$output_str.="</form>";
+return $output_str;
+
 }
 
 ?>

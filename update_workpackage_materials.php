@@ -4,9 +4,9 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_workpackage_materials($name)
+function get_workpackage_materials($name,$currentYear)
 {
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $query="SELECT tbl_wp_materials.*  
            FROM tbl_wp_info,tbl_wp_materials
            WHERE concat(tbl_wp_info.project,' ', tbl_wp_info.task)='$name'
@@ -20,6 +20,26 @@ function get_workpackage_materials($name)
 <html lang="en-US" class="no-js">
 
 <body>
+  <?php
+     #drop down
+     $currentYear=date("Y");
+     if(isset($_GET['currentYear']))
+     {
+          $currentYear=$_GET['currentYear'];
+     }
+     $drop_down_str=drop_down_year_basic($conn);
+     echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="update_workpackage_materials.php?currentYear="+passValue
+}
+</script>
+
+
+
+
 
   <?php
     $search_str=display_search_box("Enter workpackage in the search box");
@@ -35,6 +55,10 @@ function get_workpackage_materials($name)
    $managers="";
    if(isset($_POST['search'])){
        $search_name=$_POST['search'];
+       if(isset($_GET['currentYear']))
+       {
+          $currentYear=$_GET['currentYear'];
+       }
    }
    if($search_name=="")
    {
@@ -44,16 +68,17 @@ function get_workpackage_materials($name)
    }
    if($search_name!="")
    {
-       $query=get_workpackage_materials($search_name);
+       $query=get_workpackage_materials($search_name,$currentYear);
        $result=mysqli_query($conn,$query);
    }
 
 	?>
 
 <div id="msg"></div>
-<form id="form" method="post" ACTION="update_workpackage_materials.php?search=<?php echo $search_name?>">
+<form id="form" method="post" ACTION="update_workpackage_materials.php?search=<?php echo $search_name?>&currentYear=<?php echo $currentYear?>">
 <input type="hidden" name="action" value="saveAddMore">
 <input type="hidden" name="search" value="<?php echo $search_name;?>">
+<input type="hidden" name="currentYear" value="<?php echo $currentYear;?>">
 <?php
 if($search_name!="")
 {
@@ -61,7 +86,7 @@ if($search_name!="")
    $previousRow="";
    $znumbers=array();
    $currentDate=date("Y/m/d");
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $currentDate=strtotime($currentDate);
    $output_str="";
    $currentColor="";
@@ -147,7 +172,7 @@ if($search_name!="")
 
       $output_str.="<td valign='top' width='150'><input name='replacement_cost_txt[$material_id]' type='text' value='$replacement_cost'></td>\n";
       $output_str.="<td valign='top' width='150'><input name='total_cost_txt[$material_id]' type='text' value='$total_cost'></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_materials.php?search=$search_name&delete_id=$material_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_materials.php?search=$search_name&currentYear=$currentYear&delete_id=$material_id'>";
      
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
       $output_str.="</tr>\n";
@@ -176,7 +201,7 @@ if($search_name!="")
       $delete_query="DELETE from tbl_wp_materials where material_id='$material_id'";
       echo $delete_query;
       $db->query($delete_query);
-      echo "<script>window.open('update_workpackage_materials.php?search=$search_name','_self') </script>";
+      echo "<script>window.open('update_workpackage_materials.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 
 
@@ -223,7 +248,7 @@ if(isset($_POST['save'])){
 
             }
             echo "<meta http-equiv='refresh' content='0'>";
-            echo "<script>window.open('update_workpackage_materials.php?search=$search_name','_self') </script>"; 
+            echo "<script>window.open('update_workpackage_materials.php?search=$search_name&currentYear=$currentYear','_self') </script>"; 
        }
 
         if(isset($_POST['description_txt']))
@@ -286,7 +311,7 @@ if(isset($_POST['save'])){
                               
             }
        echo "<meta http-equiv='refresh' content='0'>";
-       echo "<script>window.open('update_workpackage_materials.php?search=$search_name','_self') </script>"; 
+       echo "<script>window.open('update_workpackage_materials.php?search=$search_name&currentYear=$currentYear','_self') </script>"; 
        }
 }
 

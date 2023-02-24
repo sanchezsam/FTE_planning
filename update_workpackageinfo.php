@@ -4,13 +4,14 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_workpackage_info($name)
+function get_workpackage_info($name,$currentYear)
 {
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $query="SELECT * 
            FROM tbl_wp_info
            WHERE concat(Project,' ', task)='$name'
                  and YEAR(enddate)=$currentYear";
+   #echo "$query";
    return $query;
 }
 
@@ -22,6 +23,27 @@ function get_workpackage_info($name)
 <body>
 
   <?php
+     #drop down
+     $currentYear=date("Y");
+     if(isset($_GET['currentYear']))
+     {    
+          $currentYear=$_GET['currentYear'];
+     }
+     $drop_down_str=drop_down_year_basic($conn);
+     echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="update_workpackageinfo.php?currentYear="+passValue
+}
+</script>
+
+  <?php
+
+
+
+
     $search_str=display_search_box("Enter workpackage in the search box");
     echo $search_str;
   ?>
@@ -35,6 +57,10 @@ function get_workpackage_info($name)
    $managers="";
    if(isset($_POST['search'])){
        $name=$_POST['search'];
+       if(isset($_GET['currentYear']))
+       {
+          $currentYear=$_GET['currentYear'];
+       } 
    }
    if($name=="")
    {
@@ -44,16 +70,17 @@ function get_workpackage_info($name)
    }
    if($name!="")
    {
-       $query=get_workpackage_info($name);
+       $query=get_workpackage_info($name,$currentYear);
        $result=mysqli_query($conn,$query);
    }
 
 	?>
 
 <div id="msg"></div>
-<form id="form" method="post" ACTION="update_workpackageinfo.php?search=<?php echo $name?>">
+<form id="form" method="post" ACTION="update_workpackageinfo.php?search=<?php echo $name?>&currentYear=<?php echo $currentYear?>">
 <input type="hidden" name="action" value="saveAddMore">
 <input type="hidden" name="search" value="<?php echo $name;?>">
+<input type="hidden" name="currentYear" value="<?php echo $currentYear;?>">
 <?php
 if($name!="")
 {
@@ -169,7 +196,7 @@ if(isset($_POST['save'])){
                               
             }
         echo "<meta http-equiv='refresh' content='0'>";
-        echo "<script>window.open('update_workpackageinfo.php?search=$name','_self') </script>";
+        echo "<script>window.open('update_workpackageinfo.php?search=$name&currentYear=$currentYear','_self') </script>";
        }
 }
 
