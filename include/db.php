@@ -10,6 +10,7 @@ $header_color='#ADD8E6';
 $change_font_color="white";
 $column_color='#C1C1E8';
 $totals_color='#33ffce';
+#$totals_color='red';
 $startFY="2022";
 $endFY="2023";
 $endMonth='10-01';
@@ -97,7 +98,14 @@ function get_record_id($rec_id,$result)
 {
     #check if results has something
     $row = $result -> fetch_array(MYSQLI_ASSOC);
-    return $row[$rec_id];
+    if($row)
+    {
+       return $row[$rec_id];
+    }
+    else
+    {
+       return;
+    }
 }
 
 function get_mysql_values($result)
@@ -109,7 +117,7 @@ function get_mysql_values($result)
    while($row=mysqli_fetch_row($result))
    {
       $currentColor= ${'colour' .($termcount % 2)};            
-      $return_str.="<tr bgcolor='$currentColor'>";
+      $return_str.="<tr bgcolor='$currentColor'>\n";
       for($i=0;$i<count($row);$i++){
         if($row[$i]=="")
         {

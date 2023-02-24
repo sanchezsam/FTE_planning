@@ -209,7 +209,8 @@ if(isset($_POST['search']))
        $currentYear=$_GET['currentYear'];
    }
    #open of main table
-   $output_str="\n<table id='dataTable' class='table table-striped' width='100%'>\n";
+   #$output_str="\n<table id='dataTable' class='table table-striped' width='100%'>\n";
+   $output_str="\n<table id='dataTable' width='100%'>\n";
    #$output_str.="<tr>\n";
    #$output_str.="<td>\n";
 
@@ -218,7 +219,6 @@ if(isset($_POST['search']))
    $result=mysqli_query($conn,$query);
    
 
-   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $header_str="$name $currentYear Forcast ";
    $output_str.=display_table_header($header_str); 
    list($column_str,$columns)=get_mysql_columns($result);
@@ -234,8 +234,6 @@ if(isset($_POST['search']))
    #display workpackage staff
    $query=get_wp_staff($record_id);
    $result=mysqli_query($conn,$query);
-   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
-   #$output_str.="<table  width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Retained Team'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
@@ -249,12 +247,10 @@ if(isset($_POST['search']))
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_totals_values($result,$columns,$columns_totals);
    $output_str.="<tr><td colspan='100%'></td></tr>";
-   ##$output_str.="</table>\n";
 
    #display Services 
    $query=get_wp_services($record_id);
    $result=mysqli_query($conn,$query);
-   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Service & Support Contracts'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
@@ -268,12 +264,10 @@ if(isset($_POST['search']))
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_totals_values($result,$columns,$columns_totals);
    $output_str.="<tr><td colspan='100%'></td></tr>";
-   #$output_str.="</table>\n";
 
    #display Materials 
    $query=get_wp_materials($record_id);
    $result=mysqli_query($conn,$query);
-   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Systems & Materials'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
@@ -287,35 +281,28 @@ if(isset($_POST['search']))
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_totals_values($result,$columns,$columns_totals);
    $output_str.="<tr><td colspan='100%'></td></tr>";
-   #$output_str.="</table>\n";
 
    #display Activities
    $query=get_wp_activities($record_id);
    $result=mysqli_query($conn,$query);
-   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Activity Descriptions'); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_values($result);
    $output_str.="<tr><td colspan='100%'></td></tr>";
-   #$output_str.="</table>\n";
 
    #display totals
    $query=get_wp_totals($record_id);
    $result=mysqli_query($conn,$query);
-   #$output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.=display_table_header('Workpackage Info');
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
    $output_str.=get_mysql_values($result);
    $output_str.="<tr><td colspan='100%'></td></tr>";
-   #$output_str.="</table>\n";
   
    #Close of main table
-   $output_str.="</td>\n";
-   $output_str.="</tr>\n";
    $output_str.="</table>\n";
    echo $output_str;
    $output_str="";
