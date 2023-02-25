@@ -75,7 +75,7 @@ function get_mysql_columns($result)
 {
    global $column_color;
    $return_str="";
-   $return_str.="<tr bgcolor ='$column_color'>\n";
+   $return_str.="<tr bgcolor='$column_color'>\n";
    $values = $result->fetch_all(MYSQLI_ASSOC);
    $columns = array();
 
@@ -88,7 +88,7 @@ function get_mysql_columns($result)
    }
    foreach($columns as $col){
        #echo "in foreach $col<br>";
-       $return_str.="<td width='100%'  valign='top'><b>$col</b></td>\n";
+       $return_str.="<td valign='top'><b>$col</b></td>\n";
    }
    $return_str.="</tr>\n";
    return array($return_str,$columns);

@@ -5,15 +5,26 @@ require 'template/header.html';
 
 function get_workpackage_managers($currentYear)
 {
-   $query="SELECT manager_name as 'Manager',
-                  startdate as 'Start Date',
-                  enddate as 'End Date',
-                  workpackage_name as 'Workpackage',
-                  forcasted_fte_total as 'Forcasted Amount' 
-           FROM vw_workpackage_managers
-           WHERE YEAR(enddate)=$currentYear
-           ORDER BY enddate desc ";
+   #$query="SELECT manager_name as 'Manager',
+   #               startdate as 'Start Date',
+   #               enddate as 'End Date',
+   #               workpackage_name as 'Workpackage',
+   #               forcasted_fte_total as 'Forcasted Amount' 
+   #        FROM vw_workpackage_managers
+   #        WHERE YEAR(enddate)=$currentYear
+   #        ORDER BY enddate desc ";
    #echo $query;
+   $query="select program,
+                  project,
+                  task,
+                  task_name,
+                  task_manager,
+                  burden_rate,
+                  target,
+                  startdate,
+                  enddate
+          from tbl_wp_info
+          where YEAR(enddate)='$currentYear'";
    return $query;
 }
 
@@ -50,13 +61,10 @@ function refreshPage(passValue,search){
    $query=get_workpackage_managers($currentYear);
    $result=mysqli_query($conn,$query);
 
-   $output_str="<table id='dataTable' class='table table-striped' width = '900' style='border:1px solid black;'>\n";
+   $output_str="<table id='dataTable' style='border:1px solid black;'>\n";
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);
-   #$query=get_workpackage_managers($currentYear);
-   #$result=mysqli_query($conn,$query);
-   #$output_str.=get_mysql_values_with_old($currentYear,$result,$columns);
    $output_str.=get_mysql_values($result);
    $output_str.="</table>\n";
    echo $output_str;

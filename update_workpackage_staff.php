@@ -22,9 +22,22 @@ function cal_cost($salary_min,$salary_max,$percent)
   return round($cost,2);
 }
 
-function get_title_and_salary($conn,$znumber,$wp_staff_id)
+
+function get_name_from_znumber($conn,$znumber,$currentYear)
 {
-   $query="SELECT labor_pool,job_title FROM `tbl_staff_info` WHERE znumber='$znumber'";
+   $name=""; 
+   $query="SELECT name FROM `tbl_staff_info` WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   {
+     $name=$row[0];
+   }
+   return $name;
+}
+
+function get_title_and_salary($conn,$znumber,$wp_staff_id,$currentYear)
+{
+   $query="SELECT labor_pool,job_title FROM `tbl_staff_info` WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
    $result=mysqli_query($conn,$query);
    $output_str="";
    while($row=mysqli_fetch_array($result))
@@ -211,6 +224,14 @@ if($search_name!="")
       $output_str.="<td valign='top'>$wp_staff_id</td>\n";
       #$output_str.="<td valign='top'>$wp_id</td>\n";
       #----$output_str.="<td valign='top'><input name='znumber_txt[$wp_staff_id]' type='text' value='$znumber' readonly></td>\n";
+      if($znumber)
+      {
+          $znum2name=get_name_from_znumber($conn,$znumber,$currentYear); 
+          if($name=="")
+          {
+             $name=$znum2name;
+          }
+      }
       $output_str.="<td valign='top'><input name='name_txt[$wp_staff_id]' type='text' value='$name'></td>\n";
       #----$output_str.="<td valign='top'><input name='start_date_txt[$wp_staff_id]' type='text' value='$startdate'></td>\n";
       #----$output_str.="<td valign='top'><input name='end_date_txt[$wp_staff_id]' type='text' value='$enddate'></td>\n";
@@ -219,7 +240,7 @@ if($search_name!="")
       #----$output_str.="<td valign='top'><input name='salary_max_txt[$wp_staff_id]' type='text' value='$salary_max'></td>\n";
       if($znumber)
       {
-         $output_str.=get_title_and_salary($conn,$znumber,$wp_staff_id);
+         $output_str.=get_title_and_salary($conn,$znumber,$wp_staff_id,$currentYear);
       }
       else
       {
@@ -378,13 +399,17 @@ if(isset($_POST['save'])){
                    $total_cost="0";
                }
                #$cost=$cost_txt[$key];
+               $name=$name_txt[$key];
                #$total_cost=$total_cost_txt[$key];
                $notes=$notes_txt[$key];
                $update_query="UPDATE tbl_wp_staff 
                               SET pct_fte = '$pct_fte',
                               cost = '$cost',
+                              name = '$name',
                               funded = '$funded',
                               funded_percent = '$funded_percent',
+                              salary_min = '$salary_min',
+                              salary_max = '$salary_max',
                               total_cost = '$total_cost',
                               notes = '$notes'
                               WHERE wp_staff_id = $key; ";
