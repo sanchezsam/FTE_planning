@@ -206,6 +206,114 @@ function get_mysql_values_with_old($currentYear,$result,$columns)
    return $return_str;
 }
 
+
+ 
+
+function drop_down_year_with_program($conn,$page_name)
+{
+#$currentYear=date("Y");
+
+#$currentDate=strtotime($currentDate);
+$output_str="";
+#$output_str.="<form id='yearform' method='post' action=workpackage_managers.php>";
+$output_str.="<form id='yearform' method='post' action=$page_name.php>";
+$output_str.="<table style='border:1px solid black;'>\n";
+$output_str.="<tr bgcolor ='#C1C1E8'>\n";
+
+$output_str.="<td align='left' class='btn-group pull-left'>";
+$output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
+$output_str.="<ul class='dropdown-menu' role='menu'>\n";
+$output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
+$output_str.="<li><a class='dataExport' data-type='excel'>XLS</a></li>";
+$output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";
+$output_str.="</ul>";
+$output_str.="</td>";
+$output_str.="<td>\n";
+$query="SELECT distinct program  FROM tbl_wp_info";
+$program_result=mysqli_query($conn,$query);
+$check_box_str="";
+$currentYear="";
+
+
+
+$program="";
+if(isset($_POST["submit"]))
+{
+     if(isset($_POST['program_name']))
+     {
+        $program= $_POST['program_name'];
+     }
+     if(isset($_POST['year']))
+     {
+          $currentYear=$_POST['year'][0];
+     }
+     #print_r($_POST);
+     #echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';
+
+}
+$checkbox_str="";
+while($row=mysqli_fetch_array($program_result))
+{
+      $program_value=$row[0];
+      if($program==$program_value)
+      {
+          $checkbox_str.="<input type='radio' id='$program_value' name=program_name value='$program_value' checked>";
+      }
+      else
+      {
+          $checkbox_str.="<input type='radio' id='$program_value' name=program_name value='$program_value' required='required'>";
+      }
+      #$checkbox_str.="<input type='radio' id='$program_value' name=program_name value='$program_value'>";
+      $checkbox_str.="<label for=$program_value>$program_value</label>";
+}
+
+$output_str.=$checkbox_str;
+$output_str.="</td>\n";
+
+$output_str.="<td valign='top'><b>View by Year</b></td>\n";
+$query="SELECT distinct year(enddate) FROM tbl_wp_info group by year(enddate)";
+$year_result=mysqli_query($conn,$query);
+$output_str.="<td width='200'>";
+#$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+$output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+$output_str.="<option value=''>Select</option>";
+while($row=mysqli_fetch_array($year_result))
+{
+   if($currentYear==$row[0])
+   {
+       $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
+   }
+   else
+   {
+       $output_str.="<option value=$row[0]>$row[0]</option>";
+   }
+}
+$output_str.="</select>";
+$output_str.="</td>";
+$output_str.="<td>";
+#$output_str.="<a href='workpackage_managers.php?currentYear=$currentYear&program=$program'>";
+$output_str.="<a href='$page_name.php?currentYear=$currentYear&program=$program'>";
+$output_str.="<input type='submit' name='submit' value='Display'>";
+$output_str.="</a>";
+
+$output_str.="</td>";
+$output_str.="</tr>\n";
+$output_str.="</table>\n";
+$output_str.="</form>";
+return $output_str;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 function drop_down_year_with_group($conn)
 {
 #$currentYear=date("Y");

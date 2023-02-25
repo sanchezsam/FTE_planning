@@ -3,7 +3,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_workpackage_managers($currentYear)
+function get_workpackage_managers($program,$currentYear)
 {
    #$query="SELECT manager_name as 'Manager',
    #               startdate as 'Start Date',
@@ -24,7 +24,8 @@ function get_workpackage_managers($currentYear)
                   startdate,
                   enddate
           from tbl_wp_info
-          where YEAR(enddate)='$currentYear'";
+          where YEAR(enddate)='$currentYear'
+                and program='$program'";
    return $query;
 }
 
@@ -40,9 +41,30 @@ if(isset($_GET['currentYear']))
 {
      $currentYear=$_GET['currentYear'];
 }
-$drop_down_str=drop_down_year($conn);
+$drop_down_str=drop_down_year_with_program($conn,'workpackage_managers');
 echo $drop_down_str;
+
+$program="";
+if(isset($_POST["submit"]))
+{
+
+     if(isset($_POST['program_name']))
+     {
+        $program= $_POST['program_name'];
+        echo "sumbited $program";
+     }
+     if(isset($_POST['year']))
+     {
+          $currentYear=$_POST['year'][0];
+     }
+
+}
+
+
 ?>
+
+
+
 <script>
 function refreshPage(passValue,search){
 //do something in this function with the value
@@ -57,8 +79,13 @@ function refreshPage(passValue,search){
        $currentYear=$_GET['currentYear'];
    }
 
+
+
+
+
+
    #display workpackage info
-   $query=get_workpackage_managers($currentYear);
+   $query=get_workpackage_managers($program,$currentYear);
    $result=mysqli_query($conn,$query);
 
    $output_str="<table id='dataTable' style='border:1px solid black;'>\n";
