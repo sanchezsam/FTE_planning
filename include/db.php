@@ -247,10 +247,18 @@ if(isset($_POST["submit"]))
      {
           $currentYear=$_POST['year'][0];
      }
-     #print_r($_POST);
-     #echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';
-
 }
+
+if(isset($_GET['program_name']))
+{
+   $program= $_GET['program_name'];
+}
+
+if(isset($_GET['currentYear']))
+{
+     $currentYear=$_GET['currentYear'];
+}
+
 $checkbox_str="";
 while($row=mysqli_fetch_array($program_result))
 {

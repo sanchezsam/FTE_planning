@@ -51,7 +51,6 @@ if(isset($_POST["submit"]))
      if(isset($_POST['program_name']))
      {
         $program= $_POST['program_name'];
-        echo "sumbited $program";
      }
      if(isset($_POST['year']))
      {

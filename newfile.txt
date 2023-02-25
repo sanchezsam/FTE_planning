@@ -1,3 +1,4 @@
-INSERT INTO tbl_wp_staff
-                                   (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
-                                   VALUES ('6','897858','Students','','','2023-02-25','2023-10-01');
+INSERT INTO tbl_wp_info
+                                   (program,project,task,task_name,task_manager,task_description,burden_rate,target,startdate,enddate) 
+                                   VALUES ('IC','2023 fadsf ad','adfadsa','a fdadsf','Andrew Montoya','2023 fadfasdf ',
+                                            'afda','afdasd','2023-02-25','2023-10-01');
