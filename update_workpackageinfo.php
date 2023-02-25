@@ -10,7 +10,7 @@ function get_workpackage_info($name,$currentYear)
    $query="SELECT * 
            FROM tbl_wp_info
            WHERE concat(Project,' ', task)='$name'
-                 and YEAR(enddate)=$currentYear";
+                 and YEAR(enddate)=$currentYear limit 1";
    #echo "$query";
    return $query;
 }
