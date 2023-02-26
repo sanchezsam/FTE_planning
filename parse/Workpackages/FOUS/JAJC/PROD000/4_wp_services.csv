@@ -1,13 +1,13 @@
 ﻿Contract Description,Start Date,End Date,Contract Owner,Vendor,Pct FOUS,Risk (0-5),Funded?,Cost,Total Cost,Notes
-Moon/Luna Redhat Licenses,2022-10-01,2023-09-30,,,100%,0,Yes,42672,42672,Do we need this on Moon?
-Snow Redhat Licenses ,2022-10-01,2023-09-30,,,100%,4,Yes,8022,8022,
-Cyclone Redhat Licenses,2022-10-01,2023-09-30,,,100%,4,Yes,22000,22000,Pricing?  See comment!
-Fire Redhat Licenses,2022-10-01,2023-09-30,,,100%,5,Yes,22000,22000,
-Ice Redhat Licenses,2022-10-01,2023-09-30,,,100%,5,Yes,22000,22000,
-Viewmaster/Lightshow,2022-10-01,2023-09-30,,,100%,5,Yes,5000,5000,8985.75
-Viz Software,2022-10-01,2023-09-30,,,100%,5,Yes,5000,5000,
-O'Reilly Online Learning (Safari),2022-10-01,2023-09-30,,,100%,3,Yes,13105,13105,Roughly $220 per person
-CSM Technologies Training,2022-10-01,2023-09-30,,,50%,4,Yes,150000,75000,Training on CSM & component technologies (split 50/50 with IC)
-GitLab License,2022-10-01,2023-09-30,Johnathan Nielsen,,30%,5,Yes,25000,7500,Split 30/30/40 among JAJC JAKC IC
-CHARM Licenses (Open),2022-10-01,2023-09-30,Johnathan Nielsen,,50%,5,Yes,21000,10500,RedHat Virtualization licenses for the open CHARM deployment (50% ASC FOUS)
-CHARM Licenses (Secure),2022-10-01,2023-09-30,Johnathan Nielsen,,100%,4,Yes,15000,15000,RedHat Virtualization licenses for the secure CHARM deployment (100% ASC FOUS)
+Moon/Luna Redhat Licenses,2022-10-01,2023-09-30,,,1,0,Yes,42672,42672,Do we need this on Moon?
+Snow Redhat Licenses ,2022-10-01,2023-09-30,,,1,4,Yes,8022,8022,
+Cyclone Redhat Licenses,2022-10-01,2023-09-30,,,1,4,Yes,22000,22000,Pricing?  See comment!
+Fire Redhat Licenses,2022-10-01,2023-09-30,,,1,5,Yes,22000,22000,
+Ice Redhat Licenses,2022-10-01,2023-09-30,,,1,5,Yes,22000,22000,
+Viewmaster/Lightshow,2022-10-01,2023-09-30,,,1,5,Yes,5000,5000,8985.75
+Viz Software,2022-10-01,2023-09-30,,,1,5,Yes,5000,5000,
+O'Reilly Online Learning (Safari),2022-10-01,2023-09-30,,,1,3,Yes,13105,13105,Roughly $220 per person
+CSM Technologies Training,2022-10-01,2023-09-30,,,0.5,4,Yes,150000,75000,Training on CSM & component technologies (split 50/50 with IC)
+GitLab License,2022-10-01,2023-09-30,Johnathan Nielsen,,0.3,5,Yes,25000,7500,Split 30/30/40 among JAJC JAKC IC
+CHARM Licenses (Open),2022-10-01,2023-09-30,Johnathan Nielsen,,0.5,5,Yes,21000,10500,RedHat Virtualization licenses for the open CHARM deployment (50% ASC FOUS)
+CHARM Licenses (Secure),2022-10-01,2023-09-30,Johnathan Nielsen,,1,4,Yes,15000,15000,RedHat Virtualization licenses for the secure CHARM deployment (100% ASC FOUS)

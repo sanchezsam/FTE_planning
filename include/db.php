@@ -62,10 +62,13 @@ function generate_select_list($db,$query,$selected_value,$drop_down_name)
 
 
 
-function display_table_header($header_str)
+function display_table_header($header_str,$colspan="")
 {  
    global $header_color;
-   $output_str="\n<tr bgcolor='$header_color'>\n<td colspan='100%'><b>$header_str</b></td>\n</tr>\n";
+   if($colspan==""){
+      $colspan='100%';
+   }
+   $output_str="\n<tr bgcolor='$header_color'>\n<td colspan='$colspan'><h4><b>$header_str</b></h4></td>\n</tr>\n";
    return $output_str;
 }
 
