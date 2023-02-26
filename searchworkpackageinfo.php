@@ -21,10 +21,10 @@ function get_wp_totals($wp_id)
                                         (tbl_services.service_cost*tbl_info.burden_rate)+
                                         (tbl_materials.materials_cost*tbl_info.burden_rate),0)) as 'FY ALLOCTIONS'
             FROM tbl_wp_staff, 
-                 (SELECT sum(tbl_wp_services.total_cost) as 'service_cost'
+                 (SELECT COALESCE(sum(tbl_wp_services.total_cost),0) as 'service_cost'
                  FROM `tbl_wp_services`
                  WHERE tbl_wp_services.wp_id=$wp_id) as tbl_services,
-                 (SELECT sum(tbl_wp_materials.total_cost)*1000 as 'materials_cost'
+                 (SELECT COALESCE(sum(tbl_wp_materials.total_cost),0)*1000 as 'materials_cost'
                  FROM `tbl_wp_materials`
                  WHERE tbl_wp_materials.wp_id=$wp_id) as tbl_materials,
                  (SELECT burden_rate 
