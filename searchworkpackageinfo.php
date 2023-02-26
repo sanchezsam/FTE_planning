@@ -343,7 +343,7 @@ if(isset($_POST['search']))
       if(trim($notes)!="")
       {
           $output_str.="<tr bgcolor='$column_color'>\n";
-          $output_str.="<td style='background-color:$column_color' colspan='9' valign='top'><b>Notes:</b> $notes</td>\n";
+          $output_str.="<td style='background-color:$currentColor' colspan='9' valign='top'><b>Notes:</b> $notes</td>\n";
           $output_str.="</tr>";
       }
       $output_str.="<tr bgcolor='gray'><td colspan='9'></td></tr>";
@@ -428,8 +428,8 @@ if(isset($_POST['search']))
       $output_str.="</tr>";
       if(trim($notes)!="")
       {
-          $output_str.="<tr bgcolor='$currentColor'>\n";
-          $output_str.="<td colspan='10' valign='top'><b>Notes:</b> $notes</td>\n";
+          $output_str.="<tr>\n";
+          $output_str.="<td style='background-color:$currentColor' colspan='10' valign='top'><b>Notes:</b> $notes</td>\n";
           $output_str.="</tr>";
       }
       $termcount++;
@@ -513,7 +513,7 @@ if(isset($_POST['search']))
       if(trim($notes)!="")
       {
           $output_str.="<tr bgcolor='$currentColor'>\n";
-          $output_str.="<td colspan='10' valign='top'><b>Notes:</b> $notes</td>\n";
+          $output_str.="<td style='background-color:$currentColor' colspan='10' valign='top'><b>Notes:</b> $notes</td>\n";
           $output_str.="</tr>";
       }
       $output_str.="<tr bgcolor='gray'><td colspan='100%'></td></tr>";
