@@ -68,7 +68,7 @@ function display_table_header($header_str,$colspan="")
    if($colspan==""){
       $colspan='100%';
    }
-   $output_str="\n<tr bgcolor='$header_color'>\n<td colspan='$colspan'><h4><b>$header_str</b></h4></td>\n</tr>\n";
+   $output_str="\n<tr>\n<td style='background-color:$header_color' colspan='$colspan'><h4><b>$header_str</b></h4></td>\n</tr>\n";
    return $output_str;
 }
 

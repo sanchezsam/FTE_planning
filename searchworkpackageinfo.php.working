@@ -1,8 +1,7 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
-#require 'template/header.html';
-require 'template/header2.html';
+require 'template/header.html';
 
 #$file_name ="test.xls";
 #header("Content-type: application/vnd.ms-excel");
@@ -236,38 +235,37 @@ if(isset($_POST['search']))
       $task_description=$row[9];
       $currentColor= ${'colour' .($termcount % 2)};
       
-      #$output_str.="<tr bgcolor='$column_color'>\n";
-      $output_str.="<tr>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Program</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Project</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Task</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top' colspan='4'><b>Task Name</b></td>\n";
-      $output_str.="</tr>";
-      $output_str.="<tr>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top'>$program</td>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top'>$project</td>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top'>$task</td>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top' colspan='4'>$task_name</td>\n";
-      $output_str.="</tr>";
-
-      $output_str.="<tr>\n";
-      $output_str.="<td  style='background-color:$column_color' valign='top' colspan='4'><b>Task Manager</b></td>\n";
-      $output_str.="<td  style='background-color:$column_color' valign='top'><b>Burden Rate</b></td>\n";
-      $output_str.="<td  style='background-color:$column_color' valign='top'><b>Start Date</b></td>\n";
-      $output_str.="<td  style='background-color:$column_color' valign='top'><b>End Date</b></td>\n";
+      $output_str.="<tr bgcolor='$column_color'>\n";
+      $output_str.="<td valign='top'><b>Program</b></td>\n";
+      $output_str.="<td valign='top'><b>Project</b></td>\n";
+      $output_str.="<td valign='top'><b>Task</b></td>\n";
+      $output_str.="<td valign='top' colspan='4'><b>Task Name</b></td>\n";
       $output_str.="</tr>";
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top' colspan='4'>$task_manager</td>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top'>$burden_rate</td>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top'>$startdate</td>\n";
-      $output_str.="<td  style='background-color:$currentColor' valign='top'>$enddate</td>\n";
+      $output_str.="<td valign='top'>$program</td>\n";
+      $output_str.="<td valign='top'>$project</td>\n";
+      $output_str.="<td valign='top'>$task</td>\n";
+      $output_str.="<td valign='top' colspan='4'>$task_name</td>\n";
       $output_str.="</tr>";
 
-      $output_str.="<tr>\n";
-      $output_str.="<td style='background-color:$column_color' colspan='7' valign='top'><b>Task Description</b></td>\n";
+      $output_str.="<tr bgcolor='$column_color'>\n";
+      $output_str.="<td valign='top' colspan='4'><b>Task Manager</b></td>\n";
+      $output_str.="<td valign='top'><b>Burden Rate</b></td>\n";
+      $output_str.="<td valign='top'><b>Start Date</b></td>\n";
+      $output_str.="<td valign='top'><b>End Date</b></td>\n";
       $output_str.="</tr>";
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' colspan='7' valign='top'>$task_description</td>\n";
+      $output_str.="<td valign='top' colspan='4'>$task_manager</td>\n";
+      $output_str.="<td valign='top'>$burden_rate</td>\n";
+      $output_str.="<td valign='top'>$startdate</td>\n";
+      $output_str.="<td valign='top'>$enddate</td>\n";
+      $output_str.="</tr>";
+
+      $output_str.="<tr bgcolor='$column_color'>\n";
+      $output_str.="<td colspan='7' valign='top'><b>Task Description</b></td>\n";
+      $output_str.="</tr>";
+      $output_str.="<tr bgcolor='$currentColor'>\n";
+      $output_str.="<td colspan='7' valign='top'>$task_description</td>\n";
       $output_str.="</tr>";
       $termcount++;
     }
@@ -302,47 +300,47 @@ if(isset($_POST['search']))
       $currentColor= ${'colour' .($termcount % 2)};
       
       $output_str.="<tr bgcolor='$column_color'>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>znumber</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' colspan='2' valign='top'><b>Staff</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' colspan='4' valign='top'><b>Title</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Start Date</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>End Date</b></td>\n";
+      $output_str.="<td valign='top'><b>znumber</b></td>\n";
+      $output_str.="<td colspan='2' valign='top'><b>Staff</b></td>\n";
+      $output_str.="<td colspan='4' valign='top'><b>Title</b></td>\n";
+      $output_str.="<td valign='top'><b>Start Date</b></td>\n";
+      $output_str.="<td valign='top'><b>End Date</b></td>\n";
       $output_str.="</tr>";
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$znumber</td>\n";
-      $output_str.="<td style='background-color:$currentColor' colspan='2' valign='top'>$staff</td>\n";
-      $output_str.="<td style='background-color:$currentColor' colspan='4' valign='top'>$title</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$startdate</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$enddate</td>\n";
+      $output_str.="<td valign='top'>$znumber</td>\n";
+      $output_str.="<td colspan='2' valign='top'>$staff</td>\n";
+      $output_str.="<td colspan='4' valign='top'>$title</td>\n";
+      $output_str.="<td valign='top'>$startdate</td>\n";
+      $output_str.="<td valign='top'>$enddate</td>\n";
       $output_str.="</tr>";
 
       $output_str.="<tr bgcolor='$column_color'>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Group Name</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Org Code</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Salary Min</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Salary Max</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Pct FTE</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Cost</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Funded</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Funded Percent</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Total Cost</b></td>\n";
+      $output_str.="<td valign='top'><b>Group Name</b></td>\n";
+      $output_str.="<td valign='top'><b>Org Code</b></td>\n";
+      $output_str.="<td valign='top'><b>Salary Min</b></td>\n";
+      $output_str.="<td valign='top'><b>Salary Max</b></td>\n";
+      $output_str.="<td valign='top'><b>Pct FTE</b></td>\n";
+      $output_str.="<td valign='top'><b>Cost</b></td>\n";
+      $output_str.="<td valign='top'><b>Funded</b></td>\n";
+      $output_str.="<td valign='top'><b>Funded Percent</b></td>\n";
+      $output_str.="<td valign='top'><b>Total Cost</b></td>\n";
       $output_str.="</tr>";
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$group_name</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$org_code</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$salary_min</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$salary_max</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$pct_fte</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$cost</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$funded</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$funded_percent</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$total_cost</td>\n";
+      $output_str.="<td valign='top'>$group_name</td>\n";
+      $output_str.="<td valign='top'>$org_code</td>\n";
+      $output_str.="<td valign='top'>$salary_min</td>\n";
+      $output_str.="<td valign='top'>$salary_max</td>\n";
+      $output_str.="<td valign='top'>$pct_fte</td>\n";
+      $output_str.="<td valign='top'>$cost</td>\n";
+      $output_str.="<td valign='top'>$funded</td>\n";
+      $output_str.="<td valign='top'>$funded_percent</td>\n";
+      $output_str.="<td valign='top'>$total_cost</td>\n";
       $output_str.="</tr>";
 
       if(trim($notes)!="")
       {
           $output_str.="<tr bgcolor='$column_color'>\n";
-          $output_str.="<td style='background-color:$column_color' colspan='9' valign='top'><b>Notes:</b> $notes</td>\n";
+          $output_str.="<td colspan='9' valign='top'><b>Notes:</b> $notes</td>\n";
           $output_str.="</tr>";
       }
       $output_str.="<tr bgcolor='gray'><td colspan='9'></td></tr>";
@@ -353,12 +351,12 @@ if(isset($_POST['search']))
    $query=get_totals_for_staff($wp_id);
    $result=mysqli_query($conn,$query);
    $output_str.="<tr bgcolor='$totals_color'>";
-   $output_str.="<td style='background-color:$totals_color' colspan='4'></td>";
-   $output_str.="<td style='background-color:$totals_color'><b>PCT FTE</b></td>";
-   $output_str.="<td style='background-color:$totals_color'><b>Cost</b></td>";
-   $output_str.="<td style='background-color:$totals_color'></td>";
-   $output_str.="<td style='background-color:$totals_color'><b>Funded %</b></td>";
-   $output_str.="<td style='background-color:$totals_color'><b>Total Cost</b></td>";
+   $output_str.="<td colspan='4'></td>";
+   $output_str.="<td><b>PCT FTE</b></td>";
+   $output_str.="<td><b>Cost</b></td>";
+   $output_str.="<td></td>";
+   $output_str.="<td><b>Funded %</b></td>";
+   $output_str.="<td><b>Total Cost</b></td>";
    $output_str.="</tr>";
    while($row=mysqli_fetch_array($result))
    {
@@ -367,12 +365,12 @@ if(isset($_POST['search']))
        $funded=$row[2];
        $total_cost=$row[3];
        $output_str.="<tr bgcolor='$totals_color'>";
-       $output_str.="<td style='background-color:$totals_color' colspan='4'></td>";
-       $output_str.="<td style='background-color:$totals_color'>$pct_fte</td>";
-       $output_str.="<td style='background-color:$totals_color'>$cost</td>";
-       $output_str.="<td style='background-color:$totals_color'></td>";
-       $output_str.="<td style='background-color:$totals_color'>$funded</td>";
-       $output_str.="<td style='background-color:$totals_color'>$total_cost</td>";
+       $output_str.="<td colspan='4'></td>";
+       $output_str.="<td>$pct_fte</td>";
+       $output_str.="<td>$cost</td>";
+       $output_str.="<td></td>";
+       $output_str.="<td>$funded</td>";
+       $output_str.="<td>$total_cost</td>";
        $output_str.="</tr>";
    }
 
@@ -383,21 +381,21 @@ if(isset($_POST['search']))
    $query=get_wp_services($wp_id);
    $result=mysqli_query($conn,$query);
    
-   $output_str.=display_table_header('Service & Support Contracts',10); 
+   $output_str.=display_table_header('Service & Support Contracts'); 
    #$output_str.=display_table_header($header_str,4); 
 
    $termcount=1;
    $output_str.="<tr bgcolor='$column_color'>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Service</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>End Date</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Owner</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Vendor</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Percent of FOUS</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Risk</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Funded</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Cost</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Total Cost</b></td>\n";
+   $output_str.="<td valign='top'><b>Service</b></td>\n";
+   $output_str.="<td valign='top'><b>Start Date</b></td>\n";
+   $output_str.="<td valign='top'><b>End Date</b></td>\n";
+   $output_str.="<td valign='top'><b>Owner</b></td>\n";
+   $output_str.="<td valign='top'><b>Vendor</b></td>\n";
+   $output_str.="<td valign='top'><b>Percent of FOUS</b></td>\n";
+   $output_str.="<td valign='top'><b>Risk</b></td>\n";
+   $output_str.="<td valign='top'><b>Funded</b></td>\n";
+   $output_str.="<td valign='top'><b>Cost</b></td>\n";
+   $output_str.="<td valign='top'><b>Total Cost</b></td>\n";
    $output_str.="</tr>";
    while($row=mysqli_fetch_array($result))
    {
@@ -414,16 +412,16 @@ if(isset($_POST['search']))
       $notes=$row[10];
       $currentColor= ${'colour' .($termcount % 2)};
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$service</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$startdate</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$enddate</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$owner</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$vendor</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$percent</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$risk</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$funded</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$cost</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$total_cost</td>\n";
+      $output_str.="<td valign='top'>$service</td>\n";
+      $output_str.="<td valign='top'>$startdate</td>\n";
+      $output_str.="<td valign='top'>$enddate</td>\n";
+      $output_str.="<td valign='top'>$owner</td>\n";
+      $output_str.="<td valign='top'>$vendor</td>\n";
+      $output_str.="<td valign='top'>$percent</td>\n";
+      $output_str.="<td valign='top'>$risk</td>\n";
+      $output_str.="<td valign='top'>$funded</td>\n";
+      $output_str.="<td valign='top'>$cost</td>\n";
+      $output_str.="<td valign='top'>$total_cost</td>\n";
       $output_str.="</tr>";
       if(trim($notes)!="")
       {
@@ -437,18 +435,18 @@ if(isset($_POST['search']))
    $query=get_totals_for_services($wp_id);
    $result=mysqli_query($conn,$query);
    $output_str.="<tr bgcolor='$totals_color'>";
-   $output_str.="<td style='background-color:$totals_color' colspan='8'></td>";
-   $output_str.="<td style='background-color:$totals_color' colspan='1'><b>Cost</b></td>";
-   $output_str.="<td style='background-color:$totals_color' colspan='1'><b>Total Cost</b></td>";
+   $output_str.="<td colspan='8'></td>";
+   $output_str.="<td colspan='1'><b>Cost</b></td>";
+   $output_str.="<td colspan='1'><b>Total Cost</b></td>";
    $output_str.="</tr>";
    while($row=mysqli_fetch_array($result))
    {
        $cost=$row[0];
        $total_cost=$row[1];
        $output_str.="<tr bgcolor='$totals_color'>";
-       $output_str.="<td style='background-color:$totals_color' colspan='8'></td>";
-       $output_str.="<td style='background-color:$totals_color' colspan='1'>$cost</td>";
-       $output_str.="<td style='background-color:$totals_color' colspan='1'>$total_cost</td>";
+       $output_str.="<td colspan='8'></td>";
+       $output_str.="<td colspan='1'>$cost</td>";
+       $output_str.="<td colspan='1'>$total_cost</td>";
        $output_str.="</tr>";
    }
 
@@ -460,7 +458,7 @@ if(isset($_POST['search']))
    $query=get_wp_materials($wp_id);
    $result=mysqli_query($conn,$query);
    
-   $output_str.=display_table_header('Systems & Materials',10); 
+   $output_str.=display_table_header('Systems & Materials'); 
 
    $termcount=1;
    while($row=mysqli_fetch_array($result))
@@ -480,33 +478,33 @@ if(isset($_POST['search']))
       $currentColor= ${'colour' .($termcount % 2)};
       
       $output_str.="<tr bgcolor='$column_color'>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Property Number</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top' colspan='9'><b>Description</b></td>\n";
+      $output_str.="<td valign='top'><b>Property Number</b></td>\n";
+      $output_str.="<td valign='top' colspan='10'><b>Description</b></td>\n";
       $output_str.="</tr>";
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$property_number</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'colspan='9'>$description</td>\n";
+      $output_str.="<td valign='top'>$property_number</td>\n";
+      $output_str.="<td valign='top'colspan='10'>$description</td>\n";
       $output_str.="</tr>";
 
       $output_str.="<tr bgcolor='$column_color'>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Service Entry</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top' colspan='3'><b>Owner</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Under Maint</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Percent of FOUS</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Risk</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Replace Fund</b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Replacement Cost<b></td>\n";
-      $output_str.="<td style='background-color:$column_color' valign='top'><b>Total Cost</b></td>\n";
+      $output_str.="<td valign='top'><b>Service Entry</b></td>\n";
+      $output_str.="<td valign='top' colspan='3'><b>Owner</b></td>\n";
+      $output_str.="<td valign='top'><b>Under Maint</b></td>\n";
+      $output_str.="<td valign='top'><b>Percent of FOUS</b></td>\n";
+      $output_str.="<td valign='top'><b>Risk</b></td>\n";
+      $output_str.="<td valign='top'><b>Replace Fund</b></td>\n";
+      $output_str.="<td valign='top'><b>Replacement Cost<b></td>\n";
+      $output_str.="<td valign='top'><b>Total Cost</b></td>\n";
       $output_str.="</tr>";
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$service_entry</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top' colspan='3'>$owner</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$under_maint</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$percent</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$risk</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$replace_fund</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$replace_cost</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$total_cost</td>\n";
+      $output_str.="<td valign='top'>$service_entry</td>\n";
+      $output_str.="<td valign='top' colspan='3'>$owner</td>\n";
+      $output_str.="<td valign='top'>$under_maint</td>\n";
+      $output_str.="<td valign='top'>$percent</td>\n";
+      $output_str.="<td valign='top'>$risk</td>\n";
+      $output_str.="<td valign='top'>$replace_fund</td>\n";
+      $output_str.="<td valign='top'>$replace_cost</td>\n";
+      $output_str.="<td valign='top'>$total_cost</td>\n";
       $output_str.="</tr>";
 
       if(trim($notes)!="")
@@ -523,18 +521,18 @@ if(isset($_POST['search']))
    $query=get_totals_for_materials($wp_id);
    $result=mysqli_query($conn,$query);
    $output_str.="<tr bgcolor='$totals_color'>";
-   $output_str.="<td style='background-color:$totals_color' colspan='8'></td>";
-   $output_str.="<td style='background-color:$totals_color' colspan='1'><b>Cost</b></td>";
-   $output_str.="<td style='background-color:$totals_color' colspan='1'><b>Total Cost</b></td>";
+   $output_str.="<td colspan='8'></td>";
+   $output_str.="<td colspan='1'><b>Cost</b></td>";
+   $output_str.="<td colspan='1'><b>Total Cost</b></td>";
    $output_str.="</tr>";
    while($row=mysqli_fetch_array($result))
    {
        $cost=$row[0];
        $total_cost=$row[1];
        $output_str.="<tr bgcolor='$totals_color'>";
-       $output_str.="<td style='background-color:$totals_color' colspan='8'></td>";
-       $output_str.="<td style='background-color:$totals_color' colspan='1'>$cost</td>";
-       $output_str.="<td style='background-color:$totals_color' colspan='1'>$total_cost</td>";
+       $output_str.="<td colspan='8'></td>";
+       $output_str.="<td colspan='1'>$cost</td>";
+       $output_str.="<td colspan='1'>$total_cost</td>";
        $output_str.="</tr>";
    }  
   $output_str.="<tr bgcolor='$seperator_color'><td colspan='100%'></td></tr>";
@@ -544,16 +542,16 @@ if(isset($_POST['search']))
    $query=get_wp_activities($wp_id);
    $result=mysqli_query($conn,$query);
    
-   $output_str.=display_table_header('Activity Description',10); 
+   $output_str.=display_table_header('Activity Description'); 
    #$output_str.=display_table_header($header_str,4); 
 
    $termcount=1;
    $output_str.="<tr bgcolor='$column_color'>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top' colspan='2'><b>Activity</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top'><b>End Date</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top' colspan='2'><b>Members</b></td>\n";
-   $output_str.="<td style='background-color:$column_color' valign='top' colspan='4'><b>Description</b></td>\n";
+   $output_str.="<td valign='top' colspan='2'><b>Activity</b></td>\n";
+   $output_str.="<td valign='top'><b>Start Date</b></td>\n";
+   $output_str.="<td valign='top'><b>End Date</b></td>\n";
+   $output_str.="<td valign='top' colspan='2'><b>Members</b></td>\n";
+   $output_str.="<td valign='top' colspan='4'><b>Description</b></td>\n";
    $output_str.="</tr>";
    while($row=mysqli_fetch_array($result))
    {
@@ -564,11 +562,11 @@ if(isset($_POST['search']))
       $description=$row[4];
       $currentColor= ${'colour' .($termcount % 2)};
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top' colspan='2'>$activity</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$startdate</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top'>$enddate</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top' colspan='2'>$members</td>\n";
-      $output_str.="<td style='background-color:$currentColor' valign='top' colspan='4'>$description</td>\n";
+      $output_str.="<td valign='top' colspan='2'>$activity</td>\n";
+      $output_str.="<td valign='top'>$startdate</td>\n";
+      $output_str.="<td valign='top'>$enddate</td>\n";
+      $output_str.="<td valign='top' colspan='2'>$members</td>\n";
+      $output_str.="<td valign='top' colspan='4'>$description</td>\n";
       $output_str.="</tr>";
       $termcount++;
     }
@@ -578,16 +576,16 @@ if(isset($_POST['search']))
    #display totals
    $query=get_wp_totals($wp_id);
    $result=mysqli_query($conn,$query);
-   $output_str.=display_table_header('Workpackage Info',10);
+   $output_str.=display_table_header('Workpackage Info');
 
    $output_str.="<tr bgcolor='$column_color'>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top'><b>Burden Rate</b></td>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'><b>Request FTE</b></td>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'><b>Funded FTE</b></td>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'><b>Service Costs</b></td>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>Hardware Inventory</b></td>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>Hardware Costs</b></td>\n";
-   $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>FY Allocations</b></td>\n";
+   $output_str.="<td valign='top'><b>Burden Rate</b></td>\n";
+   $output_str.="<td valign='top' colspan='2'><b>Request FTE</b></td>\n";
+   $output_str.="<td valign='top' colspan='2'><b>Funded FTE</b></td>\n";
+   $output_str.="<td valign='top' colspan='2'><b>Service Costs</b></td>\n";
+   $output_str.="<td valign='top' colspan='1'><b>Hardware Inventory</b></td>\n";
+   $output_str.="<td valign='top' colspan='1'><b>Hardware Costs</b></td>\n";
+   $output_str.="<td valign='top' colspan='1'><b>FY Allocations</b></td>\n";
    $output_str.="</tr>";
    while($row=mysqli_fetch_array($result))
    {
@@ -600,13 +598,13 @@ if(isset($_POST['search']))
       $fy_allocations=$row[6];
       $currentColor= ${'colour' .($termcount % 2)};
       $output_str.="<tr bgcolor='$currentColor'>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top'>$burden_rate</td>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'>$request_fte</td>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'>$funded_fte</td>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'>$service_costs</td>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$hardware_inventory</td>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$hardware_costs</td>\n";
-      $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$fy_allocations</td>\n";
+      $output_str.="<td valign='top'>$burden_rate</td>\n";
+      $output_str.="<td valign='top' colspan='2'>$request_fte</td>\n";
+      $output_str.="<td valign='top' colspan='2'>$funded_fte</td>\n";
+      $output_str.="<td valign='top' colspan='2'>$service_costs</td>\n";
+      $output_str.="<td valign='top' colspan='1'>$hardware_inventory</td>\n";
+      $output_str.="<td valign='top' colspan='1'>$hardware_costs</td>\n";
+      $output_str.="<td valign='top' colspan='1'>$fy_allocations</td>\n";
       $output_str.="</tr>";
     }
 
