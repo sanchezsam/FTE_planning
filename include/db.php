@@ -91,7 +91,7 @@ function get_mysql_columns($result)
    }
    foreach($columns as $col){
        #echo "in foreach $col<br>";
-       $return_str.="<td valign='top'><b>$col</b></td>\n";
+       $return_str.="<td style='background-color:$column_color' valign='top'><b>$col</b></td>\n";
    }
    $return_str.="</tr>\n";
    return array($return_str,$columns);
@@ -127,7 +127,7 @@ function get_mysql_values($result)
               $return_str.="<td>&nbsp;</td>\n";
         }
         else{
-            $return_str.="<td>$row[$i]</td>\n";
+            $return_str.="<td style='background-color:$currentColor'>$row[$i]</td>\n";
         }
       }
       $termcount++;
@@ -201,7 +201,7 @@ function get_mysql_values_with_old($currentYear,$result,$columns)
       }
       $return_str.="<tr bgcolor='$currentColor'>";
       for($i=0;$i<count($row);$i++){
-        $return_str.="<td><font color=$font_color>$row[$i]</font></td>\n";
+        $return_str.="<td style='background-color:$currentColor'><font color=$font_color>$row[$i]</font></td>\n";
       }
       $termcount++;
       $return_str.="</tr>\n";

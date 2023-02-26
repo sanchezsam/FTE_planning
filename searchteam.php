@@ -93,14 +93,15 @@ $currentDate=date("Y/m/d");
 #$currentYear=date("Y");
 $currentDate=strtotime($currentDate);
 
-$output_str="<table id='dataTable' width = '900' style='border:1px solid black;'>\n";
+echo "$column_color<br>";
+$output_str="<table id='dataTable' width = '900'>\n";
 #$output_str.="<tr><td>$name $currentYear Forcast</td></tr>\n";
-$output_str.="<tr bgcolor ='#C1C1E8'>\n";
-$output_str.="<td valign='top' width='300'><b>Workpackage Name</b></td>\n";
-$output_str.="<td valign='top'><b>Staff Name</b></td>\n";
-$output_str.="<td valign='top'><b>Forcasted Amount</b></td>\n";
-$output_str.="<td valign='top'><b>Start Date</b></td>\n";
-$output_str.="<td valign='top'><b>End Date</b></td>\n";
+$output_str.="<tr>\n";
+$output_str.="<td style='background-color:$column_color' valign='top' width='300'><b>Workpackage Name</b></td>\n";
+$output_str.="<td style='background-color:$column_color' valign='top'><b>Staff Name</b></td>\n";
+$output_str.="<td style='background-color:$column_color' valign='top'><b>Forcasted Amount</b></td>\n";
+$output_str.="<td style='background-color:$column_color' valign='top'><b>Start Date</b></td>\n";
+$output_str.="<td style='background-color:$column_color' valign='top'><b>End Date</b></td>\n";
 $output_str.="</tr>\n";
 
 $total=0;
@@ -122,11 +123,11 @@ while($row=mysqli_fetch_array($result))
        {   
            #$output_str.="<tr bgcolor='#b1fefe'>\n<td colspan='5' align='right'>WP Total :  $total</td></tr>\n";
            $output_str.="<tr bgcolor='#b1fefe'>\n";
-           $output_str.= "<td>&nbsp;</td>\n";
-           $output_str.= "<td>&nbsp;</td>\n";
-           $output_str.= "<td>&nbsp;</td>\n";
-           $output_str.= "<td>&nbsp;</td>\n";
-           $output_str.="<td align='right'>WP Total :  $total</td></tr>\n";
+           $output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+           $output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+           $output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+           $output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+           $output_str.="<td  style='background-color:$totals_color' align='right'>WP Total :  $total</td></tr>\n";
            $total=0;
        }
 
@@ -151,26 +152,26 @@ while($row=mysqli_fetch_array($result))
          $currentColor=$old_color;
          $font_color=$change_font_color;
    }
-   $output_str.="<td bgcolor='$currentColor' valign='top'>$staff_name</td>\n";
-   $output_str.="<td bgcolor='$currentColor' valign='top' align='right'>$forcasted</td>\n";
-   $output_str.="<td bgcolor='$currentColor' valign='top' align='right'>$startdate</td>\n";
-   $output_str.="<td bgcolor='$currentColor' valign='top' align='right'>$enddate</td>\n";
+   $output_str.="<td style='background-color:$currentColor' valign='top'>$staff_name</td>\n";
+   $output_str.="<td style='background-color:$currentColor' valign='top' align='right'>$forcasted</td>\n";
+   $output_str.="<td style='background-color:$currentColor' valign='top' align='right'>$startdate</td>\n";
+   $output_str.="<td style='background-color:$currentColor' valign='top' align='right'>$enddate</td>\n";
    $currentColor=$prev_color;
    $output_str.="</tr>\n";
 }
 $output_str.="<tr bgcolor='#b1fefe'>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.="<td align='right'>WP Total :  $total</td></tr>\n";
+$output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+$output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+$output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+$output_str.= "<td style='background-color:$totals_color' >&nbsp;</td>\n";
+$output_str.="<td  style='background-color:$totals_color' align='right'>WP Total :  $total</td></tr>\n";
 
 $output_str.="<tr bgcolor='#b1fefe'>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.= "<td>&nbsp;</td>\n";
-$output_str.="<td align='right'>Team Total :  $grand_total</td></tr>\n";
+$output_str.= "<td style='background-color:$totals_color'>&nbsp;</td>\n";
+$output_str.= "<td style='background-color:$totals_color'>&nbsp;</td>\n";
+$output_str.= "<td style='background-color:$totals_color'>&nbsp;</td>\n";
+$output_str.= "<td style='background-color:$totals_color'>&nbsp;</td>\n";
+$output_str.="<td  style='background-color:$totals_color' align='right'>Team Total :  $grand_total</td></tr>\n";
 $total=0;
 $output_str.="</table>\n";
 

@@ -194,6 +194,7 @@ function refreshPage(passValue,search){
   <?php
     $search_str=display_search_box("Enter workpackage in the search box");
     echo $search_str;
+    echo "<br>";
   ?>
 
 

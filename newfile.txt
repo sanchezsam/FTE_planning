@@ -1,1 +1,1 @@
-2023year
+SELECT team_name,group_name FROM vw_team_mapping WHERE team_name LIKE :team order by team_name asc

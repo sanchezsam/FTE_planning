@@ -67,6 +67,10 @@ elseif(isset($_POST['group_name']))
 {
    $exportName=$_POST['group_name'];
 }
+elseif(isset($_GET['currentYear']))
+{
+   $exportName=$_GET['currentYear'];
+}
 else
 {
    $exportName="default";
