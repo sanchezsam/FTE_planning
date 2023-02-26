@@ -223,14 +223,19 @@ $output_str.="<form id='yearform' method='post' action=$page_name.php>";
 $output_str.="<table style='border:1px solid black;'>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 
-$output_str.="<td align='left' class='btn-group pull-left'>";
-$output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
-$output_str.="<ul class='dropdown-menu' role='menu'>\n";
-$output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
-$output_str.="<li><a class='dataExport' data-type='excel'>XLS</a></li>";
-$output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";
+$output_str.="<td align='left'>";
+$output_str.="<ul class='actions'>";
+$output_str.="<li><a href='#' onclick='doExport()' class='button'>Export</a></li>";
 $output_str.="</ul>";
-$output_str.="</td>";
+
+#$output_str.="<td align='left' class='btn-group pull-left'>";
+#$output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
+#$output_str.="<ul class='dropdown-menu' role='menu'>\n";
+#$output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
+#$output_str.="<li><a class='dataExport' data-type='excel'>XLS</a></li>";
+#$output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";
+#$output_str.="</ul>";
+#$output_str.="</td>";
 $output_str.="<td>\n";
 $query="SELECT distinct program  FROM tbl_wp_info";
 $program_result=mysqli_query($conn,$query);
@@ -337,13 +342,21 @@ $output_str.="<form id='yearform' method='post' action=allftes.php>";
 $output_str.="<table style='border:1px solid black;'>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 
-$output_str.="<td align='left' class='btn-group pull-left'>";
-$output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
-$output_str.="<ul class='dropdown-menu' role='menu'>\n";
-$output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
-$output_str.="<li><a class='dataExport' data-type='excel'>XLS</a></li>";
-$output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";
+
+$output_str.="<td align='left'>";
+$output_str.="<ul class='actions'>";
+$output_str.="<li><a href='#' onclick='doExport()' class='button'>Export</a></li>";
 $output_str.="</ul>";
+
+
+
+#$output_str.="<td align='left' class='btn-group pull-left'>";
+#$output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
+#$output_str.="<ul class='dropdown-menu' role='menu'>\n";
+#$output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
+#$output_str.="<li><a class='dataExport' data-type='excel'>XLS</a></li>";
+#$output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";
+#$output_str.="</ul>";
 $output_str.="</td>";
 
 
@@ -441,13 +454,12 @@ $output_str="<table style='border:1px solid black;'>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 
 
-$output_str.="<td align='left' class='btn-group pull-left'>";
-$output_str.="<button type='button' btn-lg dropdown-toggle' data-toggle='dropdown'>Export <span class='caret'></span></button>\n";
-$output_str.="<ul class='dropdown-menu' role='menu'>\n";
-$output_str.="<li><a class='dataExport' data-type='csv'>CSV</a></li>";
-$output_str.="<li><a class='dataExport' data-type='excel'>XLS</a></li>";          
-$output_str.="<li><a class='dataExport' data-type='txt'>TXT</a></li>";			 			  
+$output_str.="<td align='left'>";
+$output_str.="<ul class='actions'>";
+$output_str.="<li><a href='#' onclick='doExport()' class='button'>Export</a></li>";
 $output_str.="</ul>";
+
+
 $output_str.="</td>";
 
 $output_str.="<td valign='top'><b>View by Year</b></td>\n";

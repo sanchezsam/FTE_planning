@@ -2,7 +2,7 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 #require 'template/header.html';
-require 'template/header2.html';
+require 'template/header.html';
 
 #$file_name ="test.xls";
 #header("Content-type: application/vnd.ms-excel");
