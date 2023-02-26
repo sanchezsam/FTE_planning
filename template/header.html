@@ -17,15 +17,23 @@
                 <!-- Header -->
                	<header id="header">
                		<a href="index.php" class="logo"><strong>HPC</strong> FTE PLANNING</a>
-                               <!--
-               		<ul class="icons">
+                        <!--
+                        <ul class="icons">
+                                <li class="icon solid fa-home"><span class="label"><a href='int.lanl.gov'></span></a></li>
+                                <li class="icon solid fa-envelope"><a href="webmail.lanl.gov"></a></li>
+                                <li class="icon solid fa-phone"><a href="phonebook.lanl.gov"></a></li>
                			<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
                			<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
                			<li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
                			<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
                			<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+                        </ul>
+                        -->
+               		<ul class="icons">
+               			<li><a href="https://int.lanl.gov/" class="icon solid fa-home"><span class="label">home</span></a></li>
+               			<li><a href="https://webmail.lanl.gov" class="icon solid fa-envelope"><span class="label">mail</span></a></li>
+               			<li><a href="https://phonebook-y.lanl.gov/" class="icon solid fa-phone"><span class="label">phone</span></a></li>
                		</ul>
-                               -->
            	</header>
 <!--
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -40,10 +48,35 @@
 <script type="text/javascript" src="script_dir/FileSaver.min.js"></script>
 <!--<script type="text/javascript" src="script_dir/jspdf.umd.min.js"></script>-->
 <script type="text/javascript" src="script_dir/tableExport.js"></script>
+
+
+<?php
+$arr = get_defined_vars();
+#print_r($arr);
+#var_dump($_REQUEST);
+#var_dump($_POST);
+if(isset($_POST['search']))
+{
+    $exportName=$_POST['search'];
+}
+elseif(isset($_POST['program_name']))
+{
+   $exportName=$_POST['program_name'];
+}
+elseif(isset($_POST['group_name']))
+{
+   $exportName=$_POST['group_name'];
+}
+else
+{
+   $exportName="default";
+}
+?>
 <script type="text/javaScript">
       function doExport() {
         $('#dataTable').tableExport({
             type:'excel',
+            fileName: '<?php echo $exportName;?>',
             mso: {
               styles: ['background-color',
                        'color',

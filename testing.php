@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
 <?php
-#require 'include/db.php';
-require 'template/header2.html';
+require 'include/db.php';
+require 'template/header.html';
 ?>
 </head>
 <body>
+<?php
+$drop_down_str=drop_down_year($conn);
+echo $drop_down_str;
+
+$output_str.="<input type='hidden' name='exportName' value='SAM'>";
+echo $output_str;
+?>
+
 
 
 <table id="dataTable">
