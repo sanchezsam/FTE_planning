@@ -274,7 +274,7 @@ if($search_name!="")
       $output_str.="<td valign='top'><input name='funded_percent_txt[$wp_staff_id]' type='text' value='$funded_percent'></td>\n";
       $total_cost="$" . number_format(floatval($total_cost), 2, ".", ",");
       $output_str.="<td valign='top'><input name='total_cost_txt[$wp_staff_id]' type='text' value='$total_cost'></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&currentYear=$currentYear&delete_id=$wp_staff_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_staff.php?search=$search_name&currentYear=$currentYear&delete_id=$wp_staff_id&name=$name'>";
       #$output_str.="<button type='button' data-toggle='tooltip' data-placement='right' onclick='if(confirm(\"Are you sure to remove?\")){$(this).closest('tr').remove();}'";
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
       $output_str.="</tr>\n";
@@ -301,9 +301,17 @@ if($search_name!="")
 
   if(isset($_GET['delete_id'])){
       $wp_staff_id=$_GET['delete_id'];
+      $name=$_GET['name'];
       $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
       #echo $delete_query;
-      $db->query($delete_query);
+      #$db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted: $name";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
       echo "<script>window.open('update_workpackage_staff.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 
@@ -319,41 +327,78 @@ if(isset($_POST['save'])){
 
        if (is_array($znumbers) || is_object($znumbers))
        {
+            $errorMsg="";
+            $insertMsg="";
             foreach($znumbers as $key=>$znumber){
                     #get wp_id
                     #$staff_name = $_POST['staff_name'];
                     #echo "<input type='hidden' name='search' value='$name'>";
+                    $select_query="SELECT * FROM tbl_staff_info where znumber ='$znumber'";
+                    #echo $query;
                     $result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber'");
-                    while($val  =   $result->fetch_assoc())
-                    {
-                        $name=trim($val['name']);
-                        $labor_pool=$val['labor_pool'];
-                        $job_title=$val['job_title'];
-                        $group_code=$val['group_code'];
-                        $group_name=$val['group_name'];
-                    }
-                    $currentDate=date("Y-m-d");
-                    #$currentY=date("Y");
-                    $enddate="$currentYear-$endMonth";
-                    #echo "<br>$znumber";
-                    #echo "<br>$name";
-                    #echo "<br>$labor_pool";
-                    #echo "<br>$job_title";
-                    #echo "<br>$group_code";
-                    #echo "<br>$group_name";
-                    
+                    $count=mysqli_num_rows($result);
 
-                    $insert_query="INSERT INTO tbl_wp_staff
-                                   (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
-                                   VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
-                    echo "<br>$insert_query<br>";
-               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-               $txt=$insert_query;
-               fwrite($myfile, $txt);
-               fclose($myfile);
-                    $db->query($insert_query);
+                    #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                    #fwrite($myfile, $select_query);
+                    #fwrite($myfile, $count);
+                    #fclose($myfile);
+           
+                    if ($count>0)  
+                    #if($db->query($select_query) === TRUE)
+                    {     
+                            while($val  =   $result->fetch_assoc())
+                            {
+                                $name=trim($val['name']);
+                                $labor_pool=$val['labor_pool'];
+                                $job_title=$val['job_title'];
+                                $group_code=$val['group_code'];
+                                $group_name=$val['group_name'];
+                            }
+                            $currentDate=date("Y-m-d");
+                            #$currentY=date("Y");
+                            $enddate="$currentYear-$endMonth";
+                            #echo "<br>$znumber";
+                            #echo "<br>$name";
+                            #echo "<br>$labor_pool";
+                            #echo "<br>$job_title";
+                            #echo "<br>$group_code";
+                            #echo "<br>$group_name";
+                            
+
+                            $insert_query="INSERT INTO tbl_wp_staff
+                                           (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
+                                           VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
+                            echo "<br>$insert_query<br>";
+                            $db->query($insert_query);
+                            $insertMsg.=" $name,";
+                     }
+                     else
+                     {
+                        $insert_query="";
+                        #$insert_query="Failed insert: No staff with that znumber";
+                        $errorMsg.=" $znumber";
+                        echo "Error: " . $query . "<br>" . $conn->error;
+                     }
+                       #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                       #$txt=$insert_query;
+                       #fwrite($myfile, $txt);
+                       #fclose($myfile);
 
             }
+            if($errorMsg)
+            {
+                 $errorMsg="Invaild zumber('s): $errorMsg";
+                 echo ' <script type="text/javascript">
+                      alert("'.$errorMsg.'");
+                      </script>';
+             }
+            if($insertMsg)
+            {
+                 $insertMsg="Added: $insertMsg";
+                 echo ' <script type="text/javascript">
+                      alert("'.$insertMsg.'");
+                      </script>';
+             }
        }
 
 

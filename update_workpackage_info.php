@@ -164,14 +164,14 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
    $row_str1.="<td valign='top'><b>Program</b></td>\n";
    $row_str1.="<td valign='top'><b>Project</b></td>\n";
    $row_str1.="<td valign='top'><b>Task</b></td>\n";
-   $row_str1.="<td valign='top'><b>Task Name</b></td>\n";
+   $row_str1.="<td valign='top'><b>Burden Rate</b></td>\n";
+   $row_str1.="<td valign='top'><b>Target $$$</b></td>\n";
    $row_str1.="<td valign='top'><b>Task Manager</b></td>\n";
    $row_str1.="</tr>\n";
    
 
    $row_str2="<tr bgcolor ='$column_color'>\n";
-   $row_str2.="<td valign='top'><b>Burden Rate</b></td>\n";
-   $row_str2.="<td valign='top'><b>Target $$$</b></td>\n";
+   $row_str2.="<td valign='top' colspan='3'><b>Task Name</b></td>\n";
    #$row_str2.="<td valign='top'><b>Start Date</b></td>\n";
    #$row_str2.="<td valign='top'><b>End Date</b></td>\n";
    $row_str2.="<td valign='top' colspan='3'><b>Task Description</b></td>\n";
@@ -203,7 +203,8 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
       $output_str.=generate_select_list($db,$query,$program,$drop_down_name);
       $output_str.="<td valign='top'><input name='project_txt[$wp_id]' type='text' value='$project'></td>\n";
       $output_str.="<td valign='top'><input name='task_txt[$wp_id]' type='text' value='$task'></td>\n";
-      $output_str.="<td valign='top'><input name='task_name_txt[$wp_id]' type='text' value='$task_name'></td>\n";
+      $output_str.="<td valign='top'><input name='burden_rate_txt[$wp_id]' type='text' value='$burden_rate'></td>\n";
+      $output_str.="<td valign='top'><input name='target_txt[$wp_id]' type='text' value='$target'></td>\n";
 
       $query="SELECT DISTINCT manager_name FROM tbl_wp_manager order by manager_name asc;";
       $drop_down_name="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
@@ -214,8 +215,7 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
 
       $output_str.="<tr bgcolor='$currentColor'>\n";
 
-      $output_str.="<td valign='top'><input name='burden_rate_txt[$wp_id]' type='text' value='$burden_rate'></td>\n";
-      $output_str.="<td valign='top'><input name='target_txt[$wp_id]' type='text' value='$target'></td>\n";
+      $output_str.="<td valign='top' colspan='3'><input name='task_name_txt[$wp_id]' type='text' value='$task_name'></td>\n";
       $output_str.="<td valign='top' colspan='3'><table><tr><td valign='top' width='95%'><textarea name='task_description_txt[$wp_id]' rows='4'>$task_description</textarea></td>";
       $output_str.="<td valign='top'><a href='update_workpackage_info.php?program_name=$program&currentYear=$currentYear&delete_id=$wp_id'>";
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td></tr></table></td>";

@@ -1,0 +1,4 @@
+﻿Property Number,System Description,Service Entry Date,System Owner,Under Maint?,Maintenance PO#,Pct FOUS,Risk (0-5),Replace/ Fund?,Replacement Cost,Total Cost,Notes
+1,HPC GitLab Hardware Refresh,2022-10-01,Johnathan Nielsen,Yes,,100%,2,Yes,90000,90000,Split between ASC and IC?  What ratio?
+2,CHARM Deployment for Red,2022-10-01,Johnathan Nielsen,Yes,,100%,5,Yes,405000,405000,Secure CHARM is 100% ASC; can scale back and do partial deployment if needed (roughly $30k/host lower)
+3,Spares Cache Replenishment,2022-10-01,Johnathan Nielsen,Yes,,100%,1,Yes,30000,30000,2 hosts to replace OSCM hosts

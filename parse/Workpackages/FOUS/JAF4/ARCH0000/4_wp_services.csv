@@ -1,0 +1,9 @@
+﻿Contract Description,Start Date,End Date,Contract Owner,Vendor,Pct FOUS,Risk (0-5),Funded?,Cost,Total Cost,Notes
+Open Spectra Library Maint,2021-10-01,2022-09-30,Brett Hollander,SpectraLogic Crop,0.33,5,Yes,134000,44220,% of Yellow Spectra for ASC; year 2 of 3 yr contract
+Brocade FC Switch Maint,2021-10-01,2022-09-30,Brett Hollander,ABBA,1,5,Yes,17000,17000,20367.7
+Oracle SL8500 Maint,2021-10-01,2022-09-30,Brett Hollander,Total Asset Managers,1,0,No,51794,0,SCC SL8500s drives until repack finished
+Dell Server Maint,2021-10-01,2022-09-30,Brett Hollander,,1,5,Yes,24000,24000,28754.4
+HPSS ORNL/IBM Contract,2021-10-01,2022-09-30,Brett Hollander,IBM via Oak Ridge,1,0,No,229000,0,This gets paid for through a different mechanism now
+HPSS DB2 Extended Support,2021-10-01,2022-09-30,Brett Hollander,IBM,1,5,Yes,28000,28000,33546.8
+Redhat License,2021-10-01,2022-09-30,Brett Hollander,,1,5,Yes,7500,7500,
+Netapp Maint,2021-10-01,2022-09-30,Brett Hollander,,1,5,Yes,22000,22000,
