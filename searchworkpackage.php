@@ -6,15 +6,32 @@ require 'template/header.html';
 function get_wp_info($name,$currentYear)
 {
 
-   $query="SELECT staff_name as 'Staff Name',
-                  forcasted_amount as 'Forcasted Amount',
-                  startdate as 'Start Date',
-                  enddate as 'End Date'
-            FROM `vw_fte_mapping`
-            WHERE workpackage_name='$name'
-                  and YEAR(enddate)='$currentYear'
-            ORDER BY enddate desc";
-   #echo $query;
+   #$query="SELECT staff_name as 'Staff Name',
+   #               forcasted_amount as 'Forcasted Amount',
+   #               startdate as 'Start Date',
+   #               enddate as 'End Date'
+   #         FROM `vw_fte_mapping`
+   #         WHERE workpackage_name='$name'
+   #               and YEAR(enddate)='$currentYear'
+   #         ORDER BY enddate desc";
+   
+   $pieces = explode(" ", $name);
+   $project=$pieces[0]; 
+   $task= $pieces[1]; 
+
+   #$query="SELECT CONCAT(project,' ',task) as workpackage, 
+   $query="SELECT tbl_wp_staff.name, 
+                  funded_percent, 
+                  tbl_wp_info.startdate, 
+                  tbl_wp_info.enddate 
+                  FROM `tbl_wp_staff`,tbl_wp_info,tbl_staff_info
+                  where tbl_wp_staff.wp_id=tbl_wp_info.wp_id 
+                  and tbl_staff_info.znumber=tbl_wp_staff.znumber 
+                  and project='$project'
+                  and task='$task'
+                  and YEAR(tbl_wp_staff.enddate)='$currentYear'
+                  group by name
+                  order by name";
    return $query;
 }
 
@@ -69,7 +86,8 @@ if(isset($_POST['search']))
    $result=mysqli_query($conn,$query);
 
    $output_str="<table id='dataTable' width = '900' style='border:1px solid black;'>\n";
-   $output_str.="<tr><td>$name $currentYear Forcast</td></tr>\n";
+   $header="$name $currentYear Forcast";
+   $output_str.=display_table_header($header,4); 
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);

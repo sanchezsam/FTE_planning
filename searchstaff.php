@@ -17,17 +17,30 @@ function get_staff_fte($name,$currentYear)
    
 
       #WITH team and group
-      $query="SELECT vw_fte_mapping.workpackage_name as 'Workpackage',
-                  vw_fte_mapping.forcasted_amount as 'Forcasted Amount',
-                  vw_fte_mapping.startdate as 'Start Date',
-                  vw_fte_mapping.enddate as 'End Date'
-           FROM `vw_fte_mapping`,vw_staff_mapping 
-           WHERE vw_fte_mapping.staff_name='$name'
-                 and YEAR(vw_fte_mapping.enddate)=$currentYear
-                 and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id 
-                 and vw_staff_mapping.team_name='$team' 
-                 and vw_staff_mapping.group_name='$group'
-          ORDER BY vw_fte_mapping.enddate desc";
+      #$query="SELECT vw_fte_mapping.workpackage_name as 'Workpackage',
+      #            vw_fte_mapping.forcasted_amount as 'Forcasted Amount',
+      #            vw_fte_mapping.startdate as 'Start Date',
+      #            vw_fte_mapping.enddate as 'End Date'
+      #     FROM `vw_fte_mapping`,vw_staff_mapping 
+      #     WHERE vw_fte_mapping.staff_name='$name'
+      #           and YEAR(vw_fte_mapping.enddate)=$currentYear
+      #           and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id 
+      #           and vw_staff_mapping.team_name='$team' 
+      #           and vw_staff_mapping.group_name='$group'
+      #    ORDER BY vw_fte_mapping.enddate desc";
+      $query="SELECT project,
+                     task,
+                     funded_percent,
+                     tbl_wp_info.startdate,
+                     tbl_wp_info.enddate
+             FROM `tbl_wp_staff`,tbl_wp_info,tbl_staff_info
+             where tbl_wp_staff.wp_id=tbl_wp_info.wp_id
+             and tbl_staff_info.znumber=tbl_wp_staff.znumber
+             and tbl_staff_info.name like '%$name%'
+             and tbl_staff_info.team_name ='$team'
+             and tbl_staff_info.group_name ='$group'
+             and YEAR(tbl_wp_staff.enddate)=$currentYear;
+             ";
    }
    #echo $query;
    return $query;
@@ -79,7 +92,7 @@ if(isset($_POST['search']))
    $result=mysqli_query($conn,$query);
    $output_str="<table id='dataTable' width = '900' style='border:1px solid black;'>\n";
    $header_str="$name $currentYear Forcast";
-   $output_str.=display_table_header($header_str,4);
+   $output_str.=display_table_header($header_str,5);
    list($column_str,$columns)=get_mysql_columns($result);
    $output_str.=$column_str;
    mysqli_data_seek($result,0);

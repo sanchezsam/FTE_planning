@@ -8,10 +8,10 @@ $currentYear=date("Y");
 		<select name="wp[]" id="wp" data-size="10" required="required">
 			<option value="">Select</option>
 			<?php
-				$result	=	$db->query("SELECT wp_id,workpackage_name FROM `tbl_workpackage` WHERE YEAR(enddate)>='$currentYear' ORDER BY workpackage_name ASC ");
+				$result	=	$db->query("SELECT distinct CONCAT(project,' ',task) as workpackage_name from tbl_wp_info WHERE YEAR(enddate)>='$currentYear' ORDER BY project,task ");
 				while($val  =   $result->fetch_assoc()){
 				?>
-				<option value="<?php echo $val['wp_id']?>"><?php echo $val['workpackage_name']?></option>
+				<option value="<?php echo $val['workpackage_name']?>"><?php echo $val['workpackage_name']?></option>
 			<?php }?>
 		</select>
 		</td>

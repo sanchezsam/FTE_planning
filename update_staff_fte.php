@@ -4,6 +4,75 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
+
+
+function get_znumber($conn,$wp_staff_id)
+{  
+   $name=""; 
+   $query="SELECT znumber FROM tbl_wp_staff  WHERE wp_staff_id='$wp_staff_id'";
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   { 
+     $znumber=$row[0];
+   }
+   return $znumber;
+}
+
+
+function get_workpackage_id($conn,$project,$task,$currentYear)
+{
+   $query="SELECT wp_id FROM tbl_wp_info  WHERE project='$project' and task='$task' and YEAR(enddate)='$currentYear'";
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   {
+     $wp_id=$row[0];
+   }
+   return $wp_id;
+}
+
+
+
+function get_znumber_from_name($conn,$name)
+{  
+   $query="SELECT znumber FROM tbl_wp_staff  WHERE name='$name'";
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   { 
+     $znumber=$row[0];
+   }
+   return $znumber;
+}
+
+function cal_cost($salary_min,$salary_max,$percent)
+{
+  $average_salary=(floatval($salary_min)+floatval($salary_max))/2;
+  $percent_salary=$average_salary*floatval($percent);
+  $cost=$average_salary-$percent_salary;
+  return round($cost,2);
+}
+
+function get_salary($conn,$znumber,$currentYear)
+{
+   $query="SELECT labor_pool,job_title FROM tbl_staff_info WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
+   $result=mysqli_query($conn,$query);
+   $salary_min="";
+   $salary_max="";
+   while($row=mysqli_fetch_array($result))
+   {
+      $title=$row[0];
+      $str = str_replace(' ', '', $title);
+      $pattern = "{([^0-9]+)([0-9]+)(\-)([0-9]+\.[0-9]+)}";
+
+      if (preg_match($pattern, $str, $matches)) {
+          $title="$matches[1] ($row[1])";
+          $salary_min=$matches[2];
+          $salary_max=$matches[4];
+      }
+   }
+   return array($salary_min,$salary_max);
+}
+
+
 function get_staff_fte($name)
 {
    $currentYear=date("Y");
@@ -13,11 +82,21 @@ function get_staff_fte($name)
    $name=$pieces[0];
    $team=$pieces[1];
    $group=$pieces[2];
-   $query="SELECT vw_fte_mapping.fte_id,vw_fte_mapping.workpackage_name,vw_fte_mapping.forcasted_amount,vw_fte_mapping.startdate,vw_fte_mapping.enddate,vw_staff_mapping.staff_id FROM `vw_fte_mapping`,vw_staff_mapping where vw_fte_mapping.staff_name='$name' and vw_staff_mapping.staff_id= vw_fte_mapping.staff_id and vw_staff_mapping.team_name='$team' and vw_staff_mapping.group_name='$group' order by vw_fte_mapping.enddate desc";
-
-
-   #$query="SELECT fte_id,workpackage_name,forcasted_amount,startdate,enddate FROM vw_fte_mapping where staff_name LIKE '%$name' and YEAR(enddate)>=$currentYear order by enddate desc";
-   #echo $query;
+   $query="SELECT wp_staff_id,
+                     project,
+                     task,
+                     funded_percent,
+                     tbl_wp_info.startdate,
+                     tbl_wp_info.enddate,
+                     tbl_staff_info.znumber
+             FROM `tbl_wp_staff`,tbl_wp_info,tbl_staff_info
+             where tbl_wp_staff.wp_id=tbl_wp_info.wp_id
+             and tbl_staff_info.znumber=tbl_wp_staff.znumber
+             and tbl_staff_info.name like '%$name%'
+             and tbl_staff_info.team_name ='$team'
+             and tbl_staff_info.group_name ='$group'
+             and YEAR(tbl_wp_staff.enddate)=$currentYear;
+             ";
    }
    return $query;
 }
@@ -42,72 +121,28 @@ function get_staff_fte($name)
    $name="";
    if(isset($_POST['search'])){
        $name=$_POST['search'];
+       $search_name=$_POST['search'];
    }
    if($name=="")
    {
      if(isset($_GET['search'])){
          $name=$_GET['search'];
+         $search_name=$_GET['search'];
      }
    }
    if($name!=""){
        $query=get_staff_fte($name);
        $result=mysqli_query($conn,$query);
    }
-
-
-
-
-		#$result	=	$db->query("SELECT workpackage_name,forcasted_amount FROM vw_fte_mapping WHERE staff_name='$name'");
-		#while($row  =   $result->fetch_assoc()){
-	#		$workpackage_name[$row['workpackage_name']]	=	$val['workpackage_name'];
-	#	}
-		?>
-		<script>
-		$(document).ready(function(e) {
-			$('.selectpicker').selectpicker();
-			
-			$('body').on('mousemove',function(){
-				$('[data-toggle="tooltip"]').tooltip();
-			});
-			
-			$("#addmore").on("click",function(){
-				$.ajax({
-					type:'POST',
-					url:'action-form.ajax.php',
-					data:{'action':'addDataRow'},
-					success: function(data){
-						$('#tb').append(data);
-						$('.selectpicker').selectpicker('refresh');
-						$('#save').removeAttr('hidden',true);
-					}
-				});
-			});
-			
-			$("#form").on("submit",function(){
-				$.ajax({
-					type:'POST',
-					url:'action-form.ajax.php',
-					data:$(this).serialize(),
-					success: function(data){
-						var a	=	data.split('|***|');
-						if(a[1]=="add"){
-							$('#mag').html(a[0]);
-							setTimeout(function(){location.reload();},1500);
-						}
-					}
-				});
-			});
-			
-		});
-		</script>
-
+?>
 
 
 
 		<div id="msg"></div>
-		<form id="form" method="post" ACTION="update_staff_fte.php?search=<?php echo $name?>">
+		<form id="form" method="post" ACTION="update_staff_fte.php?search=<?php echo $search_name?>">
 			<input type="hidden" name="action" value="saveAddMore">
 			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
+			<input type="hidden" name="znumber" value="<?php echo $znumber;?>">
 			<input type="hidden" name="search" value="<?php echo $name;?>">
 <?php
 if($name!="")
@@ -123,10 +158,11 @@ if($name!="")
    $output_str="<table><tr><td rowspan='4'>$name $currentYear Forcast</td></tr></table>";
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
    $output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   $output_str.="<td valign='top'><b>Charge Code</b></td>\n";
+   $output_str.="<td valign='top'><b>Project</b></td>\n";
+   $output_str.="<td valign='top'><b>Task</b></td>\n";
    $output_str.="<td valign='top'><b>Percent</b></td>\n";
    $output_str.="<td valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td valign='top'><b>End Date</b></td>\n";
+   $output_str.="<td valign='top' colspan='2'><b>End Date</b></td>\n";
    $output_str.="</tr><tbody id='tb'>\n";
 
   $total=0;
@@ -134,18 +170,15 @@ if($name!="")
    $enddate="";
    while($row=mysqli_fetch_array($result))
    {
-      $fte_id=$row[0];
-      $wp_name=$row[1];
-      $percent=$row[2];
-      $startdate=$row[3];
-      $enddate=$row[4];
-      $staff_id=$row[5];
-      #echo "<br>SELECT enddate FROM `tbl_staff` where staff_id=$staff_id";
-      $result_staff_id = $db->query("SELECT enddate FROM `tbl_staff` where staff_id=$staff_id");
-      while($val  =  $result_staff_id->fetch_assoc()){
-           $staff_enddate = $val['enddate'];
-      }
+      $wp_staff_id=$row[0];
+      $project=$row[1];
+      $task=$row[2];
+      $percent=$row[3];
+      $startdate=$row[4];
+      $enddate=$row[5];
+      $znumber=$row[6];
       $pass="T";
+      $wp_name="$project $task";
       if(($previousName != $wp_name))
       {
           #This is the first display for this term, calculate the tr background color ??
@@ -153,42 +186,22 @@ if($name!="")
           $termcount++;
           $previousName = $wp_name;
       }
-      #Change row color for records that are closed
-      if($currentDate>=strtotime($enddate) or $staff_enddate!="")
-      {
-          $currentColor=$old_color;
-          $font_color=$change_font_color;
-          $pass="F";
-      }
-      else
-      {
-
-        $total+=$percent;
-      }
+      $total+=$percent;
 
 
-      if($pass=="F")
-      {
-          $output_str.="<tr bgcolor='$currentColor'>\n<td width=350 valign='top'><font color='$font_color'>$wp_name</font></td>\n";
-          $output_str.="<td width=210 valign='top'><font color='$font_color'>$percent</font></td>\n";
-          $output_str.="<td valign='top'><font color='$font_color'>$startdate</font></td>\n";
-          $output_str.="<td valign='top'><font color='$font_color'>$enddate</font></td>\n";
-      }
-      else
-      {
-          $output_str.="<tr bgcolor='$currentColor'>\n<td width=350 valign='top'><input name='wp_txt[$fte_id]' type='text' value='$wp_name'></td>\n";
-          $output_str.="<td width=210 valign='top'><input name='forcast_txt[$fte_id]' type='text' value=$percent></td>\n";
+          $output_str.="<tr bgcolor='$currentColor'>\n";
+          $output_str.="<td width=210 valign='top'>$project</td>\n";
+          $output_str.="<td width=210 valign='top'>$task</td>\n";
+          $output_str.="<td width=210 valign='top'><input name='forcast_txt[$wp_staff_id]' type='text' value=$percent></td>\n";
           $output_str.="<td valign='top'>$startdate</td>\n";
           $output_str.="<td valign='top'>$enddate</td>\n";
-      }
-
-      $pass="T";
+          $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_staff_fte.php?search=$name&delete_id=$wp_staff_id&search=$search_name&proj=$project&task=$task'>";
+      $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
 
       $output_str.="</tr>\n";
    }
    
       $output_str.="</tbody><tr>";
-      #if($staff_enddate=="")
       if($currentDate<=strtotime($enddate) or $staff_enddate=="")
       {
       $output_str.="<td colspan='6'>";
@@ -208,83 +221,150 @@ if($name!="")
                 <div class="clearfix"></div>
 
 <?php
+
+if(isset($_GET['delete_id'])){
+      $wp_staff_id=$_GET['delete_id'];
+      $project=$_GET['proj'];
+      $task=$_GET['task'];
+      $name=$_GET['search'];
+      $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
+      #echo $delete_query;
+      #$db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted: $name from $proj $task ";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
+      echo "<script>window.open('update_staff_fte.php?search=$name&currentYear=$currentYear','_self') </script>";
+  }
+
+
+
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
-        foreach($wp as $key=>$wp_id){
-                $forcasted_value=$forcast[$key];
-                #get wp_id
-                $staff_name = $_POST['staff_name'];
-                echo "<input type='hidden' name='search' value='$name'>";
-                #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                $pieces = explode("->", $staff_name);
-                $name=$pieces[0];
-                $team=$pieces[1];
-                $group=$pieces[2];
-                #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                $result_id=$db->query("SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group_name='$group'");
-                #echo "<br>SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group_name='$group'";
-                while($val  =   $result_id->fetch_assoc())
-                {
-                    $staff_id=$val['staff_id'];
-                }
-                $currentDate=date("Y-m-d");
-                $currentYear=date("Y");
-
-                $insert_query="INSERT INTO tbl_fte_planning (fte_id,staff_id,wp_id,forcasted_amount,startdate,enddate) VALUES (NULL, '$staff_id','$wp_id', $forcasted_value, '$currentDate', '$currentYear-10-12');";
-                #echo "<br>$insert_query";
-                $db->query($insert_query);
-
-        }
         #Refresh
-        echo "<meta http-equiv='refresh' content='0'>";
-        foreach($wp_txt as $key=>$wp_name)
-        {
-           foreach($forcast_txt as $key2=>$for_value)
+        #var_dump($_POST);
+        $projects="";
+        if (is_array($wp) || is_object($wp))
            {
-            if($key==$key2){ 
-               $wp_result=$db->query("SELECT wp_id,fte_id,workpackage_name,forcasted_amount FROM vw_fte_mapping WHERE fte_id='$key'");
-               while($val  =   $wp_result->fetch_assoc())
-               {
-                   
-                       #$forcast_txt=$forcast_txt[$key];
-                       $wp_id=$val['wp_id'];
-                       $current_forcasted=$val['forcasted_amount'];
-                       if($for_value!=$current_forcasted)
-                       {
-                          #echo "Updating";
-                          #$update_query="UPDATE `tbl_fte_planning` SET `forcasted_amount` = '$for_value' WHERE `tbl_fte_planning`.`fte_id` = $key; ";
-                          $currentDate=date("Y-m-d");
-                          $currentYear=date("Y");
-                          $update_query="UPDATE tbl_fte_planning SET enddate = '$currentDate'  WHERE tbl_fte_planning.fte_id = $key; ";
-                          echo $update_query;
-                          $db->query($update_query);
-                          
-                          if($for_value>0)
-                          {
-                              $staff_name = $_POST['staff_name'];
-                              echo $staff_name;
-                              $pieces = explode("->", $staff_name);
-                              $name=$pieces[0];
-                              $team=$pieces[1];
-                              $group=$pieces[2];
-                              #$result=$db->query("SELECT staff_id FROM tbl_staff where staff_name LIKE '%$staff_name'");
-                              $result_id=$db->query("SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group_name='$group'");
-                              echo "<br>SELECT staff_id FROM vw_staff_mapping where staff_name LIKE '%$name' and team_name='$team' and group='$group'";
-                              while($val  =   $result_id->fetch_assoc())
-                              {
-                                  $staff_id=$val['staff_id'];
-                              }
-                              $insert_query="INSERT INTO tbl_fte_planning (fte_id,staff_id,wp_id,forcasted_amount,startdate,enddate) VALUES (NULL, '$staff_id','$wp_id', $for_value, '$currentDate', '$currentYear-10-12');";
-                              #echo $insert_query;
+                $errorMsg="";
+                $insertMsg="";
+                foreach($wp as $key=>$work_pack){
+                        #get wp_id
+                        $staff_name = $_POST['search'];
+                        $pieces = explode("->", $staff_name);
+                        $staff_name=$pieces[0];
+                        $funded_percent=$forcast[$key];
+                        $znumber=get_znumber_from_name($conn,$staff_name);               
+                        list($salary_min,$salary_max)=get_salary($conn,$znumber,$currentYear);
+                        $total_cost=cal_cost($salary_min,$salary_max,$funded_percent); 
 
-                              $db->query($insert_query);
-                          }
-                        }
+                        $wp_pieces=explode(" ", $work_pack);
+                        $project=$wp_pieces[0];
+                        $task=$wp_pieces[1];
+                        $wp_id=get_workpackage_id($conn,$project,$task,$currentYear);
+                        $select_query="SELECT * FROM `tbl_wp_staff`,tbl_wp_info
+                                       where tbl_wp_staff.wp_id=tbl_wp_info.wp_id
+                                       AND tbl_wp_info.project='$project' 
+                                       and tbl_wp_info.task='$task' 
+                                       and tbl_wp_staff.znumber ='$znumber';
+                                       ";
+                        $result=$db->query($select_query);
+                        $count=mysqli_num_rows($result);
+
+                        #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                        #fwrite($myfile, $select_query);
+                        #fwrite($myfile, $count);
+                        #fclose($myfile);
+
+                        if ($count==0)
+                        {
+                                $currentDate=date("Y-m-d");
+                                $insert_query="INSERT INTO tbl_wp_staff
+                                               (wp_id,znumber,name,startdate,enddate,salary_min,salary_max,total_cost,funded,funded_percent) 
+                                               VALUES ('$wp_id','$znumber','$staff_name','$currentDate','$enddate',
+                                                       '$salary_min','$salary_max','$total_cost','Yes','$funded_percent');";
+                                #echo "<br>$insert_query<br>";
+                                $db->query($insert_query);
+                                $insertMsg.=" $work_pack,";
+                         }
+                         else
+                         {
+                            $insert_query="";
+                            $errorMsg.=" $work_pack,";
+                            #echo "Error: " . $query . "<br>" . $conn->error;
+                         }
+                           #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                           #$txt=$insert_query;
+                           #fwrite($myfile, $txt);
+                           #fclose($myfile);
+
                 }
+                if($errorMsg)
+                {
+                     $errorMsg="$staff_name already added to $errorMsg";
+                     echo ' <script type="text/javascript">
+                          alert("'.$errorMsg.'");
+                          </script>';
+                 }
+
+                if($insertMsg)
+                {
+                     $insertMsg="Added: $name to $insertMsg";
+                     echo ' <script type="text/javascript">
+                          alert("'.$insertMsg.'");
+                          </script>';
+                 }
            }
-          }
-        }
+       
+
+
+
+
+
+
+
+
+
+
+       if(isset($_POST['forcast_txt']))
+        {
+            foreach($forcast_txt as $key=>$funded_percent)
+            {
+               $funded="Yes";
+               $znumber=get_znumber($conn,$key);               
+               list($salary_min,$salary_max)=get_salary($conn,$znumber,$currentYear);
+               $total_cost=cal_cost($salary_min,$salary_max,$funded_percent); 
+               $update_query="UPDATE tbl_wp_staff 
+                              SET 
+                              funded = '$funded',
+                              total_cost = '$total_cost',
+                              funded_percent = '$funded_percent'
+                              WHERE wp_staff_id = $key; ";
+               #echo "$update_query<br>";
+               $db->query($update_query);
+               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+               $txt=$update_query;
+               fwrite($myfile, $txt);
+               fclose($myfile);
+       echo "<meta http-equiv='refresh' content='0'>";
+       echo "<script>window.open('update_staff_fte.php?search=$name&currentYear=$currentYear','_self') </script>";
+
+       }
+}
+
+
+
+
+
+
+
+
+
+
 }
 
 

@@ -12,12 +12,24 @@ function get_team_fte($name,$currentYear)
       $pieces = explode("->", $name);
       $group=$pieces[0];
       $team=$pieces[1];
-      $query="SELECT * 
-              FROM `vw_team_forcast`
-              WHERE YEAR(enddate)=$currentYear
-                    and  team_name='$team' 
-                    and group_name='$group'
-              ORDER BY workpackage_name, enddate desc";
+      #$query="SELECT * 
+      #        FROM `vw_team_forcast`
+      #        WHERE YEAR(enddate)=$currentYear
+      #              and  team_name='$team' 
+      #              and group_name='$group'
+      #        ORDER BY workpackage_name, enddate desc";
+      $query="SELECT CONCAT(project,' ',task) as workpackage,
+                     tbl_wp_staff.name,
+                     funded_percent,
+                     tbl_wp_info.startdate,
+                     tbl_wp_info.enddate
+              FROM `tbl_wp_staff`,tbl_wp_info,tbl_staff_info 
+              where tbl_wp_staff.wp_id=tbl_wp_info.wp_id 
+              and tbl_staff_info.znumber=tbl_wp_staff.znumber 
+              and tbl_staff_info.team_name ='$team' 
+              and tbl_staff_info.group_name ='$group' 
+              and YEAR(tbl_wp_staff.enddate)=$currentYear
+              order by project,task,name;";
    }
    #echo $query;
    return $query;
@@ -108,13 +120,11 @@ $total=0;
 $grand_total=0;
 while($row=mysqli_fetch_array($result))
 {
+   $workpackage=$row[0];
    $staff_name=$row[1];
-   $team_name=$row[2];
-   $group_name=$row[3];
-   $workpackage=$row[4];
-   $forcasted=$row[5];
-   $startdate=$row[6];
-   $enddate=$row[7];
+   $forcasted=$row[2];
+   $startdate=$row[3];
+   $enddate=$row[4];
    $endFYI="$currentYear-$endFYIDate";
    if(($previousWP != $workpackage))
    {
