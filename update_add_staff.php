@@ -11,15 +11,19 @@ function get_staff_details($name)
    if($name){
       $name=trim($name);
       $query="SELECT staff_id,
-                     staff_name as 'Name',
+                     name as 'Name',
                      znumber as 'Z#',
-                     team_name as 'Team',
-                     group_name as 'Group',
+                     labor_pool as 'Labor Pool',
+                     job_title as 'Title',
                      fte_amount as 'Total FTEs',
+                     group_code as 'Group Code',
+                     group_name as 'Group Name',
+                     team_name as 'Team Name',
                      startdate as 'Start Date',
                      enddate as 'End Date'
-              FROM vw_staff_mapping where staff_name LIKE '%$name%'";
-      #echo $query;
+              FROM tbl_staff_info 
+              where name LIKE '%$name%'
+                    and YEAR(enddate)='$currentYear'";
    }
    return $query;
 }
@@ -83,9 +87,32 @@ if($name!="")
 
    $output_str="<table><tr><td rowspan='4'>$name information</td></tr></table>";
    $output_str.="<table width = '900' style='border:1px solid black;'>\n";
-   list($column_str,$columns)=get_mysql_columns($result);
-   $output_str.=$column_str;
-   mysqli_data_seek($result,0);
+   #list($column_str,$columns)=get_mysql_columns($result);
+   #$output_str.=$column_str;
+   #mysqli_data_seek($result,0);
+
+
+   $row_str1="<tr bgcolor ='$column_color'>\n";
+   $row_str1.="<td valign='top'><b>Z#</b></td>\n";
+   $row_str1.="<td valign='top'><b>Name</b></td>\n";
+   $row_str1.="<td valign='top'><b>Labor Pool</b></td>\n";
+   $row_str1.="<td valign='top'><b>Title</b></td>\n";
+   $row_str1.="<td valign='top'><b>Total FTEs</b></td>\n";
+   $row_str1.="</tr>\n";
+
+
+   $row_str2="<tr bgcolor ='$column_color'>\n";
+   $row_str2.="<td valign='top'><b>Group Code</b></td>\n";
+   $row_str2.="<td valign='top'><b>Group Name</b></td>\n";
+   $row_str2.="<td valign='top'><b>Team Name</b></td>\n";
+   $row_str2.="<td valign='top'><b>Start Date</b></td>\n";
+   $row_str2.="<td valign='top'><b>End Date</b></td>\n";
+   $row_str2.="</tr>\n";
+
+
+
+
+
    #$output_str.="<tbody id='tb'>\n";
 
   $previousId=0;
@@ -94,11 +121,14 @@ if($name!="")
       $staff_id=$row[0];
       $staff_name=$row[1];
       $znumber=$row[2];
-      $team=$row[3];
-      $group=$row[4];
+      $labor_pool=$row[3];
+      $job_title=$row[4];
       $forcasted=$row[5];
-      $startdate=$row[6];
-      $enddate=$row[7];
+      $group_code=$row[6];
+      $group_name=$row[7];
+      $team_name=$row[8];
+      $startdate=$row[9];
+      $enddate=$row[10];
       $pass="T";
       if(($previousId != $staff_id))
       {
@@ -108,19 +138,44 @@ if($name!="")
           $previousId = $staff_id;
       }
 
-
-          $output_str.="<tr bgcolor='$currentColor'>\n<td width=10 valign='top'>$staff_id</td>\n";
-          #$output_str.="<td width=350 valign='top'><input name='staff_txt[$staff_id]' type='text' value='$staff_name'></td>\n";
-          #$output_str.="<td width=210 valign='top'><input name='team_txt[$staff_id]' type='text' value=$team></td>\n";
-          #$output_str.="<td width=210 valign='top'><input name='group_txt[$staff_id]' type='text' value=$group></td>\n";
-          #$output_str.="<td width=210 valign='top'><input name='startdate_txt[$staff_id]' type='text' value=$startdate></td>\n";
+          $output_str.=$row_str1;
+          $output_str.="<tr bgcolor='$currentColor'>\n<td width=10 valign='top'>$znumber</td>\n";
           $output_str.="<td width=200 valign='top'>$staff_name</td>\n";
-          $output_str.="<td width=10 valign='top'>$znumber</td>\n";
-          $output_str.="<td width=100 valign='top'>$team</td>\n";
-          $output_str.="<td width=100 valign='top'>$group</td>\n";
+          #$output_str.="<td width=200 valign='top'><input name='staff_name_txt[$staff_id]' type='text' value=$staff_name></td>\n";
+          $query="SELECT DISTINCT labor_pool FROM tbl_job_family order by labor_pool;";
+
+          $drop_down_name="<select name='labor_pool_txt[$staff_id]' id='labor_pool' width='4'>\n";
+          $output_str.=generate_select_list($db,$query,$labor_pool,$drop_down_name);
+
+          #$output_str.="<td width=10 valign='top'>$title</td>\n";
+          $query="SELECT DISTINCT job_title FROM tbl_job_family order by job_title;";
+          $drop_down_name="<select name='job_title_txt[$staff_id]' id='job_title' width='4'>\n";
+          $output_str.=generate_select_list($db,$query,$job_title,$drop_down_name);
+
           $output_str.="<td width=4 valign='top'><input name='forcasted_txt[$staff_id]' type='text' value=$forcasted></td>\n";
-          $output_str.="<td width=100 valign='top'>$startdate</td>\n";
-          $output_str.="<td width=100 valign='top'><input name='enddate_txt[$staff_id]' type='text' value=$enddate></td>\n";
+          $output_str.="</tr>";
+          $output_str.=$row_str2;
+
+
+          #$output_str.="<td width=100 valign='top'>$group_code</td>\n";
+
+          $query="SELECT DISTINCT group_code FROM tbl_staff_info order by group_code;";
+          $drop_down_name="<select name='group_code_txt[$staff_id]' id='group_code' width='4'>\n";
+          $output_str.=generate_select_list($db,$query,$group_code,$drop_down_name);
+
+
+          #$output_str.="<td width=100 valign='top'>$group_name</td>\n";
+          $query="SELECT DISTINCT group_name FROM tbl_staff_info order by group_name;";
+          $drop_down_name="<select name='group_name_txt[$staff_id]' id='group_name' width='4'>\n";
+          $output_str.=generate_select_list($db,$query,$group_name,$drop_down_name);
+
+      
+          $query="SELECT DISTINCT team_name FROM tbl_teams where enddate is null;";
+          $drop_down_name="<select name='team_name_txt[$staff_id]' id='team_name' width='4'>\n";
+          $output_str.=generate_select_list($db,$query,$team_name,$drop_down_name);
+
+          $output_str.="<td width=400 valign='top'><input name='startdate_txt[$staff_id]' type='text' value=$startdate></td>\n";
+          $output_str.="<td width=400 valign='top'><input name='enddate_txt[$staff_id]' type='text' value=$enddate></td>\n";
 
 
       $output_str.="</tr>\n";
@@ -133,15 +188,15 @@ if($name!="")
 
       $output_str="<table width = '900' style='border:1px solid black;'>\n";
       $output_str.="<tbody id='tb'>\n";
-      $output_str.="<tr bgcolor ='#C1C1E8'>";
-      $output_str.="<td>&nbsp;</td>";
-      $output_str.="<td width='125'>Name</td>";
-      $output_str.="<td>Z Number</td>";
-      $output_str.="<td>Team-Group</td>";
-      $output_str.="<td width='4'>FTE</td>";
-      $output_str.="<td>Start Date</td>";
-      $output_str.="<td>&nbsp;</td>";
-      $output_str.="</tr>";
+      #$output_str.="<tr bgcolor ='#C1C1E8'>";
+      #$output_str.="<td>&nbsp;</td>";
+      #$output_str.="<td width='125'>Name</td>";
+      #$output_str.="<td>Z Number</td>";
+      #$output_str.="<td>Team-Group</td>";
+      #$output_str.="<td width='4'>FTE</td>";
+      #$output_str.="<td>Start Date</td>";
+      #$output_str.="<td>&nbsp;</td>";
+      #$output_str.="</tr>";
       $output_str.="</tbody>";
       $output_str.="<tr>";
       $output_str.="<td colspan='6'>";
@@ -163,48 +218,110 @@ if($name!="")
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
-        echo "in save";
         #print_r($_POST);
-        if (is_array($staff_name) || is_object($staff_name))
+        $insertMsg="";
+        $failedMsg="";
+        if (is_array($staff_names) || is_object($staff_names))
         {
-            print_r($staff_name);
-            foreach($staff_name as $key=>$staff_id){
-                    $staff=$staff_name[$key];
-                    $znum=$znumber[$key];
-                    $team_id=$team_names[$key];
-                    $start=$startdate[$key];
-                    $forcasted_amount=$forcasted[$key];
-                    #echo "<input type='hidden' name='search' value='$name'>";
-                    $insert_query="INSERT INTO tbl_staff (staff_id,znumber,staff_name,team_id,startdate,enddate,fte_amount) VALUES (NULL,'$znum','$staff',$team_id, '$start',NULL,$forcasted_amount);";
-#$myfile     = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$insert_query;
-#fwrite(    $myfile, $txt);
-#fclose(    $myfile);
-                    echo "<br>$insert_query";
-                    $db->query($insert_query);
+            #print_r($staff_names);
+            foreach($staff_names as $key=>$staff){
+                    
+                    $znumber=$znumbers[$key];
+                    $labor_pool=$labor_pools[$key];
+                    $job_title=$job_titles[$key];
+                    $forcasted=$forcasts[$key];
+                    $team_name=$team_names[$key];
+                    $group_code=$group_codes[$key];
+                    $group_name=$group_names[$key];
+                    $startdate=$startdates[$key];
+                    $enddate=$enddates[$key];
+
+
+
+                    #check if znumber exists
+                    $select_query="select znumber from tbl_staff_info where znumber='$znumber'";
+                    $result=$db->query($select_query);
+                    $count=mysqli_num_rows($result);
+                    if($count>0)
+                    {
+                       $failedMsg.="$znumber,";
+                    }
+                    else
+                    { 
+                        $insert_query="INSERT INTO tbl_staff_info
+                                       (staff_id,znumber,name,labor_pool,job_title,fte_amount,team_name,group_code,
+                                        group_name,startdate,enddate)
+                                        VALUES (
+                                       NULL,'$znumber','$staff','$labor_pool','$job_title','$forcasted',
+                                             '$team_name','$group_code','$group_name','$startdate','$enddate');";
+
+                        $myfile     = fopen("newfile.txt", "w") or die("Unable to open file!");
+                        $txt=$insert_query;
+                        fwrite(    $myfile, $txt);
+                        fclose(    $myfile);
+                        #echo "<br>$insert_query";
+                        $db->query($insert_query);
+                        $insertMsg.="$staff,";
+                    }
 
             }
+            if($insertMsg)
+            {
+                 $insertMsg="Added: $insertMsg";
+                 echo ' <script type="text/javascript">
+                      alert("'.$insertMsg.'");
+                      </script>';
+            }
+            if($failedMsg)
+            {
+                 $failedMsg="Failed Inserting. znumbers exists: $failedMsg";
+                 echo ' <script type="text/javascript">
+                      alert("'.$failedMsg.'");
+                      </script>';
+            }
+          #Refresh
+          echo "<meta http-equiv='refresh' content='0'>";
+          echo "<script>window.open('update_add_staff.php?search=$name','_self') </script>";
         }
-        #Refresh
-        echo "<meta http-equiv='refresh' content='0'>";
-        if($forcasted_txt){
+        if(isset($_POST['forcasted_txt'])){
             foreach($forcasted_txt as $key=>$forcasted)
             {
-            
+               $labor_pool=$labor_pool_txt[$key];
+               $job_title=$job_title_txt[$key];
+               $group_code=$group_code_txt[$key];
+               $group_name=$group_name_txt[$key];
+               $team_name=$team_name_txt[$key];
+               $startdate=$startdate_txt[$key];
                $enddate=$enddate_txt[$key];
-               $update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";
+               $update_query="UPDATE tbl_staff_info 
+                              SET labor_pool = '$labor_pool',
+                              job_title = '$job_title',
+                              group_code = '$group_code',
+                              job_title = '$job_title',
+                              fte_amount = '$forcasted',
+                              group_code= '$group_code',
+                              group_name = '$group_name',
+                              team_name = '$team_name',
+                              startdate = '$startdate',
+                              enddate = '$enddate'
+                              WHERE staff_id = $key; ";
+               #$enddate=$enddate_txt[$key];
+               #$update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";
                echo "<br>$update_query";
-               $db->query($update_query);
-               if($enddate==""){
-                  $update_query="UPDATE tbl_staff SET enddate = NULL  WHERE staff_id = $key; ";
-               }
-               else{
-                  $update_query="UPDATE tbl_staff SET enddate = '$enddate'  WHERE staff_id = $key; ";
-               }
-               #echo "<br>$update_query";
+               #$db->query($update_query);
+               #if($enddate==""){
+               #   $update_query="UPDATE tbl_staff SET enddate = NULL  WHERE staff_id = $key; ";
+               #}
+               #else{
+               #   $update_query="UPDATE tbl_staff SET enddate = '$enddate'  WHERE staff_id = $key; ";
+               #}
+               ##echo "<br>$update_query";
                $db->query($update_query);
                               
             }
+       #Refresh
+       echo "<meta http-equiv='refresh' content='0'>";
+       echo "<script>window.open('update_add_staff.php?search=$name','_self') </script>";
        }
 }
 

@@ -41,8 +41,8 @@ function generate_select_list($db,$query,$selected_value,$drop_down_name)
           if($selected_value==$row[0])
           {
               #echo "<br>$row[0],$selected_value";
-              #$output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
-              $output_str.="<option value='$row[0]' selected='selected'>$row[0]</option>\n";
+              $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
+              #$output_str.="<option value='$row[0]' selected='selected'>$row[0]</option>\n";
           }
           else
           {

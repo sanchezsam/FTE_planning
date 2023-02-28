@@ -1,0 +1,12 @@
+update 
+tbl_staff_info dest,
+(
+    SELECT tbl_teams.team_name as tm,
+           tbl_staff.znumber as zn
+    FROM tbl_staff,tbl_teams
+where tbl_staff.team_id=tbl_teams.team_id
+) src
+SET 
+dest.team_name=src.tm
+WHERE
+dest.znumber=src.zn;
