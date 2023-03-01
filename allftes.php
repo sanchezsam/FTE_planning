@@ -17,7 +17,7 @@ function get_all_ftes($currentYear,$group)
               and tbl_staff_info.znumber=tbl_wp_staff.znumber 
               and tbl_staff_info.group_name ='$group' 
               and YEAR(tbl_wp_staff.enddate)=$currentYear
-              group by tbl_wp_staff.name
+              group by workpackage, tbl_wp_staff.name
               order by project,task,name;";
    return $query;
 }
@@ -43,8 +43,9 @@ if(isset($_POST["submit"]))
 
 }
 
-
-$output_str=drop_down_year_with_group($conn);
+$where="currentYear=$currentYear";
+$page="allftes";
+$output_str=drop_down_year_with_group($conn,$page,$where);
 $query=get_all_ftes($currentYear,$group);
 $result=mysqli_query($conn,$query);
 echo $output_str;
@@ -52,7 +53,7 @@ echo $output_str;
 <script>
 function refreshPage(passValue){
 //do something in this function with the value
- window.location="allftes.php?currentYear="+passValue
+   window.location="allftes.php?currentYear="+passValue
 }
 </script>
 

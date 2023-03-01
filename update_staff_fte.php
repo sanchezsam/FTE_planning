@@ -21,6 +21,7 @@ function get_znumber($conn,$wp_staff_id)
 
 function get_workpackage_id($conn,$project,$task,$currentYear)
 {
+   $wp_id='';
    $query="SELECT wp_id FROM tbl_wp_info  WHERE project='$project' and task='$task' and YEAR(enddate)='$currentYear'";
    $result=mysqli_query($conn,$query);
    while($row=mysqli_fetch_array($result))
@@ -73,9 +74,9 @@ function get_salary($conn,$znumber,$currentYear)
 }
 
 
-function get_staff_fte($name)
+function get_staff_fte($name,$currentYear)
 {
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $query="";
    if($name){
    $pieces = explode("->", $name);
@@ -108,8 +109,25 @@ function get_staff_fte($name)
 <html lang="en-US" class="no-js">
 
 <body>
+  <?php
+     $currentYear=date("Y");
+     if(isset($_GET['currentYear']))
+     {
+          $currentYear=$_GET['currentYear'];
+     }
+     $drop_down_str=drop_down_year_basic($conn);
+     echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="update_staff_fte.php?currentYear="+passValue
+}
+</script>
+
 
   <?php
+
     $search_str=display_search_box("Enter Staff Name in the search box");
     echo $search_str;
   ?>
@@ -131,7 +149,7 @@ function get_staff_fte($name)
      }
    }
    if($name!=""){
-       $query=get_staff_fte($name);
+       $query=get_staff_fte($name,$currentYear);
        $result=mysqli_query($conn,$query);
    }
 ?>
@@ -139,7 +157,7 @@ function get_staff_fte($name)
 
 
 		<div id="msg"></div>
-		<form id="form" method="post" ACTION="update_staff_fte.php?search=<?php echo $search_name?>">
+		<form id="form" method="post" ACTION="update_staff_fte.php?search=<?php echo $search_name?>&currentYear=<?php echo $currentYear?>">
 			<input type="hidden" name="action" value="saveAddMore">
 			<input type="hidden" name="staff_name" value="<?php echo $name;?>">
 			<input type="hidden" name="znumber" value="<?php echo $znumber;?>">
@@ -150,8 +168,8 @@ if($name!="")
    $termcount=0;
    $previousName="";
    $currentDate=date("Y/m/d");
-   $currentYear=date("Y");
-   $currentDate=strtotime($currentDate);
+   #$currentYear=date("Y");
+   #$currentDate=strtotime($currentDate);
 
 
 
@@ -195,7 +213,7 @@ if($name!="")
           $output_str.="<td width=210 valign='top'><input name='forcast_txt[$wp_staff_id]' type='text' value=$percent></td>\n";
           $output_str.="<td valign='top'>$startdate</td>\n";
           $output_str.="<td valign='top'>$enddate</td>\n";
-          $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_staff_fte.php?search=$name&delete_id=$wp_staff_id&search=$search_name&proj=$project&task=$task'>";
+          $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_staff_fte.php?search=$name&delete_id=$wp_staff_id&search=$search_name&proj=$project&task=$task&currentYear=$currentYear'>";
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
 
       $output_str.="</tr>\n";
@@ -282,10 +300,13 @@ if(isset($_POST['save'])){
 
                         if ($count==0)
                         {
-                                $currentDate=date("Y-m-d");
+                                $currentDate=date("m-d");
+                                $startYear=$currentYear-1;
+                                $currentDate="$startYear-$currentDate";
+                                $endDateValue="$currentYear-$endFYIDate";
                                 $insert_query="INSERT INTO tbl_wp_staff
                                                (wp_id,znumber,name,startdate,enddate,salary_min,salary_max,total_cost,funded,funded_percent) 
-                                               VALUES ('$wp_id','$znumber','$staff_name','$currentDate','$enddate',
+                                              VALUES ('$wp_id','$znumber','$staff_name','$currentDate','$endDateValue',
                                                        '$salary_min','$salary_max','$total_cost','Yes','$funded_percent');";
                                 #echo "<br>$insert_query<br>";
                                 $db->query($insert_query);
@@ -297,10 +318,10 @@ if(isset($_POST['save'])){
                             $errorMsg.=" $work_pack,";
                             #echo "Error: " . $query . "<br>" . $conn->error;
                          }
-                           #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-                           #$txt=$insert_query;
-                           #fwrite($myfile, $txt);
-                           #fclose($myfile);
+                           $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                           $txt=$insert_query;
+                           fwrite($myfile, $txt);
+                           fclose($myfile);
 
                 }
                 if($errorMsg)

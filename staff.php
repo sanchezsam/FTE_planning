@@ -5,12 +5,12 @@ require 'template/header.html';
 
 function get_staff($currentYear)
 {
-   $query="SELECT staff_name as 'Staff',
+   $query="SELECT name as 'Staff',
                   team_name as 'Team',
                   group_name as 'Group',
                   startdate as 'Start Date',
                   enddate as 'End Date'
-                  FROM vw_staff_mapping";
+                  FROM tbl_staff_info";
    if($currentYear<date("Y"))
    {
         $query.=" WHERE YEAR(enddate)='$currentYear'";
@@ -20,9 +20,9 @@ function get_staff($currentYear)
         $query.=" WHERE YEAR(enddate)='$currentYear' or enddate IS NULL";
    }
 
-   $query.=" ORDER BY group_name,staff_name";
+   $query.=" ORDER BY group_name,name";
 
-   #echo $query;
+   echo $query;
    return $query;
 }
 

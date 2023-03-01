@@ -214,7 +214,7 @@ function get_mysql_values_with_old($currentYear,$result,$columns)
 
 function drop_down_year_with_program($conn,$page_name)
 {
-#$currentYear=date("Y");
+$currentYear=date("Y");
 
 #$currentDate=strtotime($currentDate);
 $output_str="";
@@ -240,7 +240,7 @@ $output_str.="<td>\n";
 $query="SELECT distinct program  FROM tbl_wp_info";
 $program_result=mysqli_query($conn,$query);
 $check_box_str="";
-$currentYear="";
+#$currentYear="";
 
 
 
@@ -287,12 +287,14 @@ $output_str.=$checkbox_str;
 $output_str.="</td>\n";
 
 $output_str.="<td valign='top'><b>View by Year</b></td>\n";
-$query="SELECT distinct year(enddate) FROM tbl_wp_info group by year(enddate)";
+$query="SELECT distinct year(enddate) FROM tbl_staff_info group by year(enddate)";
 $year_result=mysqli_query($conn,$query);
 $output_str.="<td width='200'>";
 #$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
 $output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
 $output_str.="<option value=''>Select</option>";
+
+
 while($row=mysqli_fetch_array($year_result))
 {
    if($currentYear==$row[0])
@@ -330,14 +332,18 @@ return $output_str;
 
 
 
-function drop_down_year_with_group($conn)
+function drop_down_year_with_group($conn,$page,$where)
 {
-#$currentYear=date("Y");
+$currentYear=date("Y");
+if(isset($_GET['currentYear']))
+{
+     $currentYear=$_GET['currentYear'];
+}
 
 #$currentDate=strtotime($currentDate);
 $output_str="";
 #$output_str.="<form id='yearform' method='post'>";
-$output_str.="<form id='yearform' method='post' action=allftes.php>";
+$output_str.="<form id='yearform' method='post' action=$page.php?$where>";
 #$output_str="<table width = '432' style='border:1px solid black;'>\n";
 $output_str.="<table style='border:1px solid black;'>\n";
 $output_str.="<tr bgcolor ='#C1C1E8'>\n";
@@ -365,7 +371,6 @@ $output_str.="<td>\n";
 $query="SELECT distinct group_name FROM tbl_groups";
 $group_result=mysqli_query($conn,$query);
 $check_box_str="";
-$currentYear="";
 
 
 
@@ -403,26 +408,30 @@ while($row=mysqli_fetch_array($group_result))
 $output_str.=$checkbox_str;
 $output_str.="</td>\n";
 
+
 $output_str.="<td valign='top'><b>View by Year</b></td>\n";
-$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
+$query="SELECT distinct year(enddate) FROM tbl_staff_info group by year(enddate)";
 $year_result=mysqli_query($conn,$query);
 $output_str.="<td width='200'>";
 #$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
 $output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
 $output_str.="<option value=''>Select</option>";
 while($row=mysqli_fetch_array($year_result))
-{
+{  
    if($currentYear==$row[0])
-   {
+   {   
        $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
    }
    else
-   {
+   {   
        $output_str.="<option value=$row[0]>$row[0]</option>";
    }
 }
 $output_str.="</select>";
 $output_str.="</td>";
+
+
+
 $output_str.="<td>";
 $output_str.="<a href='allftes.php?currentYear=$currentYear&group=$group'>";
 $output_str.="<input type='submit' name='submit' value='Display'>";
@@ -462,26 +471,28 @@ $output_str.="</ul>";
 
 $output_str.="</td>";
 
+
 $output_str.="<td valign='top'><b>View by Year</b></td>\n";
-#$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
-$query="SELECT year(enddate) FROM tbl_wp_info group by year(enddate)";
+$query="SELECT distinct year(enddate) FROM tbl_staff_info group by year(enddate)";
 $year_result=mysqli_query($conn,$query);
 $output_str.="<td width='200'>";
 $output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+#$output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
 $output_str.="<option value=''>Select</option>";
 while($row=mysqli_fetch_array($year_result))
-{
+{  
    if($currentYear==$row[0])
-   {
+   {   
        $output_str.="<option value=$row[0] selected='true'>$row[0]</option>";
    }
    else
-   {
+   {   
        $output_str.="<option value=$row[0]>$row[0]</option>";
    }
 }
 $output_str.="</select>";
 $output_str.="</td>";
+
 $output_str.="</tr>\n";
 $output_str.="</table>\n";
 $output_str.="<input type='hidden' name='currentYear' value='$currentYear'>";
@@ -664,8 +675,7 @@ $output_str.="<tr bgcolor ='#C1C1E8'>\n";
 
 
 $output_str.="<td valign='top'><b>View by Year</b></td>\n";
-#$query="SELECT year(enddate) FROM vw_fte_mapping group by year(enddate)";
-$query="SELECT year(enddate) FROM tbl_wp_info group by year(enddate)";
+$query="SELECT year(enddate) FROM tbl_staff_info group by year(enddate)";
 $year_result=mysqli_query($conn,$query);
 $output_str.="<td width='200'>";
 $output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";

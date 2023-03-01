@@ -55,21 +55,40 @@ $arr = get_defined_vars();
 #print_r($arr);
 #var_dump($_REQUEST);
 #var_dump($_POST);
+$currentYear="";
+if(isset($_POST['currentYear']))
+{
+
+   $currentYear=$_POST['currentYear'];
+}
+if(isset($_GET['currentYear']))
+{
+   $currentYear=$_GET['currentYear'];
+}
+
 if(isset($_POST['search']))
 {
     $exportName=$_POST['search'];
+    if($currentYear!="")
+    {
+       $exportName="$exportName-$currentYear";
+    }
 }
 elseif(isset($_POST['program_name']))
 {
    $exportName=$_POST['program_name'];
+    if($currentYear!="")
+    {
+       $exportName="$exportName-$currentYear";
+    }
 }
 elseif(isset($_POST['group_name']))
 {
-   $exportName=$_POST['group_name'];
-}
-elseif(isset($_GET['currentYear']))
-{
-   $exportName=$_GET['currentYear'];
+    $exportName=$_POST['group_name'];
+    if($currentYear!="")
+    {
+       $exportName="$exportName-$currentYear";
+    }
 }
 else
 {

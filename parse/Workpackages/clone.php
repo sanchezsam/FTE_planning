@@ -49,11 +49,25 @@ function duplicate_records($conn,$wp_id,$new_wp_id,$tmp_table,$org_table,$ID,$ne
   return;
 
 }
+#CHANGE----
 
-$startFY="2022";
+
+$startFY="2022"; //Change this of records you want to duplicate
 $nextStartFYDate="2023-10-01";
 $nextEndFYDate="2024-09-30";
-
+if(isset($_GET['startFY']))
+{
+   $startFY=$_GET['startFY'];
+}
+if(isset($_GET['nextStartFY']))
+{  
+   $nextStartFYDate=$_GET['nextStartFY'];
+}
+if(isset($_GET['nextEndFY']))
+{  
+   $nextEndFYDate=$_GET['nextEndFY'];
+}
+#______
 
 #-------Duplicate wp info
 $org_table='tbl_wp_info';

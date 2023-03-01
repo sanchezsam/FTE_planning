@@ -4,9 +4,9 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
-function get_staff_details($name)
+function get_staff_details($name,$currentYear)
 {
-   $currentYear=date("Y");
+   #$currentYear=date("Y");
    $query="";
    if($name){
       $name=trim($name);
@@ -36,7 +36,30 @@ function get_staff_details($name)
 
 <body>
 
+
+
   <?php
+
+$currentYear=date("Y");
+if(isset($_GET['currentYear']))
+{
+     $currentYear=$_GET['currentYear'];
+}
+$drop_down_str=drop_down_year($conn);
+echo $drop_down_str;
+?>
+<script>
+function refreshPage(passValue,search){
+//do something in this function with the value
+ window.location="update_add_staff.php?currentYear="+passValue
+}
+</script>
+
+  <?php
+
+
+
+
     $search_str=display_search_box("Enter Staff Name in the search box");
     echo $search_str;
   ?>
@@ -58,7 +81,7 @@ function get_staff_details($name)
      }
    }
    if($name){
-       $query=get_staff_details($name);
+       $query=get_staff_details($name,$currentYear);
        $result=mysqli_query($conn,$query);
    }
 
@@ -69,7 +92,7 @@ function get_staff_details($name)
 
 
 <div id="msg"></div>
-<form id="form" method="post" ACTION="update_add_staff.php?search=<?php echo $name?>">
+<form id="form" method="post" ACTION="update_add_staff.php?search=<?php echo $name?>&currentYear=<?php echo $currentYear?>">
 	<input type="hidden" name="action" value="saveAddMore">
 	<input type="hidden" name="staff_name" value="<?php echo $name;?>">
 	<input type="hidden" name="search" value="<?php echo $name;?>">
@@ -78,9 +101,9 @@ if($name!="")
 {
    $termcount=0;
    $previousName="";
-   $currentDate=date("Y/m/d");
-   $currentYear=date("Y");
-   $currentDate=strtotime($currentDate);
+   #$currentDate=date("Y/m/d");
+   #$currentYear=date("Y");
+   #$currentDate=strtotime($currentDate);
    $font_color="black";
 
 
@@ -97,7 +120,7 @@ if($name!="")
    $row_str1.="<td valign='top'><b>Name</b></td>\n";
    $row_str1.="<td valign='top'><b>Labor Pool</b></td>\n";
    $row_str1.="<td valign='top'><b>Title</b></td>\n";
-   $row_str1.="<td valign='top'><b>Total FTEs</b></td>\n";
+   $row_str1.="<td colspan='2' valign='top'><b>Total FTEs</b></td>\n";
    $row_str1.="</tr>\n";
 
 
@@ -106,7 +129,7 @@ if($name!="")
    $row_str2.="<td valign='top'><b>Group Name</b></td>\n";
    $row_str2.="<td valign='top'><b>Team Name</b></td>\n";
    $row_str2.="<td valign='top'><b>Start Date</b></td>\n";
-   $row_str2.="<td valign='top'><b>End Date</b></td>\n";
+   $row_str2.="<td colspan='2' valign='top'><b>End Date</b></td>\n";
    $row_str2.="</tr>\n";
 
 
@@ -152,7 +175,7 @@ if($name!="")
           $drop_down_name="<select name='job_title_txt[$staff_id]' id='job_title' width='4'>\n";
           $output_str.=generate_select_list($db,$query,$job_title,$drop_down_name);
 
-          $output_str.="<td width=4 valign='top'><input name='forcasted_txt[$staff_id]' type='text' value=$forcasted></td>\n";
+          $output_str.="<td colspan='2' width=4 valign='top'><input name='forcasted_txt[$staff_id]' type='text' value=$forcasted></td>\n";
           $output_str.="</tr>";
           $output_str.=$row_str2;
 
@@ -176,6 +199,8 @@ if($name!="")
 
           $output_str.="<td width=400 valign='top'><input name='startdate_txt[$staff_id]' type='text' value=$startdate></td>\n";
           $output_str.="<td width=400 valign='top'><input name='enddate_txt[$staff_id]' type='text' value=$enddate></td>\n";
+          $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_add_staff.php?currentYear=$currentYear&delete_id=$staff_id&name=$name'>";
+          $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
 
 
       $output_str.="</tr>\n";
@@ -215,6 +240,25 @@ if($name!="")
                 <div class="clearfix"></div>
 
 <?php
+
+  if(isset($_GET['delete_id'])){
+      $staff_id=$_GET['delete_id'];
+      $name=$_GET['name'];
+      $delete_query="DELETE from tbl_staff_info where staff_id='$staff_id'";
+      $db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted: $name";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
+      echo "<script>window.open('update_add_staff.php?currentYear=$currentYear','_self') </script>";
+  }
+
+
+
+
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
@@ -281,7 +325,7 @@ if(isset($_POST['save'])){
             }
           #Refresh
           echo "<meta http-equiv='refresh' content='0'>";
-          echo "<script>window.open('update_add_staff.php?search=$name','_self') </script>";
+          echo "<script>window.open('update_add_staff.php?search=$name&currentYear=$currentYear','_self') </script>";
         }
         if(isset($_POST['forcasted_txt'])){
             foreach($forcasted_txt as $key=>$forcasted)
@@ -321,7 +365,7 @@ if(isset($_POST['save'])){
             }
        #Refresh
        echo "<meta http-equiv='refresh' content='0'>";
-       echo "<script>window.open('update_add_staff.php?search=$name','_self') </script>";
+       echo "<script>window.open('update_add_staff.php?search=$name&currentYear=$currentYear','_self') </script>";
        }
 }
 

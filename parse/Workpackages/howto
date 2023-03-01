@@ -12,3 +12,5 @@ http://localhost:8888/FTE_planning/parse/Workpackages/parsewp_dir.php?wp=FOUS
 
 Clone all year to next year
 http://localhost:8888/FTE_planning/parse/Workpackages/clone.php
+http://localhost:8888/FTE_planning/parse/Workpackages/clone.php?startFY=2022&nextStartFY=2023-10-01&nextEndFY=2024-09-30
+http://localhost:8888/FTE_planning/parse/Workpackages/clone.php?startFY=2023&nextStartFY=2024-10-01&nextEndFY=2025-09-30

@@ -304,7 +304,7 @@ if($search_name!="")
       $name=$_GET['name'];
       $delete_query="DELETE from tbl_wp_staff where wp_staff_id='$wp_staff_id'";
       #echo $delete_query;
-      #$db->query($delete_query);
+      $db->query($delete_query);
       if($db->query($delete_query))
       {
          $deleteMsg="Deleted: $name";

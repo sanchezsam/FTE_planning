@@ -106,7 +106,9 @@ foreach($files as $file)
       {
           $file=str_replace(".csv","",$file);
           $insert_values=substr($insert_values, 0, -1);
-          print "INSERT INTO $table_name ($insert_descr) values ($insert_values);<br><br>";
+          $insert_query="INSERT INTO $table_name ($insert_descr) values ($insert_values);";
+          echo "$insert_query<br>";
+          $result=mysqli_query($conn,$insert_query);
           $insert_values="";
           #if (str_starts_with($file, '1_')) {
           #    echo "Get wp id\n<br>";

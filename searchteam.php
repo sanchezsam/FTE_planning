@@ -11,25 +11,29 @@ function get_team_fte($name,$currentYear)
       $pieces = explode("->", $name);
       $group=$pieces[0];
       $team=$pieces[1];
-      #$query="SELECT * 
-      #        FROM `vw_team_forcast`
-      #        WHERE YEAR(enddate)=$currentYear
-      #              and  team_name='$team' 
-      #              and group_name='$group'
-      #        ORDER BY workpackage_name, enddate desc";
+      #$query="SELECT CONCAT(project,' ',task) as workpackage,
+      #               tbl_wp_staff.name,
+      #               funded_percent,
+      #               tbl_wp_info.startdate,
+      #               tbl_wp_info.enddate
+      #        FROM `tbl_wp_staff`,tbl_wp_info,tbl_staff_info 
+      #        where tbl_wp_staff.wp_id=tbl_wp_info.wp_id 
+
       $query="SELECT CONCAT(project,' ',task) as workpackage,
-                     tbl_wp_staff.name,
-                     funded_percent,
-                     tbl_wp_info.startdate,
-                     tbl_wp_info.enddate
-              FROM `tbl_wp_staff`,tbl_wp_info,tbl_staff_info 
-              where tbl_wp_staff.wp_id=tbl_wp_info.wp_id 
-              and tbl_staff_info.znumber=tbl_wp_staff.znumber 
+              tbl_staff_info.name,
+              tbl_wp_staff.funded_percent,
+              tbl_wp_info.startdate, 
+              tbl_wp_info.enddate
+              FROM tbl_wp_info,tbl_staff_info,tbl_wp_staff
+              where tbl_wp_staff.znumber=tbl_staff_info.znumber
+              and tbl_wp_staff.wp_id=tbl_wp_info.wp_id
               and tbl_staff_info.team_name ='$team' 
               and tbl_staff_info.group_name ='$group' 
               and YEAR(tbl_wp_staff.enddate)=$currentYear
-              order by project,task,name;";
+              group by workpackage,name
+              order by project,task,name";
    }
+   #echo $query;
    return $query;
 }
 
