@@ -5,7 +5,6 @@ require 'template/header.html';
 
 function get_team_fte($name,$currentYear)
 {
-   #echo $name;
    $query="select ''";
    if(str_contains($name,'->'))
    {
@@ -31,7 +30,6 @@ function get_team_fte($name,$currentYear)
               and YEAR(tbl_wp_staff.enddate)=$currentYear
               order by project,task,name;";
    }
-   #echo $query;
    return $query;
 }
 
@@ -105,9 +103,10 @@ $currentDate=date("Y/m/d");
 #$currentYear=date("Y");
 $currentDate=strtotime($currentDate);
 
-echo "$column_color<br>";
 $output_str="<table id='dataTable' width = '900'>\n";
 #$output_str.="<tr><td>$name $currentYear Forcast</td></tr>\n";
+$header="$name $currentYear FTE's";
+$output_str.=display_table_header($header,5);
 $output_str.="<tr>\n";
 $output_str.="<td style='background-color:$column_color' valign='top' width='300'><b>Workpackage Name</b></td>\n";
 $output_str.="<td style='background-color:$column_color' valign='top'><b>Staff Name</b></td>\n";
@@ -145,14 +144,14 @@ while($row=mysqli_fetch_array($result))
        #This is the first display for this term, calculate the tr background color ??
        $currentColor= ${'colour' .($termcount % 2)};
        #$total+=$percent/100;
-       $output_str.="<tr bgcolor='$currentColor'>\n<td width=210 valign='top'>$workpackage</td>\n";
+       $output_str.="<tr bgcolor='$currentColor'>\n<td style='background-color:$currentColor' width=210 valign='top'>$workpackage</td>\n";
        $termcount++;
        $previousWP = $workpackage;
    }
    else
    {
       $output_str.="<tr bgcolor=$currentColor>";
-      $output_str.= "<td>&nbsp;</td>\n";
+      $output_str.= "<td style='background-color:$currentColor'>&nbsp;</td>\n";
     }
    $total+=$forcasted;
    $grand_total+=$forcasted;
