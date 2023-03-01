@@ -8,3 +8,5 @@ DELETE FROM `tbl_wp_services` WHERE `wp_id` >= 0;
 ALTER TABLE tbl_wp_services AUTO_INCREMENT = 1;
 DELETE FROM `tbl_wp_activities` WHERE `wp_id` >= 0;
 ALTER TABLE tbl_wp_activities AUTO_INCREMENT = 1;
+DELETE FROM `tbl_staff_info WHERE `staff_id` >= 0;
+ALTER TABLE tbl_staff_info AUTO_INCREMENT = 1;
