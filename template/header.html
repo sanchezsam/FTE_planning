@@ -92,7 +92,11 @@ elseif(isset($_POST['group_name']))
 }
 else
 {
-   $exportName="default";
+   $exportName=basename($_SERVER['PHP_SELF']);
+    if($currentYear!="")
+    {
+       $exportName="$exportName-$currentYear";
+    }
 }
 ?>
 <script type="text/javaScript">

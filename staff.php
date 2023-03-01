@@ -22,7 +22,7 @@ function get_staff($currentYear)
 
    $query.=" ORDER BY group_name,name";
 
-   echo $query;
+   #echo $query;
    return $query;
 }
 

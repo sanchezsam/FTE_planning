@@ -124,7 +124,7 @@ function get_mysql_values($result)
       for($i=0;$i<count($row);$i++){
         if($row[$i]=="")
         {
-              $return_str.="<td>&nbsp;</td>\n";
+              $return_str.="<td style='background-color:$currentColor'>&nbsp;</td>\n";
         }
         else{
             $return_str.="<td style='background-color:$currentColor'>$row[$i]</td>\n";
