@@ -4,6 +4,18 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require 'include/db.php';
 require 'template/header.html';
 
+function get_workpackage_id($conn,$project,$task,$currentYear)
+{
+   $wp_id='';
+   $query="SELECT wp_id FROM tbl_wp_info  WHERE project='$project' and task='$task' and YEAR(enddate)='$currentYear'";
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   {
+     $wp_id=$row[0];
+   }
+   return $wp_id;
+}
+
 function get_workpackage_staff($name,$currentYear)
 {
    $query="SELECT tbl_wp_staff.*  
@@ -329,48 +341,72 @@ if(isset($_POST['save'])){
        {
             $errorMsg="";
             $insertMsg="";
+            $errorAlready="";
             foreach($znumbers as $key=>$znumber){
                     #get wp_id
                     #$staff_name = $_POST['staff_name'];
                     #echo "<input type='hidden' name='search' value='$name'>";
                     $select_query="SELECT * FROM tbl_staff_info where znumber ='$znumber'";
-                    #echo $query;
                     $result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber'");
                     $count=mysqli_num_rows($result);
 
-                    #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-                    #fwrite($myfile, $select_query);
-                    #fwrite($myfile, $count);
-                    #fclose($myfile);
+                    $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                    fwrite($myfile, $select_query);
+                    fwrite($myfile, $count);
+                    fclose($myfile);
            
-                    if ($count>0)  
-                    #if($db->query($select_query) === TRUE)
-                    {     
-                            while($val  =   $result->fetch_assoc())
-                            {
-                                $name=trim($val['name']);
-                                $labor_pool=$val['labor_pool'];
-                                $job_title=$val['job_title'];
-                                $group_code=$val['group_code'];
-                                $group_name=$val['group_name'];
-                            }
-                            $currentDate=date("Y-m-d");
-                            #$currentY=date("Y");
-                            $enddate="$currentYear-$endMonth";
-                            #echo "<br>$znumber";
-                            #echo "<br>$name";
-                            #echo "<br>$labor_pool";
-                            #echo "<br>$job_title";
-                            #echo "<br>$group_code";
-                            #echo "<br>$group_name";
-                            
+                    if ($count>0)
+                    {  
+                        #list($salary_min,$salary_max)=get_salary($conn,$znumber,$currentYear);
+                        #$total_cost=cal_cost($salary_min,$salary_max,$funded_percent);
 
-                            $insert_query="INSERT INTO tbl_wp_staff
-                                           (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
-                                           VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
-                            echo "<br>$insert_query<br>";
-                            $db->query($insert_query);
-                            $insertMsg.=" $name,";
+                        $wp_pieces=explode(" ", $search_name);
+                        $project=$wp_pieces[0];
+                        $task=$wp_pieces[1];
+                        $work_pack="$project $task";
+                        $wp_id=get_workpackage_id($conn,$project,$task,$currentYear);
+                        $select_query="SELECT * FROM `tbl_wp_staff`,tbl_wp_info
+                                       where tbl_wp_staff.wp_id=tbl_wp_info.wp_id
+                                       AND tbl_wp_info.project='$project' 
+                                       and tbl_wp_info.task='$task' 
+                                       and tbl_wp_staff.znumber ='$znumber';
+                                       ";
+                        #echo $select_query; 
+                        $result_in=$db->query($select_query);
+                        $in_count=mysqli_num_rows($result_in);            
+                        #echo $in_count;
+                        if($in_count==0) 
+                        {     
+                                while($val  =   $result->fetch_assoc())
+                                {
+                                    $name=trim($val['name']);
+                                    $labor_pool=$val['labor_pool'];
+                                    $job_title=$val['job_title'];
+                                    $group_code=$val['group_code'];
+                                    $group_name=$val['group_name'];
+                                }
+                                $currentDate=date("Y-m-d");
+                                #$currentY=date("Y");
+                                $enddate="$currentYear-$endMonth";
+                                #echo "<br>$znumber";
+                                #echo "<br>$name";
+                                #echo "<br>$labor_pool";
+                                #echo "<br>$job_title";
+                                #echo "<br>$group_code";
+                                #echo "<br>$group_name";
+                                
+
+                                $insert_query="INSERT INTO tbl_wp_staff
+                                               (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
+                                               VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
+                                echo "<br>$insert_query<br>";
+                                $db->query($insert_query);
+                                $insertMsg.=" $name,";
+                         }
+                         else
+                         {
+                            $errorAlready.=" $znumber already in $work_pack";
+                         }
                      }
                      else
                      {
@@ -388,6 +424,13 @@ if(isset($_POST['save'])){
             if($errorMsg)
             {
                  $errorMsg="Invaild zumber('s): $errorMsg";
+                 echo ' <script type="text/javascript">
+                      alert("'.$errorMsg.'");
+                      </script>';
+             }
+           if($errorAlready)
+            {
+                 $errorMsg="$errorAlready";
                  echo ' <script type="text/javascript">
                       alert("'.$errorMsg.'");
                       </script>';

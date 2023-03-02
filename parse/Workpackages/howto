@@ -9,6 +9,7 @@ http://localhost:8888/FTE_planning/parse/Workpackages/parsewp.php?wp=FOUS/JAJC/P
 
 First import all
 http://localhost:8888/FTE_planning/parse/Workpackages/parsewp_dir.php?wp=FOUS
+http://localhost:8888/FTE_planning/parse/Workpackages/parsewp_dir.php?wp=IC
 
 Clone all year to next year
 http://localhost:8888/FTE_planning/parse/Workpackages/clone.php

@@ -1,4 +1,7 @@
 http://localhost:8888/FTE_planning/parse/Staff/parsestaff.php?wp=files
+http://localhost:8888/FTE_planning/parse/Staff/parsestaff.php?wp=files2023
+http://localhost:8888/FTE_planning/parse/Staff/parsestaff.php?wp=files2024
+http://localhost:8888/FTE_planning/parse/Staff/parsestaff.php?wp=files2025
 Replace , in name with *
 
 Edit replace in excel

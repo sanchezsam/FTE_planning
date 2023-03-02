@@ -39,7 +39,8 @@ function get_staff_fte($name,$currentYear)
              and tbl_staff_info.name like '%$name%'
              and tbl_staff_info.team_name ='$team'
              and tbl_staff_info.group_name ='$group'
-             and YEAR(tbl_wp_staff.enddate)=$currentYear;
+             and YEAR(tbl_wp_staff.enddate)=$currentYear
+             group by project,task;
              ";
    }
    #echo $query;

@@ -35,12 +35,14 @@ function get_workpackage_id($conn,$project,$task,$currentYear)
 
 function get_znumber_from_name($conn,$name)
 {  
-   $query="SELECT znumber FROM tbl_wp_staff  WHERE name='$name'";
+   $query="SELECT distinct znumber FROM tbl_staff_info  WHERE name like '%$name%'";
+   #echo $query;
    $result=mysqli_query($conn,$query);
    while($row=mysqli_fetch_array($result))
    { 
      $znumber=$row[0];
    }
+   #echo $query;
    return $znumber;
 }
 
@@ -96,9 +98,11 @@ function get_staff_fte($name,$currentYear)
              and tbl_staff_info.name like '%$name%'
              and tbl_staff_info.team_name ='$team'
              and tbl_staff_info.group_name ='$group'
-             and YEAR(tbl_wp_staff.enddate)=$currentYear;
+             and YEAR(tbl_wp_staff.enddate)=$currentYear
+             group by project,task
              ";
    }
+   #echo $query;
    return $query;
 }
 
@@ -290,6 +294,7 @@ if(isset($_POST['save'])){
                                        and tbl_wp_info.task='$task' 
                                        and tbl_wp_staff.znumber ='$znumber';
                                        ";
+                        #echo $select_query;
                         $result=$db->query($select_query);
                         $count=mysqli_num_rows($result);
 
@@ -308,7 +313,7 @@ if(isset($_POST['save'])){
                                                (wp_id,znumber,name,startdate,enddate,salary_min,salary_max,total_cost,funded,funded_percent) 
                                               VALUES ('$wp_id','$znumber','$staff_name','$currentDate','$endDateValue',
                                                        '$salary_min','$salary_max','$total_cost','Yes','$funded_percent');";
-                                #echo "<br>$insert_query<br>";
+                                echo "<br>$insert_query<br>";
                                 $db->query($insert_query);
                                 $insertMsg.=" $work_pack,";
                          }

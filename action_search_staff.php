@@ -16,17 +16,8 @@
    }
 
     $inpText = $_POST['query'];
-    $sql = 'SELECT staff_name,team_name,group_name FROM vw_staff_mapping WHERE staff_name LIKE :staff order by staff_name asc';
-    #$sql = "SELECT staff_name,team_name,group_name FROM vw_staff_mapping WHERE year(enddate)!='$currentYear' and staff_name LIKE :staff order by staff_name asc";
-    #$sql="
-    #        SELECT staff_id,
-    #         IF(
-    #             (SELECT COUNT(*) FROM vw_staff_mapping WHERE staff_name like '%$inpText%' group by staff_name)>1,
-    #             (CONCAT(staff_name,team_name)),(CONCAT(staff_name))
-    #           ) 
-    #         AS 'staff_name'
-    #         FROM vw_staff_mapping  WHERE staff_name like '%$inpText%'
-    #        ";
+    #$sql = 'SELECT staff_name,team_name,group_name FROM vw_staff_mapping WHERE staff_name LIKE :staff order by staff_name asc';
+    $sql = 'SELECT distinct name,team_name,group_name FROM tbl_staff_info WHERE name LIKE :staff order by name asc';
 
 $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
 fwrite($myfile, $currentYear);
@@ -40,7 +31,7 @@ fclose($myfile);
     if ($result) {
       foreach ($result as $row) {
             #WITH team and group
-            $display_str=$row['staff_name']."->". $row['team_name']."->".$row['group_name'];
+            $display_str=$row['name']."->". $row['team_name']."->".$row['group_name'];
             echo '<a href="#" class="list-group-item list-group-item-action border-1">' . $display_str. '</a>';
 
             #echo '<a href="#" class="list-group-item list-group-item-action border-1">' . $row['staff_name'] . '</a>';
