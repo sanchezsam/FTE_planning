@@ -46,10 +46,14 @@ foreach($files as $file)
 
     #print_r($file_name);
     $file_name=$wp_name."/".$file;
+    if (str_starts_with($file, 'none')) {
+       continue;
+    }
     echo "#$file_name<br><br>";
     $lines = file($file_name);
     $file_array=array();
 
+    $check_file='';
     if (str_starts_with($file, '1_')) {
       $insert_values="";
       $table_name="tbl_job_class";
@@ -58,12 +62,17 @@ foreach($files as $file)
     elseif(str_starts_with($file, '2_')) {
       $table_name="tbl_staff_info";
       $insert_values="";
-      $insert_descr="znumber,name,labor_pool,job_title,group_code,group_name,startdate,enddate";
+      $check_file=$wp_name;
+      $insert_descr="znumber,name,labor_pool,job_title,group_code,group_name,startdate,enddate,staff_cost";
     } 
     elseif(str_starts_with($file, '3_')) {
+      $check_file='';
       $table_name="tbl_job_family";
       $insert_values="";
       $insert_descr="labor_pool,job_title,job_class_desc,job_family_desc,job_function_desc,job_category_desc,startdate,	enddate ";
+    } 
+    elseif(str_starts_with($file, '9_')) {
+      $table_name="tbl_staff_info";
     } 
     #else{
     #  $insert_values="'$wp_id',";
@@ -84,28 +93,65 @@ foreach($files as $file)
     foreach($file_array as $row)
     {
       #print "Header";
+      $column_count=0;
+      $insert_add_value="";
       foreach($row as $item)
       {
-         if($count==0)
-         {
-            #$insert_descr.="$item,";
-         }
-         else
-         {
-           $item = str_replace("'", "\'", $item);
+        if (str_starts_with($file, '2_'))  
+        {
+             if($count>0 && $column_count==0)
+             {
            
-          if(strpos($item, "*") !== false )
-          {
-              $myArray = explode('*', $item); 
-              $item="$myArray[1] $myArray[0]";
-          }
-           $insert_values.="'$item',";
+                $value=0;
+                $znumber=$item;
+                $cmd="grep $znumber $check_file/none_9_salary_cost.csv | cut -d',' -f3";
+                #echo "$cmd<br>";
+                $value=system($cmd,$return_value);
+                #$insert_add_value=$return_value;
+                if($value=='#N/A')
+                {
+                   $value=0;
+                }
+                $insert_add_value=$value;
+                #echo "---$insert_add_value<br>";
+             }
+             $column_count++;
+        }
+        if($count==0)
+        {
+           #$insert_descr.="$item,";
+        }
+        else
+        {
+          $item = str_replace("'", "\'", $item);
+          
+         if(strpos($item, "*") !== false )
+         {
+             $myArray = explode('*', $item); 
+             $item="$myArray[1] $myArray[0]";
          }
+          $insert_values.="'$item',";
+        }
+        
       }
       if($count>0)
       {
           $file=str_replace(".csv","",$file);
           $insert_values=substr($insert_values, 0, -1);
+          if (str_starts_with($file, '2_'))  
+          {
+              echo "FILE $file<br>";
+              if($insert_add_value!="")
+              {
+                 #$insert_descr="$insert_descr,$insert_add_str";
+                 $insert_values="$insert_values,'$insert_add_value'";
+              }
+              else
+              {
+                 $insert_values="$insert_values,'0'";
+              }
+             echo "VALUE- $insert_add_value";
+          }
           $insert_query="INSERT INTO $table_name ($insert_descr) values ($insert_values);";
           echo "$insert_query<br>";
           $result=mysqli_query($conn,$insert_query);

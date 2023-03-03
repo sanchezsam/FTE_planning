@@ -31,6 +31,7 @@ function get_wp_totals($wp_id)
                  FROM tbl_wp_info
                  WHERE wp_id=$wp_id) as tbl_info
            WHERE tbl_wp_staff.wp_id=$wp_id;";
+   #echo $query;
    return $query;
 }
 
@@ -109,6 +110,7 @@ function get_wp_staff($wp_id)
             FROM tbl_wp_staff
             WHERE wp_id='$wp_id'
            ";
+   echo $query;
    return $query;
 }
 

@@ -24,13 +24,25 @@ function get_workpackage_staff($name,$currentYear)
                  and YEAR(tbl_wp_info.enddate)=$currentYear
                  and tbl_wp_staff.wp_id=tbl_wp_info.wp_id
            ORDER by tbl_wp_staff.startdate";
+   #echo $query;
    return $query;
 }
-function cal_cost($salary_min,$salary_max,$percent)
+function cal_cost($conn,$znumber,$percent,$currentYear)
 {
-  $average_salary=(floatval($salary_min)+floatval($salary_max))/2;
-  $percent_salary=$average_salary*floatval($percent);
-  $cost=$average_salary-$percent_salary;
+  
+  $query="SELECT staff_cost FROM `tbl_staff_info` WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
+  $result=mysqli_query($conn,$query);
+  #$info= "$percent $query";
+  #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+  #fwrite($myfile, $info);
+  #fclose($myfile);
+
+  while($row=mysqli_fetch_array($result))
+   {
+     $cost=$row[0];
+   }
+  
+  $cost=floatval($cost)*floatval($percent);
   return round($cost,2);
 }
 
@@ -39,6 +51,7 @@ function get_name_from_znumber($conn,$znumber,$currentYear)
 {
    $name=""; 
    $query="SELECT name FROM `tbl_staff_info` WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
+   #echo "$query<br>";
    $result=mysqli_query($conn,$query);
    while($row=mysqli_fetch_array($result))
    {
@@ -77,7 +90,32 @@ function get_title_and_salary($conn,$znumber,$wp_staff_id,$currentYear)
    return $output_str; 
 }
 
+function get_znumber_from_name($conn,$name)
+{ 
+   $query="SELECT distinct znumber FROM tbl_staff_info  WHERE name like '%$name%'";
+   #echo $query;
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   {
+     $znumber=$row[0];
+   }
+   #echo $query;
+   return $znumber;
+}
 
+
+
+function get_znumber($conn,$wp_staff_id)
+{
+   $name="";
+   $query="SELECT znumber FROM tbl_wp_staff  WHERE wp_staff_id='$wp_staff_id'";
+   $result=mysqli_query($conn,$query);
+   while($row=mysqli_fetch_array($result))
+   {
+     $znumber=$row[0];
+   }
+   return $znumber;
+}
 #function generate_select_list($db,$query,$selected_value,$drop_down_name)
 #{
 #
@@ -350,10 +388,10 @@ if(isset($_POST['save'])){
                     $result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber'");
                     $count=mysqli_num_rows($result);
 
-                    $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-                    fwrite($myfile, $select_query);
-                    fwrite($myfile, $count);
-                    fclose($myfile);
+                    #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                    #fwrite($myfile, $select_query);
+                    #fwrite($myfile, $count);
+                    #fclose($myfile);
            
                     if ($count>0)
                     {  
@@ -466,30 +504,43 @@ if(isset($_POST['save'])){
                {
                    $salary_max=$salary_max_txt[$key];
                }
+               $name=$name_txt[$key];
+               $znumber=get_znumber($conn,$key);
+
                $pct_fte=$pct_fte_txt[$key];
                $funded=$funded_txt[$key];
                
                $funded_percent=$funded_percent_txt[$key];
-               if($pct_fte==0)
+               if($znumber!="")
                {
-                   $cost=0;
+                   if($pct_fte==0)
+                   {
+                       $cost=0;
+                   }
+                   else
+                   {
+                       $cost=cal_cost($conn,$znumber,$pct_fte,$currentYear);
+                   }
+                   if($funded=='Yes')
+                   {
+                      $total_cost=cal_cost($conn,$znumber,$funded_percent,$currentYear);
+                      
+                   }
+                   else
+                   {
+                       $total_cost="0";
+                   }
                }
                else
                {
-                   $cost=cal_cost($salary_min,$salary_max,$pct_fte);
+                   $cost=$cost_txt[$key];
+                   $replace=array('$',',');
+                   $cost=str_replace($replace,"", $cost);
+                   $total_cost=$total_cost_txt[$key];
+                   $total_cost=str_replace($replace,"", $total_cost);
                }
-               if($funded=='Yes')
-               {
-                  $total_cost=cal_cost($salary_min,$salary_max,$funded_percent);
-               }
-               else
-               {
-                   $total_cost="0";
-               }
-               #$cost=$cost_txt[$key];
-               $name=$name_txt[$key];
-               #$total_cost=$total_cost_txt[$key];
-               $notes=$notes_txt[$key];
+               $notes=addslashes($notes_txt[$key]);
+                     
                $update_query="UPDATE tbl_wp_staff 
                               SET pct_fte = '$pct_fte',
                               cost = '$cost',
@@ -501,7 +552,7 @@ if(isset($_POST['save'])){
                               total_cost = '$total_cost',
                               notes = '$notes'
                               WHERE wp_staff_id = $key; ";
-               #echo "$update_query<br>";
+               echo "$update_query<br>";
                $db->query($update_query);
                #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
                #$txt=$update_query;

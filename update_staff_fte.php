@@ -46,11 +46,23 @@ function get_znumber_from_name($conn,$name)
    return $znumber;
 }
 
-function cal_cost($salary_min,$salary_max,$percent)
+
+function cal_cost($conn,$znumber,$percent,$currentYear)
 {
-  $average_salary=(floatval($salary_min)+floatval($salary_max))/2;
-  $percent_salary=$average_salary*floatval($percent);
-  $cost=$average_salary-$percent_salary;
+
+  $query="SELECT staff_cost FROM `tbl_staff_info` WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
+  $result=mysqli_query($conn,$query);
+  #$info= "$percent $query";
+  #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+  #fwrite($myfile, $info);
+  #fclose($myfile);
+
+  while($row=mysqli_fetch_array($result))
+   {
+     $cost=$row[0];
+   }
+
+  $cost=floatval($cost)*floatval($percent);
   return round($cost,2);
 }
 
@@ -281,8 +293,18 @@ if(isset($_POST['save'])){
                         $staff_name=$pieces[0];
                         $funded_percent=$forcast[$key];
                         $znumber=get_znumber_from_name($conn,$staff_name);               
-                        list($salary_min,$salary_max)=get_salary($conn,$znumber,$currentYear);
-                        $total_cost=cal_cost($salary_min,$salary_max,$funded_percent); 
+                        if($znumber!="")
+                        {
+                            if($funded_percent==0)
+                            {
+                                $total_cost="0";
+                            }
+                            else
+                            {
+                                $total_cost=cal_cost($conn,$znumber,$funded_percent,$currentYear);
+                            }
+         
+                        }
 
                         $wp_pieces=explode(" ", $work_pack);
                         $project=$wp_pieces[0];
@@ -310,9 +332,9 @@ if(isset($_POST['save'])){
                                 $currentDate="$startYear-$currentDate";
                                 $endDateValue="$currentYear-$endFYIDate";
                                 $insert_query="INSERT INTO tbl_wp_staff
-                                               (wp_id,znumber,name,startdate,enddate,salary_min,salary_max,total_cost,funded,funded_percent) 
+                                               (wp_id,znumber,name,startdate,enddate,salary_min,salary_max,total_cost,funded,funded_percent,cost,pct_fte) 
                                               VALUES ('$wp_id','$znumber','$staff_name','$currentDate','$endDateValue',
-                                                       '$salary_min','$salary_max','$total_cost','Yes','$funded_percent');";
+                                                       '$salary_min','$salary_max','$total_cost','Yes','$funded_percent','$total_cost','$funded_percent');";
                                 echo "<br>$insert_query<br>";
                                 $db->query($insert_query);
                                 $insertMsg.=" $work_pack,";
@@ -362,12 +384,13 @@ if(isset($_POST['save'])){
             {
                $funded="Yes";
                $znumber=get_znumber($conn,$key);               
-               list($salary_min,$salary_max)=get_salary($conn,$znumber,$currentYear);
-               $total_cost=cal_cost($salary_min,$salary_max,$funded_percent); 
+               $total_cost=cal_cost($conn,$znumber,$funded_percent,$currentYear);
                $update_query="UPDATE tbl_wp_staff 
                               SET 
                               funded = '$funded',
                               total_cost = '$total_cost',
+                              pct_fte = '$funded',
+                              cost = '$total_cost',
                               funded_percent = '$funded_percent'
                               WHERE wp_staff_id = $key; ";
                #echo "$update_query<br>";

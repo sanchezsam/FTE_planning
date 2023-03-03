@@ -1,0 +1,100 @@
+
+#######Works for totals for services
+create view vw_services_by_wp AS
+SELECT
+tbl_wp_info.wp_id,project,task,tbl_wp_info.startdate,tbl_wp_info.enddate,
+FORMAT(sum(tbl_wp_services.cost), 0) as 'Service_Cost',
+FORMAT(sum(tbl_wp_services.total_cost)*tbl_wp_info.burden_rate,2) as 'Service_Total_Cost'
+FROM `tbl_wp_services`,tbl_wp_info
+where tbl_wp_info.wp_id=tbl_wp_services.wp_id
+group by enddate,project,task  
+ORDER BY `tbl_wp_info`.`wp_id`
+
+#####################
+
+#####Works for totals for staff
+create view vw_staff_by_wp AS
+SELECT
+tbl_wp_info.wp_id,project,task,tbl_wp_info.startdate,tbl_wp_info.enddate,
+round(sum(pct_fte),2) as 'pct_fte',
+FORMAT(sum(cost), 0) as 'Staff_Cost',
+round(sum(funded_percent),2) as 'Funded_Percent',
+FORMAT(sum(total_cost), 2) as 'Staff_Totals_Cost'
+FROM `tbl_wp_staff`,tbl_wp_info
+where tbl_wp_info.wp_id=tbl_wp_staff.wp_id
+group by enddate,project,task
+ORDER BY `tbl_wp_info`.`wp_id`;
+################################
+
+##### Works for totals for materials
+create view vw_materials_by_wp AS
+SELECT
+tbl_wp_info.wp_id,project,task,tbl_wp_info.startdate,tbl_wp_info.enddate,
+FORMAT(sum(replacement_cost), 0) as 'Materials_Replacement_Cost',
+FORMAT(sum(total_cost)*tbl_wp_info.burden_rate, 0) as 'Materials_Total_Cost'
+FROM `tbl_wp_materials`,tbl_wp_info
+where tbl_wp_info.wp_id=tbl_wp_materials.wp_id
+group by enddate,project,task  
+ORDER BY `tbl_wp_info`.`project` ASC
+#####
+
+
+Grand Totals
+create view vw_wp_totals as  
+select vw_staff_by_wp.wp_id,
+vw_staff_by_wp.project,
+vw_staff_by_wp.task,
+vw_staff_by_wp.pct_fte,
+vw_staff_by_wp.Funded_Percent,
+vw_services_by_wp.Service_Total_Cost AS 'Service_Cost',
+vw_materials_by_wp.Materials_Replacement_Cost AS 'Hardware_Inventory',
+vw_materials_by_wp.Materials_Total_Cost AS 'Hardware_Costs',
+vw_staff_by_wp.Staff_Totals_Cost AS 'Staff_Costs',
+FORMAT((
+(vw_staff_by_wp.Funded_Percent*3000)+
+IFNULL(REPLACE(vw_services_by_wp.Service_Total_Cost, ',', ''),0)+
+IFNULL(REPLACE(vw_materials_by_wp.Materials_Replacement_Cost, ',', ''),0)+
+IFNULL(REPLACE(vw_staff_by_wp.Staff_Totals_Cost,',', ''),0)
+),0) As Allocated,
+vw_staff_by_wp.startdate,
+vw_staff_by_wp.enddate
+FROM vw_staff_by_wp
+LEFT JOIN vw_services_by_wp ON vw_staff_by_wp.wp_id = vw_services_by_wp.wp_id
+LEFT JOIN vw_materials_by_wp ON vw_staff_by_wp.wp_id = vw_materials_by_wp.wp_id;
+
+
+PULL DATA
+WP Totals
+SELECT 
+vw_wp_totals.project,
+vw_wp_totals.task,
+pct_fte,
+Funded_Percent,
+CONCAT('$',Service_Cost) AS 'Service Cost',
+CONCAT('$',Hardware_Inventory) AS 'Hardware Inventory',
+CONCAT('$',Staff_Costs) AS 'Staff Costs',
+CONCAT('$',Allocated) as 'Allocated'
+FROM 
+vw_wp_totals,tbl_wp_info
+where 
+vw_wp_totals.wp_id=tbl_wp_info.wp_id
+and YEAR(tbl_wp_info.enddate)='2023'
+and program='FOUS';
+
+
+
+PROGRAM TOTALS
+
+SELECT
+SUM(pct_fte) as 'Total PCT FTE',
+SUM(Funded_Percent) as 'Total Funded Percent',
+CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),2)) as 'Total Service Cost',
+CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),2)) as 'Total Hardware Inventory',
+CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),2)) as 'Total Staff Costs',
+CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),2)) as 'Allocated'
+FROM
+vw_wp_totals,tbl_wp_info
+where
+vw_wp_totals.wp_id=tbl_wp_info.wp_id
+and YEAR(tbl_wp_info.enddate)='2023'
+and program='FOUS';
