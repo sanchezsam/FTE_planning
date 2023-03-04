@@ -60,7 +60,19 @@ if(isset($_GET['currentYear']))
 #$query=get_all_ftes($currentYear);
 #$result=mysqli_query($conn,$query);
 echo $output_str;
+
+$currentYear=date("Y");
+if(isset($_GET['currentYear']))
+{
+     $currentYear=$_GET['currentYear'];
+}
+$drop_down_str=drop_down_year($conn);
+echo $drop_down_str;
 ?>
+
+
+
+
 <script>
 function refreshPage(passValue){
 //do something in this function with the value
@@ -70,6 +82,12 @@ function refreshPage(passValue){
 
 
 <?php
+
+
+
+
+
+
 
 //echo "<section>";
 //TITLE

@@ -548,7 +548,7 @@ function over_or_under($conn,$currentYear)
 
    }
    $query="SELECT * FROM `vw_over_or_under` where YEAR(enddate)='$currentYear' and difference!=0  ORDER BY `vw_over_or_under`.`difference` ASC ";
-   echo $query;
+   #echo $query;
    $result=mysqli_query($conn,$query);
    $output_str="<font size='1'>\n";
    $output_str.="<table class='style1' width='300' style='border:1px solid black;'>\n";
@@ -616,6 +616,7 @@ function over_or_under_staff($conn,$currentYear,$group)
   FROM tbl_staff_info 
   LEFT JOIN tbl_wp_staff ON tbl_staff_info.znumber = tbl_wp_staff.znumber
    WHERE YEAR(tbl_staff_info.enddate)='$currentYear'
+         and YEAR(tbl_wp_staff.enddate)='$currentYear'
          and tbl_staff_info.group_name='$group'
    group by tbl_staff_info.name  
 ORDER BY `difference` DESC
