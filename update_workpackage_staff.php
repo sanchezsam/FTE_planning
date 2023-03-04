@@ -420,7 +420,6 @@ if(isset($_POST['save'])){
                                     $name=trim($val['name']);
                                     $labor_pool=$val['labor_pool'];
                                     $job_title=$val['job_title'];
-                                    $group_code=$val['group_code'];
                                     $group_name=$val['group_name'];
                                 }
                                 $currentDate=date("Y-m-d");
@@ -435,9 +434,9 @@ if(isset($_POST['save'])){
                                 
 
                                 $insert_query="INSERT INTO tbl_wp_staff
-                                               (wp_id,znumber,name,group_name,org_code,startdate,enddate) 
-                                               VALUES ('$wp_id','$znumber','$name','$group_name','$org_code','$currentDate','$enddate');";
-                                echo "<br>$insert_query<br>";
+                                               (wp_id,znumber,name,group_name,startdate,enddate) 
+                                               VALUES ('$wp_id','$znumber','$name','$group_name','$currentDate','$enddate');";
+                                #echo "<br>$insert_query<br>";
                                 $db->query($insert_query);
                                 $insertMsg.=" $name,";
                          }
