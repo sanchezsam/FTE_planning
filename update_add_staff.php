@@ -20,7 +20,8 @@ function get_staff_details($name,$currentYear)
                      group_name as 'Group Name',
                      team_name as 'Team Name',
                      startdate as 'Start Date',
-                     enddate as 'End Date'
+                     enddate as 'End Date',
+                     staff_cost as 'Staff Cost'
               FROM tbl_staff_info 
               where name LIKE '%$name%'
                     and YEAR(enddate)='$currentYear'";
@@ -120,7 +121,8 @@ if($name!="")
    $row_str1.="<td valign='top'><b>Name</b></td>\n";
    $row_str1.="<td valign='top'><b>Labor Pool</b></td>\n";
    $row_str1.="<td valign='top'><b>Title</b></td>\n";
-   $row_str1.="<td colspan='2' valign='top'><b>Total FTEs</b></td>\n";
+   $row_str1.="<td valign='top'><b>Staff Cost</b></td>\n";
+   $row_str1.="<td valign='top'><b>Total FTEs</b></td>\n";
    $row_str1.="</tr>\n";
 
 
@@ -152,6 +154,7 @@ if($name!="")
       $team_name=$row[8];
       $startdate=$row[9];
       $enddate=$row[10];
+      $staff_cost=$row[11];
       $pass="T";
       if(($previousId != $staff_id))
       {
@@ -165,7 +168,7 @@ if($name!="")
           $output_str.="<tr bgcolor='$currentColor'>\n<td width=10 valign='top'>$znumber</td>\n";
           $output_str.="<td width=200 valign='top'>$staff_name</td>\n";
           #$output_str.="<td width=200 valign='top'><input name='staff_name_txt[$staff_id]' type='text' value=$staff_name></td>\n";
-          $query="SELECT DISTINCT labor_pool FROM tbl_job_family order by labor_pool;";
+          $query="SELECT DISTINCT labor_pool FROM tbl_job_family where labor_pool is not null order by labor_pool;";
 
           $drop_down_name="<select name='labor_pool_txt[$staff_id]' id='labor_pool' width='4'>\n";
           $output_str.=generate_select_list($db,$query,$labor_pool,$drop_down_name);
@@ -175,7 +178,8 @@ if($name!="")
           $drop_down_name="<select name='job_title_txt[$staff_id]' id='job_title' width='4'>\n";
           $output_str.=generate_select_list($db,$query,$job_title,$drop_down_name);
 
-          $output_str.="<td colspan='2' width=4 valign='top'><input name='forcasted_txt[$staff_id]' type='text' value=$forcasted></td>\n";
+          $output_str.="<td width=4 valign='top'><input name='staff_cost_txt[$staff_id]' type='text' value=$staff_cost></td>\n";
+          $output_str.="<td width=4 valign='top'><input name='forcasted_txt[$staff_id]' type='text' value=$forcasted></td>\n";
           $output_str.="</tr>";
           $output_str.=$row_str2;
 
@@ -188,7 +192,7 @@ if($name!="")
 
 
           #$output_str.="<td width=100 valign='top'>$group_name</td>\n";
-          $query="SELECT DISTINCT group_name FROM tbl_staff_info order by group_name;";
+          $query="SELECT DISTINCT group_name FROM tbl_groups order by group_name;";
           $drop_down_name="<select name='group_name_txt[$staff_id]' id='group_name' width='4'>\n";
           $output_str.=generate_select_list($db,$query,$group_name,$drop_down_name);
 
@@ -279,6 +283,7 @@ if(isset($_POST['save'])){
                     $group_name=$group_names[$key];
                     $startdate=$startdates[$key];
                     $enddate=$enddates[$key];
+                    $staff_cost=$staff_costs[$key];
 
 
 
@@ -294,10 +299,10 @@ if(isset($_POST['save'])){
                     { 
                         $insert_query="INSERT INTO tbl_staff_info
                                        (staff_id,znumber,name,labor_pool,job_title,fte_amount,team_name,group_code,
-                                        group_name,startdate,enddate)
+                                        group_name,startdate,enddate,staff_cost)
                                         VALUES (
                                        NULL,'$znumber','$staff','$labor_pool','$job_title','$forcasted',
-                                             '$team_name','$group_code','$group_name','$startdate','$enddate');";
+                                             '$team_name','$group_code','$group_name','$startdate','$enddate','$staff_cost');";
 
                         $myfile     = fopen("newfile.txt", "w") or die("Unable to open file!");
                         $txt=$insert_query;
@@ -337,6 +342,7 @@ if(isset($_POST['save'])){
                $team_name=$team_name_txt[$key];
                $startdate=$startdate_txt[$key];
                $enddate=$enddate_txt[$key];
+               $staff_cost=$staff_cost_txt[$key];
                $update_query="UPDATE tbl_staff_info 
                               SET labor_pool = '$labor_pool',
                               job_title = '$job_title',
@@ -347,7 +353,8 @@ if(isset($_POST['save'])){
                               group_name = '$group_name',
                               team_name = '$team_name',
                               startdate = '$startdate',
-                              enddate = '$enddate'
+                              enddate = '$enddate',
+                              staff_cost = '$staff_cost'
                               WHERE staff_id = $key; ";
                #$enddate=$enddate_txt[$key];
                #$update_query="UPDATE tbl_staff SET fte_amount = '$forcasted'  WHERE staff_id = $key; ";

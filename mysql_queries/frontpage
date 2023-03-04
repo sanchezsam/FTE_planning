@@ -1,0 +1,21 @@
+SELECT  tbl_wp_staff.name,
+        tbl_staff_info.fte_amount,
+ sum(tbl_wp_staff.funded_percent) AS funded_percent,
+ (round(sum(tbl_wp_staff.funded_percent),2) - tbl_staff_info.fte_amount) AS `difference`
+  FROM tbl_staff_info 
+  LEFT JOIN tbl_wp_staff ON tbl_staff_info.znumber = tbl_wp_staff.znumber
+   WHERE YEAR(tbl_wp_staff.enddate)='2023'
+group by tbl_staff_info.name
+ORDER BY tbl_wp_staff.name ASC;
+
+
+
+SELECT  tbl_staff_info.name,
+        tbl_staff_info.fte_amount,
+ sum(tbl_wp_staff.funded_percent) AS funded_percent,
+ (round(sum(tbl_wp_staff.funded_percent),2) - tbl_staff_info.fte_amount) AS `difference`
+  FROM tbl_staff_info 
+  LEFT JOIN tbl_wp_staff ON tbl_staff_info.znumber = tbl_wp_staff.znumber
+   WHERE YEAR(tbl_staff_info.enddate)='2023'
+   group by tbl_staff_info.name  
+ORDER BY `difference` DESC

@@ -10,6 +10,7 @@ $currentYear=date("Y");
 <td valign='top'><b>Name</b></td>
 <td valign='top'><b>Labor Poot</b></td>
 <td valign='top'><b>Title</b></td>
+<td valign='top'><b>Staff Costs</b></td>
 <td valign='top' colspan='2'><b>Total FTEs</b></td>
 </tr>
 
@@ -22,7 +23,7 @@ $currentYear=date("Y");
    <select name="labor_pools[]" id="labor_pools" data-size="100" required="required">
    	<option value="">Select</option>
    	<?php
-   	   $result=$db->query("SELECT DISTINCT labor_pool FROM tbl_job_family order by labor_pool");
+   	   $result=$db->query("SELECT DISTINCT labor_pool FROM tbl_job_family where labor_pool is not null order by labor_pool");
    	    while($val  =   $result->fetch_assoc())
                {
    	?>
@@ -45,7 +46,8 @@ $currentYear=date("Y");
    </select>
    </td>
    
-   <td valign='top' width='75' colspan='2'><input type="forcasts" name="forcasts[]" class="form-control" required="required"></td>
+   <td valign='top' width='75'><input type="staff_costs" name="staff_costs[]" class="form-control" required="required"></td>
+   <td valign='top' width='200 colspan='2'><input type="forcasts" name="forcasts[]" class="form-control" required="required"></td>
 
 </tr>
 <tr bgcolor ='<?php echo $new_column_color ?>'>
@@ -78,7 +80,7 @@ $currentYear=date("Y");
    <select name="group_names[]" id="group_names" data-size="100" required="required">
         <option value="">Select</option>
         <?php
-           $result=$db->query("SELECT DISTINCT group_name FROM tbl_staff_info order by group_name");
+           $result=$db->query("SELECT DISTINCT group_name FROM tbl_groups order by group_name");
             while($val  =   $result->fetch_assoc())
                {
         ?>
@@ -91,7 +93,7 @@ $currentYear=date("Y");
    <select name="team_names[]" id="team_names" data-size="100" required="required">
         <option value="">Select</option>
         <?php
-           $result=$db->query("SELECT DISTINCT team_name FROM tbl_staff_info order by team_name");
+           $result=$db->query("SELECT DISTINCT team_name FROM tbl_teams order by team_name");
             while($val  =   $result->fetch_assoc())
                {
         ?>

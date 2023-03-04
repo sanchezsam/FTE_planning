@@ -24,7 +24,7 @@ $currentYear=date("Y");
                 <select name="owners[]" id="owners" data-size="10" required="required">
                         <option value="">Select</option>
                         <?php
-                                $result =       $db->query("SELECT distinct name FROM tbl_staff_info order by name asc ");
+                                $result =       $db->query("SELECT distinct name FROM tbl_staff_info order by trim(name) asc ");
                                 while($val  =   $result->fetch_assoc()){
                                 ?>
                                 <option value="<?php echo $val['name']?>"><?php echo $val['name']?></option>

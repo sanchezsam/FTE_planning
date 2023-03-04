@@ -405,7 +405,7 @@ $check_box_str="";
 
 
 
-$group="";
+$group="HPC-SYS";
 if(isset($_POST["submit"]))
 {
      if(isset($_POST['group_name']))
@@ -548,6 +548,7 @@ function over_or_under($conn,$currentYear)
 
    }
    $query="SELECT * FROM `vw_over_or_under` where YEAR(enddate)='$currentYear' and difference!=0  ORDER BY `vw_over_or_under`.`difference` ASC ";
+   echo $query;
    $result=mysqli_query($conn,$query);
    $output_str="<font size='1'>\n";
    $output_str.="<table class='style1' width='300' style='border:1px solid black;'>\n";
@@ -608,6 +609,18 @@ function over_or_under_staff($conn,$currentYear,$group)
 
    }
    $query="SELECT staff_name,forcasted,round(difference,2) FROM `vw_staff_over_under` where YEAR(enddate)='$currentYear' and difference!=0 and group_name='$group'  ORDER BY vw_staff_over_under.difference ASC ";
+
+   $query="SELECT  tbl_staff_info.name,
+ round(sum(tbl_wp_staff.funded_percent),2) AS funded_percent,
+ round((round(sum(tbl_wp_staff.funded_percent),2) - tbl_staff_info.fte_amount),2) AS `difference`
+  FROM tbl_staff_info 
+  LEFT JOIN tbl_wp_staff ON tbl_staff_info.znumber = tbl_wp_staff.znumber
+   WHERE YEAR(tbl_staff_info.enddate)='$currentYear'
+         and tbl_staff_info.group_name='$group'
+   group by tbl_staff_info.name  
+ORDER BY `difference` DESC
+          ";
+
    #echo $query;
    $result=mysqli_query($conn,$query);
    $output_str="<font size='1'>\n";

@@ -263,7 +263,7 @@ if(isset($_POST['save'])){
                                    (program,project,task,task_name,task_manager,task_description,burden_rate,target,startdate,enddate) 
                                    VALUES ('$program','$project','$task','$task_name','$task_manager','$task_description',
                                             '$burden_rate','$target','$startdate','$enddate');";
-                    echo "<br>$insert_query<br>";
+                    #echo "<br>$insert_query<br>";
                $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
                $txt=$insert_query;
                fwrite($myfile, $txt);

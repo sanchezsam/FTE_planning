@@ -57,8 +57,8 @@ if(isset($_GET['currentYear']))
 #$output_str.="</table>\n";
 #$output_str.="</form>";
 #$output_str=drop_down_year($conn);
-$query=get_all_ftes($currentYear);
-$result=mysqli_query($conn,$query);
+#$query=get_all_ftes($currentYear);
+#$result=mysqli_query($conn,$query);
 echo $output_str;
 ?>
 <script>
@@ -93,7 +93,7 @@ while($row=mysqli_fetch_array($group_result))
       $td_count=0;
     }
 
-    $output_str.="<td>";
+    $output_str.="<td valign='top'>";
     $content=over_or_under_staff($conn,$currentYear,$row[0]);
     $output_str.="<table><tr bgcolor ='black'><td><font color='white'>$row[0]</font></td></tr></table>";
     $output_str.=$content;
