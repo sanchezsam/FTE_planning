@@ -127,7 +127,18 @@ function get_mysql_values($result)
               $return_str.="<td style='background-color:$currentColor'>&nbsp;</td>\n";
         }
         else{
-            $return_str.="<td style='background-color:$currentColor'>$row[$i]</td>\n";
+            if (str_starts_with($row[$i], '-'))
+            {  
+                $value=$row[$i];
+                $value=str_replace('-','(', $value);
+                $value.=')';
+                $return_str.="<td style='background-color:$currentColor'><font color='red'>$value</font></td>\n";
+                #$return_str.="<td style='background-color:$currentColor'><font color='red'>$row[$i]</font></td>\n";
+            }
+            else
+            {
+                $return_str.="<td style='background-color:$currentColor'>$row[$i]</td>\n";
+            }
         }
       }
       $termcount++;
@@ -159,7 +170,20 @@ function get_mysql_totals_values($result,$columns,$columns_totals)
         }
         if($found=="T")
         {
-            $return_str.="<td><b>$row[$column_num]</b></td>\n";
+
+
+           if (str_starts_with($row[$column_num], '-'))
+            {
+                $value=$row[$column_num];
+                $value=str_replace('-','(', $value);
+                $value.=')';
+                $return_str.="<td style='background-color:$totals_color'><font color='red'>$value</font></td>\n";
+            }
+            else
+            {
+                $return_str.="<td style='background-color:$totals_color'>$row[$column_num]</td>\n";
+            }
+
             $found="F";
         }
         else
@@ -200,8 +224,15 @@ function get_mysql_values_with_old($currentYear,$result,$columns)
          $font_color=$change_font_color;
       }
       $return_str.="<tr bgcolor='$currentColor'>";
+      
       for($i=0;$i<count($row);$i++){
+        if (str_starts_with($row[$i], '-'))
+        {
+           echo $row[$i];
+           $font_color='red';
+        }
         $return_str.="<td style='background-color:$currentColor'><font color=$font_color>$row[$i]</font></td>\n";
+        $font_color='black';
       }
       $termcount++;
       $return_str.="</tr>\n";

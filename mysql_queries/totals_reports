@@ -63,9 +63,11 @@ LEFT JOIN vw_services_by_wp ON vw_staff_by_wp.wp_id = vw_services_by_wp.wp_id
 LEFT JOIN vw_materials_by_wp ON vw_staff_by_wp.wp_id = vw_materials_by_wp.wp_id;
 
 
-PULL DATA
-WP Totals
-SELECT 
+
+
+
+#Totals by project and task per program
+SELECT
 vw_wp_totals.project,
 vw_wp_totals.task,
 pct_fte,
@@ -74,16 +76,37 @@ CONCAT('$',Service_Cost) AS 'Service Cost',
 CONCAT('$',Hardware_Inventory) AS 'Hardware Inventory',
 CONCAT('$',Staff_Costs) AS 'Staff Costs',
 CONCAT('$',Allocated) as 'Allocated'
-FROM 
+FROM
 vw_wp_totals,tbl_wp_info
 where 
 vw_wp_totals.wp_id=tbl_wp_info.wp_id
 and YEAR(tbl_wp_info.enddate)='2023'
-and program='FOUS';
+and program='FOUS'
+order by vw_wp_totals.project,vw_wp_totals.task ;
 
 
 
-PROGRAM TOTALS
+Project totals per program
+
+SELECT
+tbl_wp_info.project,
+SUM(pct_fte) as 'Total PCT FTE',
+SUM(Funded_Percent) as 'Total Funded Percent',
+CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),2)) as 'Total Service Cost',
+CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),2)) as 'Total Hardware Inventory',
+CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),2)) as 'Total Staff Costs',
+CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),2)) as 'Allocated'
+FROM
+vw_wp_totals,tbl_wp_info
+where
+vw_wp_totals.wp_id=tbl_wp_info.wp_id
+and YEAR(tbl_wp_info.enddate)='2023'
+and program='FOUS'
+group by tbl_wp_info.project
+order by tbl_wp_info.project;
+
+
+Totals for program
 
 SELECT
 SUM(pct_fte) as 'Total PCT FTE',
@@ -98,3 +121,47 @@ where
 vw_wp_totals.wp_id=tbl_wp_info.wp_id
 and YEAR(tbl_wp_info.enddate)='2023'
 and program='FOUS';
+
+
+
+#overunder by project/task
+SELECT
+vw_wp_totals.project,
+vw_wp_totals.task,
+CONCAT('$',Service_Cost) AS 'Service Cost',
+CONCAT('$',Hardware_Inventory) AS 'Hardware Inventory',
+CONCAT('$',Staff_Costs) AS 'Staff Costs',
+CONCAT('$',Allocated) as 'Allocated',
+CONCAT('$',tbl_wp_info.target) as 'Targeted',
+(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')) as 'OverUnder'
+FROM
+vw_wp_totals,tbl_wp_info
+where
+vw_wp_totals.wp_id=tbl_wp_info.wp_id
+and YEAR(tbl_wp_info.enddate)='2023'
+and program='FOUS'
+order by vw_wp_totals.project,vw_wp_totals.task;
+
+
+
+OVER and under with $ and -$
+SELECT
+vw_wp_totals.project,
+vw_wp_totals.task,
+CONCAT('$',Service_Cost) AS 'Service Cost',
+CONCAT('$',Hardware_Inventory) AS 'Hardware Inventory',
+CONCAT('$',Staff_Costs) AS 'Staff Costs',
+CONCAT('$',Allocated) as 'Allocated',
+CONCAT('$',tbl_wp_info.target) as 'Targeted',
+IF(
+(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''))>0,
+CONCAT('$',(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''))),
+REPLACE((REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')),'-', '-$')
+) as 'OverUnder'
+FROM
+vw_wp_totals,tbl_wp_info
+where
+vw_wp_totals.wp_id=tbl_wp_info.wp_id
+and YEAR(tbl_wp_info.enddate)='2023'
+and program='FOUS'
+order by vw_wp_totals.project,vw_wp_totals.task;
