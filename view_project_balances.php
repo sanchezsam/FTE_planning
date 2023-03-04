@@ -6,23 +6,6 @@ require 'template/header.html';
 function get_project_task($program,$currentYear)
 {
    $query="SELECT
-           vw_wp_totals.project,
-           vw_wp_totals.task,
-           CONCAT('$',Service_Cost) AS 'Service Cost',
-           CONCAT('$',Hardware_Inventory) AS 'Hardware Inventory',
-           CONCAT('$',Staff_Costs) AS 'Staff Costs',
-           CONCAT('$',Allocated) as 'Allocated',
-           CONCAT('$',tbl_wp_info.target) as 'Targeted',
-           (REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')) as 'OverUnder'
-           FROM
-           vw_wp_totals,tbl_wp_info
-           where
-           vw_wp_totals.wp_id=tbl_wp_info.wp_id
-           and YEAR(tbl_wp_info.enddate)='$currentYear'
-           and program='$program'
-           order by vw_wp_totals.project,vw_wp_totals.task; 
-          ";
-   $query="SELECT
           vw_wp_totals.project,
           vw_wp_totals.task,
           CONCAT('$',Service_Cost) AS 'Service Cost',
@@ -30,11 +13,11 @@ function get_project_task($program,$currentYear)
           CONCAT('$',Hardware_Costs) AS 'Hardware Cost',
           CONCAT('$',Staff_Costs) AS 'Staff Costs',
           CONCAT('$',Allocated) as 'Allocated',
-          CONCAT('$',FORMAT(tbl_wp_info.target,2)) as 'Targeted',
+          CONCAT('$',FORMAT(REPLACE(tbl_wp_info.target,',',''),0)) as 'Targeted',
           IF(
           (REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''))>0,
-          CONCAT('$',FORMAT(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''),2)),
-          REPLACE( FORMAT((REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')),2),'-', '-$')
+          CONCAT('$',FORMAT(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''),0)),
+          REPLACE( FORMAT((REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')),0),'-', '-$')
           ) as 'OverUnder'
           FROM
           vw_wp_totals,tbl_wp_info
@@ -50,16 +33,16 @@ function get_program_totals($program,$currentYear)
 {
     $query="SELECT '' as '--------',
                    '' as '----------------',
-            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),2)) as 'Total Service Cost',
-            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),2)) as 'Total Hardware Inventory',
-            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),2)) as 'Total Hardware Cost',
-            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),2)) as 'Total Staff Costs',
-            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),2)) as 'Allocated',
-            CONCAT('$',FORMAT(SUM(REPLACE(tbl_wp_info.target,',','')),2)) as 'Targeted',
+            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),0)) as 'Total Service Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),0)) as 'Total Hardware Inventory',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),0)) as 'Total Hardware Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),0)) as 'Total Staff Costs',
+            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),0)) as 'Allocated',
+            CONCAT('$',FORMAT(SUM(REPLACE(tbl_wp_info.target,',','')),0)) as 'Targeted',
             IF(
             SUM((REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')))>0,
-            CONCAT('$',FORMAT(SUM(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')),2)),
-            REPLACE( FORMAT(SUM((REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''))),2),'-', '-$')
+            CONCAT('$',FORMAT(SUM(REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', '')),0)),
+            REPLACE( FORMAT(SUM((REPLACE(tbl_wp_info.target,',', '')-REPLACE(allocated,',', ''))),0),'-', '-$')
             ) as 'OverUnder'
             FROM
             vw_wp_totals,tbl_wp_info

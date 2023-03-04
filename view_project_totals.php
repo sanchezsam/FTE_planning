@@ -29,11 +29,11 @@ function get_project_task($program,$currentYear)
            vw_wp_totals.task,
            pct_fte,
            Funded_Percent,
-           CONCAT('$',Service_Cost) AS 'Service Cost',
-           CONCAT('$',Hardware_Inventory) AS 'Hardware Inventory',
-           CONCAT('$',Hardware_Costs) AS 'Hardware Costs',
-           CONCAT('$',Staff_Costs) AS 'Staff Costs',
-           CONCAT('$',Allocated) as 'Allocated'
+           CONCAT('$',FORMAT(REPLACE(Service_Cost,',', ''),0)) AS 'Service Cost',
+           CONCAT('$',FORMAT(REPLACE(Hardware_Inventory,',', ''),0)) AS 'Hardware Inventory',
+           CONCAT('$',FORMAT(REPLACE(Hardware_Costs,',', ''),0)) AS 'Hardware Costs',
+           CONCAT('$',FORMAT(REPLACE(Staff_Costs,',', ''),0)) AS 'Staff Costs',
+           CONCAT('$',FORMAT(REPLACE(Allocated,',', ''),0)) AS 'Allocated'
            FROM
            vw_wp_totals,tbl_wp_info
            where
@@ -52,11 +52,11 @@ function get_project_totals($program,$project,$currentYear)
             '' as '-',
             SUM(pct_fte) as 'Total PCT FTE',
             SUM(Funded_Percent) as 'Total Funded Percent',
-            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),2)) as 'Total Service Cost',
-            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),2)) as 'Total Hardware Inventory',
-            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),2)) as 'Total Hardware Cost',
-            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),2)) as 'Total Staff Costs',
-            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),2)) as 'Allocated'
+            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),0)) as 'Total Service Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),0)) as 'Total Hardware Inventory',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),0)) as 'Total Hardware Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),0)) as 'Total Staff Costs',
+            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),0)) as 'Allocated'
             FROM
             vw_wp_totals,tbl_wp_info
             where
@@ -75,11 +75,11 @@ function get_program_totals($program,$currentYear)
                    '' as '----------------',
             SUM(pct_fte) as 'Total PCT FTE',
             SUM(Funded_Percent) as 'Total Funded Percent',
-            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),2)) as 'Total Service Cost',
-            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),2)) as 'Total Hardware Inventory',
-            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),2)) as 'Total Hardware Cost',
-            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),2)) as 'Total Staff Costs',
-            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),2)) as 'Allocated'
+            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),0)) as 'Total Service Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),0)) as 'Total Hardware Inventory',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),0)) as 'Total Hardware Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),0)) as 'Total Staff Costs',
+            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),0)) as 'Allocated'
             FROM
             vw_wp_totals,tbl_wp_info
             where
