@@ -48,7 +48,7 @@ function refreshPage(passValue,search){
     echo $search_str;
   ?>
   <script src="script_dir/jquery.min.js"></script>
-  <script src="script_dir/script_workpackage_info.js"></script>
+<script src="script_dir/script_workpackage_update_info.js"></script>
 
     	<hr>
 		<div class="clearfix"></div>
@@ -92,23 +92,44 @@ if($name!="")
    $output_str="";
    $currentColor="";
    $header="Update Workpackage: $name";
-   $display_str=display_table_header($header); 
+   ###$display_str=display_table_header($header); 
+   ###echo $display_str;
+   ###$output_str.="<table width = '900' border='1' style='border:1px solid black;'>\n";
+   ###$output_str.="<tr bgcolor ='#C1C1E8'>\n";
+   ###$output_str.="<td valign='top'><b>Program</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Project</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Task</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Task Name</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Task Manager</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Task Description</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Burden Rate</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Target $$$</b></td>\n";
+   ###$output_str.="<td valign='top'><b>Start Date</b></td>\n";
+   ###$output_str.="<td valign='top'><b>End Date</b></td>\n";
+   ###$output_str.="</tr>\n";
+   ####$output_str.="<tbody id='tb'>\n";
+   ###$output_str.="<tr bgcolor='$currentColor'>\n";
+   $display_str=display_table_header($header);
    echo $display_str;
    $output_str.="<table width = '900' border='1' style='border:1px solid black;'>\n";
-   $output_str.="<tr bgcolor ='#C1C1E8'>\n";
-   $output_str.="<td valign='top'><b>Program</b></td>\n";
-   $output_str.="<td valign='top'><b>Project</b></td>\n";
-   $output_str.="<td valign='top'><b>Task</b></td>\n";
-   $output_str.="<td valign='top'><b>Task Name</b></td>\n";
-   $output_str.="<td valign='top'><b>Task Manager</b></td>\n";
-   $output_str.="<td valign='top'><b>Task Description</b></td>\n";
-   $output_str.="<td valign='top'><b>Burden Rate</b></td>\n";
-   $output_str.="<td valign='top'><b>Target $$$</b></td>\n";
-   $output_str.="<td valign='top'><b>Start Date</b></td>\n";
-   $output_str.="<td valign='top'><b>End Date</b></td>\n";
-   $output_str.="</tr>\n";
+   $row_str1="<tr bgcolor ='$column_color'>\n";
+   $row_str1.="<td valign='top'><b>Program</b></td>\n";
+   $row_str1.="<td valign='top'><b>Project</b></td>\n";
+   $row_str1.="<td valign='top'><b>Task</b></td>\n";
+   $row_str1.="<td valign='top'><b>Burden Rate</b></td>\n";
+   $row_str1.="<td valign='top'><b>Target $$$</b></td>\n";
+   $row_str1.="<td valign='top'><b>Task Manager</b></td>\n";
+   $row_str1.="</tr>\n";
+
+
+   $row_str2="<tr bgcolor ='$column_color'>\n";
+   $row_str2.="<td valign='top' colspan='3'><b>Task Name</b></td>\n";
+   #$row_str2.="<td valign='top'><b>Start Date</b></td>\n";
+   #$row_str2.="<td valign='top'><b>End Date</b></td>\n";
+   $row_str2.="<td valign='top' colspan='3'><b>Task Description</b></td>\n";
+   $row_str2.="</tr>\n";
+
    $output_str.="<tbody id='tb'>\n";
-   $output_str.="<tr bgcolor='$currentColor'>\n";
    while($row=mysqli_fetch_array($result))
    {
       $wp_id=$row[0];
@@ -122,46 +143,146 @@ if($name!="")
       $target=$row[8];
       $start_date=$row[9];
       $end_date=$row[10];
+
+      $currentColor= ${'colour' .($termcount % 2)};
+      $output_str.=$row_str1;
+      $output_str.="<tr bgcolor='$currentColor'>\n";
+
       $query="SELECT DISTINCT program_name FROM tbl_program_info;";
       $drop_down_name="<select name='program_txt[$wp_id]' id='program' width='4'>\n";
       $output_str.=generate_select_list($db,$query,$program,$drop_down_name);
-
       $output_str.="<td valign='top'><input name='project_txt[$wp_id]' type='text' value='$project'></td>\n";
-      $output_str.="<td valign='top'>$task</td>\n";
-      $output_str.="<td valign='top'><textarea name='task_name_txt[$wp_id]' rows='3'>$task_name</textarea></td>\n";
+      $output_str.="<td valign='top'><input name='task_txt[$wp_id]' type='text' value='$task'></td>\n";
+      $output_str.="<td valign='top'><input name='burden_rate_txt[$wp_id]' type='text' value='$burden_rate'></td>\n";
+      $output_str.="<td valign='top'><input name='target_txt[$wp_id]' type='text' value='$target'></td>\n";
 
-      $query="SELECT manager_name FROM tbl_wp_manager order by manager_name asc;";
+      $query="SELECT DISTINCT manager_name FROM tbl_wp_manager order by manager_name asc;";
       $drop_down_name="<select name='task_manager_txt[$wp_id]' id='task_managers' data-size='10' required='required'>\n";
       $output_str.=generate_select_list($db,$query,$task_manager,$drop_down_name);
 
-      $output_str.="<td valign='top'><textarea name='task_description_txt[$wp_id]' rows='6'>$task_description</textarea></td>\n";
-      $output_str.="<td valign='top'><input name='burden_rate_txt[$wp_id]' type='text' value='$burden_rate'></td>\n";
-      $output_str.="<td valign='top'><input name='target_txt[$wp_id]' type='text' value='$target'></td>\n";
-      $output_str.="<td valign='top'><input name='start_date_txt[$wp_id]' type='text' value='$start_date'></td>\n";
-      $output_str.="<td valign='top'><input name='end_date_txt[$wp_id]' type='text' value='$end_date'></td>\n";
+      $output_str.="</tr>";
+      $output_str.=$row_str2;
+
+      $output_str.="<tr bgcolor='$currentColor'>\n";
+
+      $output_str.="<td valign='top' colspan='3'><input name='task_name_txt[$wp_id]' type='text' value='$task_name'></td>\n";
+      $output_str.="<td valign='top' colspan='3'><table><tr><td valign='top' width='95%'><textarea name='task_description_txt[$wp_id]' rows='4'>$task_description</textarea></td>";
+      $output_str.="<td valign='top'><a href='update_workpackageinfo.php?program_name=$program&currentYear=$currentYear&delete_id=$wp_id'>";
+      $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td></tr></table></td>";
+
+      #$cost="$" . number_format(floatval($cost), 2, ".", ",");
+      #$output_str.="<td valign='top'><input name='cost_txt[$wp_staff_id]' type='text' value='$cost'></td>\n";
+
+      $output_str.="</tr></table>\n";
+      echo $output_str;
+      $termcount++;
+
    }
-      $output_str.="</tr>\n";
-      $output_str.="</tbody><tr>";
+
+}
+
+
+      $output_str="<table width = '900' style='border:1px solid black;'>\n";
+      $output_str.="<tbody id='tb'>\n";
+      #$output_str.="<tr bgcolor ='#C1C1E8'>";
+      #$output_str.="<td>&nbsp;</td>";
+      #$output_str.="<td width='125'>Name</td>";
+      #$output_str.="<td>Z Number</td>";
+      #$output_str.="<td>Team-Group</td>";
+      #$output_str.="<td width='4'>FTE</td>";
+      #$output_str.="<td>Start Date</td>";
+      #$output_str.="<td>&nbsp;</td>";
+      #$output_str.="</tr>";
+      $output_str.="</tbody>";
+      $output_str.="<tr>";
       $output_str.="<td colspan='6'>";
-      #$output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
+      $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
       $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
       $output_str.="</td>";
       $output_str.="</tr>";
-   $output_str.="</table>\n";
-   echo $output_str;
+      $output_str.="</tbody>";
+      $output_str.="</table>\n";
 
-}
+      echo $output_str;
+
+
+
+
+
+
+
 
    ?>
                 </form>
                 <div class="clearfix"></div>
 
 <?php
+
+  if(isset($_GET['delete_id'])){
+      $wp_id=$_GET['delete_id'];
+      $delete_query="DELETE from tbl_wp_info where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_staff where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_activities where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_services where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_materials where wp_id='$wp_id'";
+      $db->query($delete_query);
+      echo "<script>window.open('update_workpackageinfo.php?program_name=$program&currentYear=$currentYear','_self') </script>";
+  }
+
+
+
 if(isset($_POST['save'])){
         extract($_REQUEST);
         extract($_POST);
         #Refresh
         #var_dump($_POST);
+
+
+
+
+    if(isset($_POST['programs']))
+    {  
+       if (is_array($programs) || is_object($programs))
+       {    
+            foreach($programs as $key=>$program){
+                   $startdate=date("Y-m-d");
+                   $enddate="$currentYear-$endMonth";
+                   $project=$project[$key];
+                   $task=$task[$key];
+                   $task_name=$task_name[$key];
+                   $task_manager=$task_manager[$key];
+                   $task_description=$task_description[$key];
+                   $burden_rate=$burden_rate[$key];
+                   $target=$target[$key];
+                    
+                    $insert_query="INSERT INTO tbl_wp_info
+                                   (program,project,task,task_name,task_manager,task_description,burden_rate,target,startdate,enddate) 
+                                   VALUES ('$program','$project','$task','$task_name','$task_manager','$task_description',
+                                            '$burden_rate','$target','$startdate','$enddate');";
+                    echo "<br>$insert_query<br>";
+               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+               $txt=$insert_query;
+               fwrite($myfile, $txt);
+               fclose($myfile);
+                    $db->query($insert_query);
+            
+            }
+         }
+      }
+
+
+
+
+
+
+
+
+
+
         if(isset($_POST['task_name_txt']))
         {
             foreach($task_name_txt as $key=>$task_name)
@@ -172,9 +293,9 @@ if(isset($_POST['save'])){
                $task_description=$task_description_txt[$key];
                $burden_rate=$burden_rate_txt[$key];
                $target=$target_txt[$key];
-               $startdate=$start_date_txt[$key];
-               $startdate=$start_date_txt[$key];
-               $enddate=$end_date_txt[$key];
+               #$startdate=$start_date_txt[$key];
+               #$startdate=$start_date_txt[$key];
+               #$enddate=$end_date_txt[$key];
                $update_query="UPDATE tbl_wp_info 
                               SET
                               program= '$program',
@@ -183,9 +304,7 @@ if(isset($_POST['save'])){
                               task_manager = '$task_manager',
                               task_description = '$task_description',
                               burden_rate = '$burden_rate',
-                              target = '$target',
-                              startdate = '$startdate',
-                              enddate = '$enddate'
+                              target = '$target'
                               WHERE wp_id = $key; ";
                echo $update_query;
                $db->query($update_query);

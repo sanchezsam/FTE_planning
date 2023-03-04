@@ -248,7 +248,14 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
   if(isset($_GET['delete_id'])){
       $wp_id=$_GET['delete_id'];
       $delete_query="DELETE from tbl_wp_info where wp_id='$wp_id'";
-      #echo $delete_query;
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_staff where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_activities where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_services where wp_id='$wp_id'";
+      $db->query($delete_query);
+      $delete_query="DELETE from tbl_wp_materials where wp_id='$wp_id'";
       $db->query($delete_query);
       echo "<script>window.open('update_workpackage_info.php?program_name=$program&currentYear=$currentYear','_self') </script>";
   }
