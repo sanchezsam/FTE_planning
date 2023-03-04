@@ -9,28 +9,26 @@ require 'template/header.html';
 #header("Content-Disposition: attachment; filename=$file_name");
 
 
-function get_wp_totals($wp_id)
+function get_wp_totals($task,$project,$currentYear)
 {
-    $query="SELECT tbl_info.burden_rate as 'Burden Rate',
-                   round(sum(tbl_wp_staff.pct_fte),2) as 'Request FTE',
-                   round(sum(tbl_wp_staff.funded_percent),2) as 'Funded FTE',
-                   CONCAT('$',FORMAT(tbl_services.service_cost*tbl_info.burden_rate,0)) as 'Serivce Costs',
-                   CONCAT('$',FORMAT(tbl_materials.materials_cost,0)) as 'Hardware Inventory',
-                   CONCAT('$',FORMAT(tbl_materials.materials_cost*tbl_info.burden_rate,0)) as 'Hardware Costs',
-                   CONCAT('$', FORMAT(sum(tbl_wp_staff.total_cost) + 
-                                        (tbl_services.service_cost*tbl_info.burden_rate)+
-                                        (tbl_materials.materials_cost*tbl_info.burden_rate),0)) as 'FY ALLOCTIONS'
-            FROM tbl_wp_staff, 
-                 (SELECT COALESCE(sum(tbl_wp_services.total_cost),0) as 'service_cost'
-                 FROM `tbl_wp_services`
-                 WHERE tbl_wp_services.wp_id=$wp_id) as tbl_services,
-                 (SELECT COALESCE(sum(tbl_wp_materials.total_cost),0)*1000 as 'materials_cost'
-                 FROM `tbl_wp_materials`
-                 WHERE tbl_wp_materials.wp_id=$wp_id) as tbl_materials,
-                 (SELECT burden_rate 
-                 FROM tbl_wp_info
-                 WHERE wp_id=$wp_id) as tbl_info
-           WHERE tbl_wp_staff.wp_id=$wp_id;";
+    $query="SELECT
+            tbl_wp_info.burden_rate as 'Burden Rate',
+            SUM(pct_fte) as 'Total PCT FTE',
+            SUM(Funded_Percent) as 'Total Funded Percent',
+            CONCAT('$',FORMAT(SUM(REPLACE(Service_Cost,',', '')),0)) as 'Total Service Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Inventory,',', '')),0)) as 'Total Hardware Inventory',
+            CONCAT('$',FORMAT(SUM(REPLACE(Hardware_Costs,',', '')),0)) as 'Total Hardware Cost',
+            CONCAT('$',FORMAT(SUM(REPLACE(Staff_Costs,',', '')),0)) as 'Total Staff Costs',
+            CONCAT('$',FORMAT(SUM(REPLACE(Allocated,',', '')),0)) as 'Allocated'
+            FROM
+            vw_wp_totals,tbl_wp_info
+            where
+            vw_wp_totals.wp_id=tbl_wp_info.wp_id
+            and YEAR(tbl_wp_info.enddate)='$currentYear'
+            and tbl_wp_info.task='$task'
+            and tbl_wp_info.project='$project'
+            group by tbl_wp_info.project
+            order by tbl_wp_info.project;";
    #echo $query;
    return $query;
 }
@@ -110,7 +108,7 @@ function get_wp_staff($wp_id)
             FROM tbl_wp_staff
             WHERE wp_id='$wp_id'
            ";
-   echo $query;
+   #echo $query;
    return $query;
 }
 
@@ -586,9 +584,9 @@ if(isset($_POST['search']))
 
        $output_str.="<tr bgcolor='$seperator_color'><td colspan='100%'></td></tr>";
        #display totals
-       $query=get_wp_totals($wp_id);
+       $query=get_wp_totals($task,$project,$currentYear);
        $result=mysqli_query($conn,$query);
-       $output_str.=display_table_header('Workpackage Info',10);
+       $output_str.=display_table_header('Workpackage Info',11);
 
        $output_str.="<tr bgcolor='$column_color'>\n";
        $output_str.="<td style='background-color:$totals_color' valign='top'><b>Burden Rate</b></td>\n";
@@ -597,6 +595,7 @@ if(isset($_POST['search']))
        $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'><b>Service Costs</b></td>\n";
        $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>Hardware Inventory</b></td>\n";
        $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>Hardware Costs</b></td>\n";
+       $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>Staff Costs</b></td>\n";
        $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'><b>FY Allocations</b></td>\n";
        $output_str.="</tr>";
        while($row=mysqli_fetch_array($result))
@@ -607,7 +606,8 @@ if(isset($_POST['search']))
           $service_costs=$row[3];
           $hardware_inventory=$row[4];
           $hardware_costs=$row[5];
-          $fy_allocations=$row[6];
+          $staff_cost=$row[6];
+          $fy_allocations=$row[7];
           $currentColor= ${'colour' .($termcount % 2)};
           $output_str.="<tr bgcolor='$currentColor'>\n";
           $output_str.="<td style='background-color:$totals_color' valign='top'>$burden_rate</td>\n";
@@ -616,6 +616,7 @@ if(isset($_POST['search']))
           $output_str.="<td style='background-color:$totals_color' valign='top' colspan='2'>$service_costs</td>\n";
           $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$hardware_inventory</td>\n";
           $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$hardware_costs</td>\n";
+          $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$staff_cost</td>\n";
           $output_str.="<td style='background-color:$totals_color' valign='top' colspan='1'>$fy_allocations</td>\n";
           $output_str.="</tr>";
         }

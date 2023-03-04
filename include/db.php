@@ -218,11 +218,11 @@ function get_mysql_values_with_old($currentYear,$result,$columns)
       $currentColor= ${'colour' .($termcount % 2)};            
       $enddate=$row[$end_date_key];
       #if(strtotime($enddate)<strtotime($endFYI) || $currentYear<date("Y"))
-      if(strtotime($enddate)<strtotime($endFYI))
-      {
-         $currentColor=$old_color;
-         $font_color=$change_font_color;
-      }
+      #if(strtotime($enddate)<strtotime($endFYI))
+      #{
+      #   $currentColor=$old_color;
+      #   $font_color=$change_font_color;
+      #}
       $return_str.="<tr bgcolor='$currentColor'>";
       
       for($i=0;$i<count($row);$i++){

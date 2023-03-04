@@ -174,22 +174,25 @@ if(isset($_POST['save'])){
             foreach($activity as $key=>$act){
                     #get wp_id
                     #$staff_name = $_POST['staff_name'];
-                    #$result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber'");
-                    #while($val  =   $result->fetch_assoc())
-                    #{
+                    #echo "SELECT wp_id FROM tbl_wp_info where concat(project,' ',task)='$search' and YEAR(enddate)='$currentYear'";
+                    $result=$db->query("SELECT wp_id FROM tbl_wp_info where concat(project,' ',task)='$search' and YEAR(enddate)='$currentYear'");
+                    while($val  =   $result->fetch_assoc())
+                    {
                     #    $name=$val['name'];
                     #    $labor_pool=$val['labor_pool'];
                     #    $job_title=$val['job_title'];
                     #    $group_code=$val['group_code'];
-                    #    $group_name=$val['group_name'];
-                    #}
+                        $wp_id=$val['wp_id'];
+                    }
                     #$currentYear=date("Y");
                     $startdate=date("Y-m-d");
                     #$enddate="$endFYIDate";
                     $enddate="$currentYear-$endMonth";
                     $member=trim($members[$key]);
                     $desc=$description[$key];
-                    $wp=$wp_id;
+                    #$wp=$wp_id;
+                    
+                    #$wp=$key;
                     #echo "$act $member $desc $wp";
                     $insert_query="INSERT INTO tbl_wp_activities
                                    (wp_id,activity,startdate,enddate,members,description) 

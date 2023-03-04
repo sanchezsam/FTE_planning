@@ -217,6 +217,11 @@ if(isset($_POST['save'])){
        if (is_array($description) || is_object($description))
        {
             foreach($description as $key=>$desc){
+                    $result=$db->query("SELECT wp_id FROM tbl_wp_info where concat(project,' ',task)='$search' and YEAR(enddate)='$currentYear'");
+                    while($val  =   $result->fetch_assoc())
+                    {
+                        $wp_id=$val['wp_id'];
+                    }
                     $currentYear=date("Y");
                     $service_entry=date("Y-m-d");
 		    $property_number=$property_number[$key];
@@ -228,8 +233,6 @@ if(isset($_POST['save'])){
                     $replace_fund=$replace_fund[$key];
                     $replacement_cost=$replacement_cost[$key];
                     $note=$note[$key];
-                    $wp=$wp_id;
-                    #echo "$act $member $desc $wp";
                     if($replace_fund=='Yes')
                     {
                         $total_cost=$replacement_cost*$pct_fous;

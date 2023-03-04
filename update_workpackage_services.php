@@ -199,9 +199,13 @@ if(isset($_POST['save'])){
        if (is_array($description) || is_object($description))
        {
             foreach($description as $key=>$desc){
-                    #$currentYear=date("Y");
+
+                     $result=$db->query("SELECT wp_id FROM tbl_wp_info where concat(project,' ',task)='$search' and YEAR(enddate)='$currentYear'");
+                    while($val  =   $result->fetch_assoc())
+                    {
+                        $wp_id=$val['wp_id'];
+                    }
                     $startdate=date("Y-m-d");
-                    #$enddate="$endFYIDate";
                     $enddate="$currentYear-$endMonth";
                     $owners=$owners[$key];
                     $vendor=$vendor[$key];
@@ -210,8 +214,6 @@ if(isset($_POST['save'])){
                     $funded=$funded[$key];
                     $cost=$new_cost[$key];
                     $note=$new_note[$key];
-                    $wp=$wp_id;
-                    #echo "$act $member $desc $wp";
                     if($funded=='Yes')
                     {
                         $total_cost=$cost*$pct_fous;

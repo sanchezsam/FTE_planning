@@ -366,6 +366,8 @@ if(isset($_POST['save'])){
                           alert("'.$insertMsg.'");
                           </script>';
                  }
+       echo "<meta http-equiv='refresh' content='0'>";
+       echo "<script>window.open('update_staff_fte.php?search=$name&currentYear=$currentYear','_self') </script>";
            }
        
 
@@ -404,14 +406,6 @@ if(isset($_POST['save'])){
 
        }
 }
-
-
-
-
-
-
-
-
 
 
 }
