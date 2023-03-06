@@ -37,6 +37,14 @@ function refreshPage(passValue,search){
 //do something in this function with the value
  window.location="update_workpackage_materials.php?currentYear="+passValue
 }
+
+
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this Material?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
 </script>
 
 
@@ -103,18 +111,18 @@ if($search_name!="")
    $row_str1.="<td valign='top'><b>Property #</b></td>\n";
    #$row_str.="<td valign='top'><b>Start Date</b></td>\n";
    #$row_str.="<td valign='top'><b>End Date</b></td>\n";
-   $row_str1.="<td valign='top'><b>Description</b></td>\n";
+   $row_str1.="<td valign='top' colspan='2'><b>Description</b></td>\n";
    $row_str1.="<td valign='top'><b>Owner</b></td>\n";
    $row_str1.="<td valign='top'><b>Service Entry</b></td>\n";
    $row_str1.="<td valign='top'><b>Under Maint</b></td>\n";
-   $row_str1.="<td valign='top' colspan='2'><b>Maint PO</b></td>\n";
+   $row_str1.="<td valign='top'><b>Maint PO</b></td>\n";
    $row_str1.="</tr>\n";
 
    $row_str2="<tr bgcolor ='$column_color'>\n";
    $row_str2.="<td valign='top'><b>Pct Fous</b></td>\n";
    $row_str2.="<td valign='top'><b>Risk</b></td>\n";
-   $row_str2.="<td valign='top'><b>Note</b></td>\n";
    $row_str2.="<td valign='top'><b>Replace Fund</b></td>\n";
+   $row_str2.="<td valign='top'><b>Note</b></td>\n";
    $row_str2.="<td valign='top'><b>Replacement Cost</b></td>\n";
    $row_str2.="<td valign='top' colspan='2'><b>Total Cost</b></td>\n";
    $row_str2.="</tr>\n";
@@ -144,8 +152,12 @@ if($search_name!="")
       $output_str.="<input type='hidden' name='wp_id' value='$wp_id'>";
 
       $output_str.="<td valign='top' width='200'><input name='property_num_txt[$material_id]' type='text' value='$property_num'></td>\n";
-      $output_str.="<td valign='top' width='250'><textarea name='description_txt[$material_id]' rows='2'>$description</textarea></td>\n";
-      $output_str.="<td valign='top' width='275'><textarea name='owner_txt[$material_id]' rows='2'>$owner</textarea></td>\n";
+      $output_str.="<td valign='top' width='250' colspan='2'><textarea name='description_txt[$material_id]' rows='2'>$description</textarea></td>\n";
+
+      $query="SELECT distinct name FROM tbl_staff_info where YEAR(enddate)='$currentYear' order by trim(name) asc";
+      $drop_down_name="<select name='owner_txt[$material_id]' id='owner' width='4'>\n";
+      $output_str.=generate_select_list($db,$query,$owner,$drop_down_name);
+
       $output_str.="<td valign='top' width='275'><input name='service_entry_txt[$material_id]' type='text' value='$service_entry'></td>\n";
 
 
@@ -154,7 +166,7 @@ if($search_name!="")
       $output_str.=generate_select_list($db,$query,$under_maint,$drop_down_name);
 
 
-      $output_str.="<td valign='top' width='150' colspan='2'><input name='maint_po_txt[$material_id]' type='text' value='$maint_po'></td>\n";
+      $output_str.="<td valign='top' width='250'><input name='maint_po_txt[$material_id]' type='text' value='$maint_po'></td>\n";
       $output_str.="</tr>";
       $output_str.=$row_str2;
 
@@ -166,15 +178,15 @@ if($search_name!="")
       $drop_down_name="<select name='risk_txt[$material_id]' id='risk' width='4'>\n";
       $output_str.=generate_select_list($db,$query,$risk,$drop_down_name);
 
-      $output_str.="<td valign='top' width='350'><textarea name='notes_txt[$material_id]' rows='4'>$notes</textarea></td>\n";
 
       $query="SELECT 'Yes' UNION ALL SELECT 'No';";
       $drop_down_name="<select name='replace_fund_txt[$material_id]' id='replace_fund' width='4'>\n";
       $output_str.=generate_select_list($db,$query,$replace_fund,$drop_down_name);
 
+      $output_str.="<td valign='top' width='350'><textarea name='notes_txt[$material_id]' rows='4'>$notes</textarea></td>\n";
       $output_str.="<td valign='top' width='150'><input name='replacement_cost_txt[$material_id]' type='text' value='$replacement_cost'></td>\n";
       $output_str.="<td valign='top' width='150'><input name='total_cost_txt[$material_id]' type='text' value='$total_cost'></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_materials.php?search=$search_name&currentYear=$currentYear&delete_id=$material_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a onclick='javascript:confirmationDelete($(this));return false;'  href='update_workpackage_materials.php?search=$search_name&currentYear=$currentYear&delete_id=$material_id'>";
      
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
       $output_str.="</tr>\n";
@@ -200,9 +212,22 @@ if($search_name!="")
 
   if(isset($_GET['delete_id'])){
       $material_id=$_GET['delete_id'];
+      $select_query="Select description from tbl_wp_materials where material_id='$service_id'";
+      $result=mysqli_query($conn,$select_query);
+      while($row=mysqli_fetch_array($result))
+      {
+        $description=$row[0];
+      }
       $delete_query="DELETE from tbl_wp_materials where material_id='$material_id'";
       echo $delete_query;
       $db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted Material: $description ";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
       echo "<script>window.open('update_workpackage_materials.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 

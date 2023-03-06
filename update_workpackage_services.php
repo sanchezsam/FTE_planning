@@ -38,6 +38,14 @@ function refreshPage(passValue,search){
 //do something in this function with the value
  window.location="update_workpackage_services.php?currentYear="+passValue
 }
+
+
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this Service?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
 </script>
 
 
@@ -97,22 +105,21 @@ if($search_name!="")
    $display_str=display_table_header($header);
    echo $display_str;
    $output_str.="<table width = '900' border='1' style='border:1px solid black;'>\n";
-   $row_str="<tr bgcolor ='$column_color'>\n";
-   $row_str.="<td valign='top'><b>Description</b></td>\n";
-   #$row_str.="<td valign='top'><b>Start Date</b></td>\n";
-   #$row_str.="<td valign='top'><b>End Date</b></td>\n";
-   $row_str.="<td valign='top'><b>Owner</b></td>\n";
-   $row_str.="<td valign='top'><b>Vendor</b></td>\n";
-   $row_str.="<td valign='top'><b>PCT Fous</b></td>\n";
-   $row_str.="<td valign='top'><b>Risk</b></td>\n";
-   $row_str.="<td valign='top'><b>Funded</b></td>\n";
-   $row_str.="<td valign='top'><b>Cost</b></td>\n";
-   $row_str.="<td valign='top'><b>Total Cost</b></td>\n";
-   $row_str.="<td valign='top' colspan='2'><b>Note</b></td>\n";
-   $row_str.="</tr>\n";
+   $row_str1="<tr bgcolor ='$column_color'>\n";
+   $row_str1.="<td valign='top' colspan='2'><b>Description</b></td>\n";
+   $row_str1.="<td valign='top'><b>Owner</b></td>\n";
+   $row_str1.="<td valign='top'><b>Risk</b></td>\n";
+   $row_str1.="<td valign='top'><b>PCT Fous</b></td>\n";
+   $row_str1.="<td valign='top' colspan='2'><b>Cost</b></td>\n";
+   $row_str1.="</tr>\n";
+   $row_str2="<tr bgcolor ='$column_color'>\n";
+   $row_str2.="<td valign='top' colspan='2'><b>Vendor</b></td>\n";
+   $row_str2.="<td valign='top' colspan='2'><b>Note</b></td>\n";
+   $row_str2.="<td valign='top'><b>Funded</b></td>\n";
+   $row_str2.="<td valign='top' colspan='2'><b>Total Cost</b></td>\n";
+   $row_str2.="</tr>\n";
    
    $output_str.="<tbody id='tb'>\n";
-   $output_str.=$row_str;
    while($row=mysqli_fetch_array($result))
    {
       $service_id=$row[0];
@@ -129,30 +136,37 @@ if($search_name!="")
       $total_cost=$row[11];
       $notes=$row[12];
       $currentColor= ${'colour' .($termcount % 2)};
+      $output_str.=$row_str1;
       $output_str.="<tr bgcolor='$currentColor'>\n";
       $output_str.="<input type='hidden' name='wp_id' value='$wp_id'>";
 
-      $output_str.="<td valign='top' width='250'><textarea name='description_txt[$service_id]' rows='2'>$description</textarea></td>\n";
-      #$output_str.="<td valign='top'><input name='startdate_txt[$service_id]' type='text' value='$startdate'></td>\n";
-      #$output_str.="<td valign='top'><input name='enddate_txt[$service_id]' type='text' value='$enddate'></td>\n";
-      #$output_str.="<td valign='top' width='300'><input name='owner_txt[$service_id]' type='text' value='$owner'></td>\n";
-      $output_str.="<td valign='top' width='250'><textarea name='owner_txt[$service_id]' rows='2'>$owner</textarea></td>\n";
-      $output_str.="<td valign='top' width='250'><textarea name='vendor_txt[$service_id]' rows='2'>$vendor</textarea></td>\n";
-      #$output_str.="<td valign='top' width='200'><input name='vendor_txt[$service_id]' type='text' value='$vendor'></td>\n";
-      $output_str.="<td valign='top' width='100'><input name='pct_fous_txt[$service_id]' type='text' value='$pct_fous'></td>\n";
+      $output_str.="<td valign='top' width='250' colspan='2'><textarea name='description_txt[$service_id]' rows='1'>$description</textarea></td>\n";
+      #$output_str.="<td valign='top' width='250'><textarea name='owner_txt[$service_id]' rows='2'>$owner</textarea></td>\n";
+      $query="SELECT distinct trim(name) FROM tbl_staff_info where YEAR(enddate)='$currentYear' order by trim(name) asc";
+      $drop_down_name="<select name='owner_txt[$service_id]' id='owner' width='4'>\n";
+      $output_str.=generate_select_list($db,$query,$owner,$drop_down_name);
+
 
       $query="SELECT '5' UNION ALL SELECT '4' UNION ALL SELECT '3' UNION ALL SELECT '2' UNION ALL SELECT '1';";
       $drop_down_name="<select name='risk_txt[$service_id]' id='risk' width='4'>\n";
       $output_str.=generate_select_list($db,$query,$risk,$drop_down_name);
 
+      $output_str.="<td valign='top' width='100'><input name='pct_fous_txt[$service_id]' type='text' value='$pct_fous'></td>\n";
+      $output_str.="<td valign='top' width='150' colspan='2'><input name='cost_txt[$service_id]' type='text' value='$cost'></td>\n";
+
+      $output_str.="</tr>";
+      $output_str.=$row_str2;
+      $output_str.="<tr bgcolor='$currentColor'>\n";
+
+      $output_str.="<td valign='top' width='250' colspan='2'><textarea name='vendor_txt[$service_id]' rows='1'>$vendor</textarea></td>\n";
+      $output_str.="<td valign='top' width='250' colspan='2'><textarea name='notes_txt[$service_id]' rows='2'>$notes</textarea></td>\n";
+
       $query="SELECT 'Yes' UNION ALL SELECT 'No';";
       $drop_down_name="<select name='funded_txt[$service_id]' id='funded' width='4'>\n";
       $output_str.=generate_select_list($db,$query,$funded,$drop_down_name);
 
-      $output_str.="<td valign='top' width='150'><input name='cost_txt[$service_id]' type='text' value='$cost'></td>\n";
       $output_str.="<td valign='top' width='150'><input name='total_cost_txt[$service_id]' type='text' value='$total_cost'></td>\n";
-      $output_str.="<td valign='top' width='250'><textarea name='notes_txt[$service_id]' rows='4'>$notes</textarea></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_services.php?search=$search_name&currentYear=$currentYear&delete_id=$service_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a  onclick='javascript:confirmationDelete($(this));return false;' href='update_workpackage_services.php?search=$search_name&currentYear=$currentYear&delete_id=$service_id'>";
      
       #$query="SELECT 'Yes' UNION ALL SELECT 'No';";
       #$drop_down_name="<select name='funded_txt[$wp_staff_id]' id='funded' width='4'>\n";
@@ -182,9 +196,22 @@ if($search_name!="")
 
   if(isset($_GET['delete_id'])){
       $service_id=$_GET['delete_id'];
+      $select_query="Select description from tbl_wp_services where service_id='$service_id'";
+      $result=mysqli_query($conn,$select_query);
+      while($row=mysqli_fetch_array($result))
+      {
+        $description=$row[0];
+      }
       $delete_query="DELETE from tbl_wp_services where service_id='$service_id'";
       #echo $delete_query;
       $db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted Service: $description ";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
       echo "<script>window.open('update_workpackage_services.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 

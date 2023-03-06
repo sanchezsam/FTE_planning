@@ -7,7 +7,7 @@ $currentYear=date("Y");
 <table>
 <tr bgcolor ='<?php echo $new_column_color ?>'>
 <td valign='top'><b>Property #</b></td>
-<td valign='top'><b>Description</b></td>
+<td valign='top' colspan='2'><b>Description</b></td>
 <td valign='top'><b>Owner</b></td>
 <td valign='top'><b>Service Entry</b></td>
 <td valign='top'><b>Under Maint</b></td>
@@ -21,9 +21,9 @@ $currentYear=date("Y");
  <tr>
 
                 <td valign='top'><input name="property_number[]" class="form-control" required="required"></td>
-                <td><textarea name="description[]" class="form-control" required="required"></textarea></td>
+                <td width='250' colspan='2'><textarea name="description[]" class="form-control" required="required"></textarea></td>
 
-                <td valign='top' width='200'>
+                <td valign='top'  width='200'>
                 <select name="owners[]" id="owners" data-size="10" required="required">
                         <option value="">Select</option>
                         <?php
@@ -56,9 +56,9 @@ $currentYear=date("Y");
 <tr bgcolor ='<?php echo $new_column_color ?>'>
 <td valign='top'><b>PCT Fous</b></td>
 <td valign='top'><b>Risk</b></td>
-<td valign='top'><b>Note</b></td>
 <td valign='top'><b>Replace Fund</b></td>
-<td valign='top' colspan='2'><b>Replacement Cost</b></td>
+<td valign='top'><b>Note</b></td>
+<td valign='top' colspan='3'><b>Replacement Cost</b></td>
 </tr>
 
 
@@ -77,7 +77,6 @@ $currentYear=date("Y");
                 </select>
                 </td>
 
-                <td><textarea name="note[]" class="form-control" required="required"></textarea></td>
 
                 <td valign='top'>
                 <select name="replace_fund[]" id="replace_fund" data-size="10" required="required">
@@ -92,6 +91,7 @@ $currentYear=date("Y");
                 </td>
 
 
+                <td><textarea name="note[]" class="form-control" required="required"></textarea></td>
                 <td valign='top'><input name="replacement_cost[]" class="form-control" required="required"></td>
 
                 <td align="center" class="text-danger"><button type="button" data-toggle="tooltip" data-placement="right" onclick="if(confirm('Are you sure to remove?')){$(this).closest('table').remove();}" class="btn btn-danger"><i class="fa fa-fw fa-trash-alt"></i></button></td>

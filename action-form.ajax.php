@@ -1,28 +1,32 @@
 <?php include_once('config2.php');
 if(isset($_REQUEST['action']) and $_REQUEST['action']=="addDataRow"){
-$currentYear=date("Y");
-	?>
-	<tr>
-
-		<td>
-		<select name="wp[]" id="wp" data-size="10" required="required">
-			<option value="">Select</option>
-			<?php
-				$result	=	$db->query("SELECT distinct CONCAT(project,' ',task) as workpackage_name from tbl_wp_info WHERE YEAR(enddate)>='$currentYear' ORDER BY project,task ");
-				while($val  =   $result->fetch_assoc()){
-				?>
-				<option value="<?php echo $val['workpackage_name']?>"><?php echo $val['workpackage_name']?></option>
-			<?php }?>
-		</select>
-		</td>
-
-
-		<td><input type="forcast" name="forcast[]" class="form-control" required="required"></td>
-
-		<td align="center" class="text-danger"><button type="button" data-toggle="tooltip" data-placement="right" onclick="if(confirm('Are you sure to remove?')){$(this).closest('tr').remove();}" class="btn btn-danger"><i class="fa fa-fw fa-trash-alt"></i></button></td>
-	</tr>
-	<?php
-	echo '|***|addmore';
+    $currentYear=date("Y");
+    if(isset($_POST['currentYear']))
+    {
+         $currentYear = $_POST['currentYear'];
+    }
+?>
+  <tr>
+  
+  <td>
+  <select name="wp[]" id="wp" data-size="10" required="required">
+  	<option value="">Select</option>
+  	<?php
+  		$result	=$db->query("SELECT distinct CONCAT(project,' ',task) as workpackage_name from tbl_wp_info WHERE YEAR(enddate)='$currentYear' ORDER BY project,task ");
+  		while($val  =   $result->fetch_assoc()){
+  		?>
+  		<option value="<?php echo $val['workpackage_name']?>"><?php echo $val['workpackage_name']?></option>
+  	<?php }?>
+  </select>
+  </td>
+  
+  
+  <td><input type="forcast" name="forcast[]" class="form-control" required="required"></td>
+  
+  <td align="center" class="text-danger"><button type="button" data-toggle="tooltip" data-placement="right" onclick="if(confirm('Are you sure to remove?')){$(this).closest('tr').remove();}" class="btn btn-danger"><i class="fa fa-fw fa-trash-alt"></i></button></td>
+  </tr>
+<?php
+echo '|***|addmore';
 }
 
 

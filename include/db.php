@@ -36,11 +36,12 @@ function generate_select_list($db,$query,$selected_value,$drop_down_name)
       $output_str.=$drop_down_name;
       $output_str.="<option value=''>Select</option>\n";
       $result= $db->query($query);
+      #echo "Selected Value (".trim($selected_value).")<br>";
       while($row=mysqli_fetch_array($result))
       {
-          if($selected_value==$row[0])
+          #echo "ROw ($row[0])<br>";
+          if(trim($selected_value)==trim($row[0]))
           {
-              #echo "<br>$row[0],$selected_value";
               $output_str.="<option value='$row[0]' selected='true'>$row[0]</option>\n";
               #$output_str.="<option value='$row[0]' selected='selected'>$row[0]</option>\n";
           }

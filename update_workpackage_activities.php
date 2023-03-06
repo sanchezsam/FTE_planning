@@ -37,6 +37,14 @@ function refreshPage(passValue,search){
 //do something in this function with the value
  window.location="update_workpackage_activities.php?currentYear="+passValue
 }
+
+
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this Activity?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
 </script>
 
 
@@ -125,7 +133,7 @@ if($search_name!="")
       #$output_str.="<td valign='top'><input name='enddate_txt[$activity_id]' type='text' value='$enddate'></td>\n";
       $output_str.="<td valign='top' width='200'><input name='members_txt[$activity_id]' type='text' value='$members'></td>\n";
       $output_str.="<td valign='top'><textarea name='description_txt[$activity_id]' rows='2'>$description</textarea></td>\n";
-      $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_workpackage_activities.php?search=$search_name&currentYear=$currentYear&delete_id=$activity_id'>";
+      $output_str.="<td valign='top' align='center' class='text-danger'><a onclick='javascript:confirmationDelete($(this));return false;' href='update_workpackage_activities.php?search=$search_name&currentYear=$currentYear&delete_id=$activity_id'>";
      
       #$query="SELECT 'Yes' UNION ALL SELECT 'No';";
       #$drop_down_name="<select name='funded_txt[$wp_staff_id]' id='funded' width='4'>\n";
@@ -154,10 +162,24 @@ if($search_name!="")
 <?php
 
   if(isset($_GET['delete_id'])){
-      $wp_staff_id=$_GET['delete_id'];
+      $activity_id=$_GET['delete_id'];
+      $select_query="Select activity from tbl_wp_activities where activity_id='$activity_id'";
+      $result=mysqli_query($conn,$select_query);
+      while($row=mysqli_fetch_array($result))
+      {
+        $activity=$row[0];
+      }
+
       $delete_query="DELETE from tbl_wp_activities where activity_id='$activity_id'";
       #echo $delete_query;
       $db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted Activity: $activity ";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
       echo "<script>window.open('update_workpackage_activities.php?search=$search_name&currentYear=$currentYear','_self') </script>";
   }
 

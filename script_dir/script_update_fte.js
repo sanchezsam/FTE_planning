@@ -40,7 +40,9 @@ $(document).ready(function(e) {
                 $.ajax({
                         type:'POST',
                         url:'action-form.ajax.php',
-                        data:{'action':'addDataRow'},
+                        data:{'action':'addDataRow',
+                              'currentYear': searchYear,
+                             },
                         success: function(data){
                                 $('#tb').append(data);
                                 $('.selectpicker').selectpicker('refresh');
