@@ -38,7 +38,9 @@ $(document).ready(function(e) {
                 $.ajax({
                         type:'POST',
                         url:'action-form_update_wp_activities.php',
-                        data:{'action':'addDataRow'},
+                        data:{'action':'addDataRow',
+                              'currentYear': searchYear,
+                             },
                         success: function(data){
                                 $('#tb').append(data);
                                 $('.selectpicker').selectpicker('refresh');

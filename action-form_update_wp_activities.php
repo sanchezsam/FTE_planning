@@ -3,6 +3,10 @@ require 'include/db.php';
 
 if(isset($_REQUEST['action']) and $_REQUEST['action']=="addDataRow"){
 $currentYear=date("Y");
+if(isset($_POST['currentYear']))
+{
+     $currentYear = $_POST['currentYear'];
+}
 ?>
 
 <tr><td colspan=7>
@@ -14,9 +18,6 @@ $currentYear=date("Y");
 </tr>
 
 
-
-
-
  <tr>
 
                 <td valign='top' width='400'><input type="activity" name="activity[]" class="form-control" required="required"></td>
@@ -25,7 +26,8 @@ $currentYear=date("Y");
                 <select name="members[]" id="members" data-size="10" required="required">
                         <option value="">Select</option>
                         <?php
-                                $result =       $db->query("SELECT distinct name FROM tbl_staff_info order by trim(name) asc ");
+                                #$result = $db->query("SELECT distinct name FROM tbl_staff_info order by trim(name) asc ");
+                                $result = $db->query("SELECT distinct name FROM tbl_staff_info where YEAR(enddate)='$currentYear' order by trim(name) asc ");
                                 while($val  =   $result->fetch_assoc()){
                                 ?>
                                 <option value="<?php echo $val['name']?>"><?php echo $val['name']?></option>

@@ -143,6 +143,14 @@ function refreshPage(passValue,search){
 //do something in this function with the value
  window.location="update_staff_fte.php?currentYear="+passValue
 }
+
+
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this FTE?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
 </script>
 
 
@@ -233,7 +241,7 @@ if($name!="")
           $output_str.="<td width=210 valign='top'><input name='forcast_txt[$wp_staff_id]' type='text' value=$percent></td>\n";
           $output_str.="<td valign='top'>$startdate</td>\n";
           $output_str.="<td valign='top'>$enddate</td>\n";
-          $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_staff_fte.php?search=$name&delete_id=$wp_staff_id&search=$search_name&proj=$project&task=$task&currentYear=$currentYear'>";
+          $output_str.="<td valign='top' align='center' class='text-danger'><a onclick='javascript:confirmationDelete($(this));return false;' href='update_staff_fte.php?search=$name&delete_id=$wp_staff_id&search=$search_name&proj=$project&task=$task&currentYear=$currentYear'>";
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
 
       $output_str.="</tr>\n";
