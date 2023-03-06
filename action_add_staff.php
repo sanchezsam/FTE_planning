@@ -1,9 +1,13 @@
 <?php
   require_once 'config.php';
 
+  $currentYear=date("Y");
   if (isset($_POST['query'])) {
     $inpText = $_POST['query'];
-    $sql = 'SELECT distinct name FROM tbl_staff_info WHERE name LIKE :staff order by name asc';
+    $currentYear = $_POST['currentYear'];
+    #echo "Search $currentYear";
+    #$sql = 'SELECT distinct name FROM tbl_staff_info WHERE name LIKE :staff order by name asc';
+    $sql = "SELECT distinct name FROM tbl_staff_info WHERE YEAR(enddate)='$currentYear' and name LIKE :staff order by name asc";
     $stmt = $conn->prepare($sql);
     $stmt->execute(['staff' => '%' . $inpText . '%']);
     $result = $stmt->fetchAll();

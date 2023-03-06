@@ -58,6 +58,10 @@ if(isset($_GET['currentYear']))
 $drop_down_str=drop_down_year($conn);
 echo $drop_down_str;
 ?>
+
+<script type="text/javascript">var searchYear = "<?php echo $currentYear; ?>";</script>
+<input type="hidden" name="searchYear" value="<?php echo $currentYear;?>">
+
 <script>
 function refreshPage(passValue,search){
 //do something in this function with the value
@@ -68,6 +72,7 @@ function refreshPage(passValue,search){
     $search_str=display_search_box("Enter workpackage in the search box");
     echo $search_str;
   ?>
+
   <script src="script_dir/script_workpackage.js"></script>
 
 
@@ -80,7 +85,9 @@ if(isset($_POST['search']))
    {
        $currentYear=$_GET['currentYear'];
    }
+?>
 
+<?php
    #display workpackage info
    $query=get_wp_info($name,$currentYear);
    $result=mysqli_query($conn,$query);

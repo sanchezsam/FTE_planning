@@ -64,6 +64,9 @@ if(isset($_GET['currentYear']))
 $drop_down_str=drop_down_year($conn);
 echo $drop_down_str;
 ?>
+
+<script type="text/javascript">var searchYear = "<?php echo $currentYear; ?>";</script>
+<input type="hidden" name="searchYear" value="<?php echo $currentYear;?>">
 <script>
 function refreshPage(passValue,search){
 //do something in this function with the value

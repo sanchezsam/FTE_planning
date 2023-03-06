@@ -8,6 +8,7 @@ $(document).ready(function () {
         method: "post",
         data: {
           query: searchText,
+          currentYear: searchYear,
         },
         success: function (response) {
           $("#show-list").html(response);

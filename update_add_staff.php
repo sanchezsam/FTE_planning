@@ -49,11 +49,21 @@ if(isset($_GET['currentYear']))
 $drop_down_str=drop_down_year($conn);
 echo $drop_down_str;
 ?>
+<script type="text/javascript">var searchYear = "<?php echo $currentYear; ?>";</script>
+<input type="hidden" name="searchYear" value="<?php echo $currentYear;?>">
 <script>
 function refreshPage(passValue,search){
 //do something in this function with the value
  window.location="update_add_staff.php?currentYear="+passValue
 }
+
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this Staff Member?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+
 </script>
 
   <?php
@@ -203,7 +213,7 @@ if($name!="")
 
           $output_str.="<td width=400 valign='top'><input name='startdate_txt[$staff_id]' type='text' value=$startdate></td>\n";
           $output_str.="<td width=400 valign='top'><input name='enddate_txt[$staff_id]' type='text' value=$enddate></td>\n";
-          $output_str.="<td valign='top' align='center' class='text-danger'><a href='update_add_staff.php?currentYear=$currentYear&delete_id=$staff_id&name=$name'>";
+          $output_str.="<td valign='top' align='center' class='text-danger'><a onclick='javascript:confirmationDelete($(this));return false;' href='update_add_staff.php?currentYear=$currentYear&delete_id=$staff_id&name=$name'>";
           $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
 
 
@@ -248,7 +258,19 @@ if($name!="")
   if(isset($_GET['delete_id'])){
       $staff_id=$_GET['delete_id'];
       $name=$_GET['name'];
+      $currentYear=$_GET['currentYear'];
+      $znumber_query="SELECT znumber FROM tbl_staff_info WHERE staff_id=$staff_id and YEAR(enddate)='$currentYear'";
+      $result=mysqli_query($conn,$znumber_query);
+      while($row=mysqli_fetch_array($result))
+      { 
+         $znumber=$row[0];
+      }
+      
+      $delete_wp_query="DELETE from tbl_wp_staff where znumber=$znumber and YEAR(enddate)='$currentYear'";
+      $db->query($delete_wp_query);
+      #echo $delete_wp_query;
       $delete_query="DELETE from tbl_staff_info where staff_id='$staff_id'";
+      #echo $delete_query;
       $db->query($delete_query);
       if($db->query($delete_query))
       {

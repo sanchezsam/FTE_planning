@@ -110,6 +110,15 @@ function refreshPage(passValue,search){
 //do something in this function with the value
  window.location="update_workpackage_info.php?currentYear="+passValue
 }
+
+
+
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this Work Package?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
 </script>
 
 <script src="script_dir/jquery.min.js"></script>
@@ -217,7 +226,7 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
 
       $output_str.="<td valign='top' colspan='3'><input name='task_name_txt[$wp_id]' type='text' value='$task_name'></td>\n";
       $output_str.="<td valign='top' colspan='3'><table><tr><td valign='top' width='95%'><textarea name='task_description_txt[$wp_id]' rows='4'>$task_description</textarea></td>";
-      $output_str.="<td valign='top'><a href='update_workpackage_info.php?program_name=$program&currentYear=$currentYear&delete_id=$wp_id'>";
+      $output_str.="<td valign='top'><a  onclick='javascript:confirmationDelete($(this));return false;' href='update_workpackage_info.php?program_name=$program&currentYear=$currentYear&delete_id=$wp_id'>";
       $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td></tr></table></td>";
 
       #$cost="$" . number_format(floatval($cost), 2, ".", ",");
@@ -247,6 +256,14 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
 
   if(isset($_GET['delete_id'])){
       $wp_id=$_GET['delete_id'];
+      $wp_query="SELECT project,task FROM tbl_wp_info WHERE wp_id='$wp_id'";
+      $result=mysqli_query($conn,$wp_query);
+      while($row=mysqli_fetch_array($result))
+      {
+         $wp_name="$row[0] $row[1]";
+      }
+
+
       $delete_query="DELETE from tbl_wp_info where wp_id='$wp_id'";
       $db->query($delete_query);
       $delete_query="DELETE from tbl_wp_staff where wp_id='$wp_id'";
@@ -257,6 +274,13 @@ if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name
       $db->query($delete_query);
       $delete_query="DELETE from tbl_wp_materials where wp_id='$wp_id'";
       $db->query($delete_query);
+      if($db->query($delete_query))
+      {
+         $deleteMsg="Deleted: $wp_name";
+         echo ' <script type="text/javascript">
+              alert("'.$deleteMsg.'");
+              </script>';
+      }
       echo "<script>window.open('update_workpackage_info.php?program_name=$program&currentYear=$currentYear','_self') </script>";
   }
 
