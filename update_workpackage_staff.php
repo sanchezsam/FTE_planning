@@ -82,6 +82,11 @@ function get_title_and_salary($conn,$znumber,$wp_staff_id,$currentYear)
                          where znumber='$znumber'";
           mysqli_query($conn,$update_query);
       }
+      else
+      {
+         $salary_min=0;
+         $salary_max=0;
+      }
       #print_r($titleArray);
       $output_str="<td valign='top'>$title</td>\n";
       $output_str.="<td valign='top'><input name='salary_min_txt[$wp_staff_id]' type='text' value='$salary_min'></td>\n";
@@ -386,8 +391,8 @@ if(isset($_POST['save'])){
                     #get wp_id
                     #$staff_name = $_POST['staff_name'];
                     #echo "<input type='hidden' name='search' value='$name'>";
-                    $select_query="SELECT * FROM tbl_staff_info where znumber ='$znumber'";
-                    $result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber'");
+                    $select_query="SELECT * FROM tbl_staff_info where znumber ='$znumber' and YEAR(enddate)='$currentYear'";
+                    $result=$db->query("SELECT * FROM tbl_staff_info where znumber ='$znumber' and YEAR(enddate)='$currentYear'");
                     $count=mysqli_num_rows($result);
 
                     #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
@@ -452,7 +457,7 @@ if(isset($_POST['save'])){
                         $insert_query="";
                         #$insert_query="Failed insert: No staff with that znumber";
                         $errorMsg.=" $znumber";
-                        echo "Error: " . $query . "<br>" . $conn->error;
+                        #echo "Error: " . $query . "<br>" . $conn->error;
                      }
                        #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
                        #$txt=$insert_query;

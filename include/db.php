@@ -370,7 +370,6 @@ if(isset($_GET['currentYear']))
 {
      $currentYear=$_GET['currentYear'];
 }
-
 #$currentDate=strtotime($currentDate);
 $output_str="";
 #$output_str.="<form id='yearform' method='post'>";
@@ -444,8 +443,8 @@ $output_str.="<td valign='top'><b>View by Year</b></td>\n";
 $query="SELECT distinct year(enddate) FROM tbl_staff_info group by year(enddate)";
 $year_result=mysqli_query($conn,$query);
 $output_str.="<td width='200'>";
-#$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
-$output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+$output_str.="<select  onchange='refreshPage(this.value);' name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
+#$output_str.="<select  name='year[]' id='year' data-size='4' required='required' onchange='change()'>";
 $output_str.="<option value=''>Select</option>";
 while($row=mysqli_fetch_array($year_result))
 {  
@@ -464,7 +463,7 @@ $output_str.="</td>";
 
 
 $output_str.="<td>";
-$output_str.="<a href='allftes.php?currentYear=$currentYear&group=$group'>";
+$output_str.="<a href='$page.php?currentYear=$currentYear&group=$group'>";
 $output_str.="<input type='submit' name='submit' value='Display'>";
 $output_str.="</a>";
 

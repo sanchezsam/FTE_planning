@@ -29,7 +29,7 @@ function get_wp_totals($task,$project,$currentYear)
             and tbl_wp_info.project='$project'
             group by tbl_wp_info.project
             order by tbl_wp_info.project;";
-   #echo $query;
+   echo $query;
    return $query;
 }
 

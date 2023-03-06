@@ -32,8 +32,8 @@ function get_staff($group,$currentYear)
 echo "<br><strong>Workpackage Managers</strong><br><br>";
 
 //Get drop down menu (Year selector)
-$currentYear=date("Y");
-$currentDate=date("Y/m/d");
+#$currentYear=date("Y");
+#$currentDate=date("Y/m/d");
 $currentYear=date("Y");
 $group='HPC-SYS';
 if(isset($_GET['currentYear']))
@@ -66,7 +66,6 @@ if(isset($_POST["submit"]))
           $currentYear=$_POST['year'][0];
      }
 
-}
 
    if(isset($_GET['currentYear']))
    {
@@ -87,5 +86,5 @@ if(isset($_POST["submit"]))
    $output_str.="</table>\n";
    echo $output_str;
 //echo "</section>";
-
+}
 require 'template/footer.html';

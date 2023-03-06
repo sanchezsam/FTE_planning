@@ -5,11 +5,10 @@ SELECT
 tbl_wp_info.wp_id,project,task,tbl_wp_info.startdate,tbl_wp_info.enddate,
 FORMAT(sum(tbl_wp_services.cost), 0) as 'Service_Cost',
 FORMAT(sum(tbl_wp_services.total_cost)*tbl_wp_info.burden_rate,2) as 'Service_Total_Cost'
-FROM `tbl_wp_services`,tbl_wp_info
-where tbl_wp_info.wp_id=tbl_wp_services.wp_id
+FROM tbl_wp_info
+LEFT JOIN tbl_wp_services on  tbl_wp_info.wp_id=tbl_wp_services.wp_id
 group by enddate,project,task  
-ORDER BY `tbl_wp_info`.`wp_id`
-
+ORDER BY `tbl_wp_info`.`project` ASC;
 #####################
 
 #####Works for totals for staff
@@ -20,10 +19,12 @@ round(sum(pct_fte),2) as 'pct_fte',
 FORMAT(sum(cost), 0) as 'Staff_Cost',
 round(sum(funded_percent),2) as 'Funded_Percent',
 FORMAT(sum(total_cost), 2) as 'Staff_Totals_Cost'
-FROM `tbl_wp_staff`,tbl_wp_info
-where tbl_wp_info.wp_id=tbl_wp_staff.wp_id
-group by enddate,project,task
-ORDER BY `tbl_wp_info`.`wp_id`;
+FROM tbl_wp_info
+LEFT JOIN tbl_wp_staff on tbl_wp_info.wp_id=tbl_wp_staff.wp_id
+group by enddate,project,task  
+ORDER BY `tbl_wp_info`.`project` ASC
+
+
 ################################
 
 ##### Works for totals for materials
@@ -32,8 +33,8 @@ SELECT
 tbl_wp_info.wp_id,project,task,tbl_wp_info.startdate,tbl_wp_info.enddate,
 FORMAT(sum(replacement_cost), 0) as 'Materials_Replacement_Cost',
 FORMAT(sum(total_cost)*tbl_wp_info.burden_rate, 0) as 'Materials_Total_Cost'
-FROM `tbl_wp_materials`,tbl_wp_info
-where tbl_wp_info.wp_id=tbl_wp_materials.wp_id
+FROM tbl_wp_info
+LEFT JOIN tbl_wp_materials on tbl_wp_info.wp_id=tbl_wp_materials.wp_id
 group by enddate,project,task  
 ORDER BY `tbl_wp_info`.`project` ASC
 #####
@@ -51,17 +52,19 @@ vw_materials_by_wp.Materials_Replacement_Cost AS 'Hardware_Inventory',
 vw_materials_by_wp.Materials_Total_Cost AS 'Hardware_Costs',
 vw_staff_by_wp.Staff_Totals_Cost AS 'Staff_Costs',
 FORMAT((
-(vw_staff_by_wp.Funded_Percent*3000)+
+IFNULL(REPLACE(vw_services_by_wp.Service_Total_Cost, ',', ''),0)+
 IFNULL(REPLACE(vw_services_by_wp.Service_Total_Cost, ',', ''),0)+
 IFNULL(REPLACE(vw_materials_by_wp.Materials_Replacement_Cost, ',', ''),0)+
 IFNULL(REPLACE(vw_staff_by_wp.Staff_Totals_Cost,',', ''),0)
 ),0) As Allocated,
 vw_staff_by_wp.startdate,
 vw_staff_by_wp.enddate
-FROM vw_staff_by_wp
-LEFT JOIN vw_services_by_wp ON vw_staff_by_wp.wp_id = vw_services_by_wp.wp_id
-LEFT JOIN vw_materials_by_wp ON vw_staff_by_wp.wp_id = vw_materials_by_wp.wp_id;
-
+FROM tbl_wp_info
+LEFT JOIN vw_staff_by_wp ON tbl_wp_info.wp_id = vw_staff_by_wp.wp_id
+LEFT JOIN vw_services_by_wp ON tbl_wp_info.wp_id = vw_services_by_wp.wp_id
+LEFT JOIN vw_materials_by_wp ON tbl_wp_info.wp_id = vw_materials_by_wp.wp_id
+group by project,task,enddate  
+ORDER BY `vw_staff_by_wp`.`project` ASC;
 
 
 
@@ -165,3 +168,19 @@ vw_wp_totals.wp_id=tbl_wp_info.wp_id
 and YEAR(tbl_wp_info.enddate)='2023'
 and program='FOUS'
 order by vw_wp_totals.project,vw_wp_totals.task;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
