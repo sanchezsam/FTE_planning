@@ -746,4 +746,16 @@ return $output_str;
 
 }
 
+function get_wp_access($conn,$name)
+{ 
+    
+    $access_level=0;
+    $query="SELECT userlevel FROM vw_wp_access where manager_name='$name'";
+    $result=mysqli_query($conn,$query);
+    $while($row=mysqli_fetch_array($result))
+    {
+      $access_level=$row[0]
+    }
+ return $access_level;
+}
 ?>
