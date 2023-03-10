@@ -23,6 +23,9 @@ $nextEndFYDate="2024-09-30";
 #$old_color='green';
 #$change_font_color="red";
 $new_column_color='#90EE90';
+$verification="True";
+$login_name="220350";
+#$verification="False";
 
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());
 
@@ -746,16 +749,28 @@ return $output_str;
 
 }
 
-function get_wp_access($conn,$name)
-{ 
-    
+function get_wp_program_access($conn,$name)
+{
     $access_level=0;
-    $query="SELECT userlevel FROM vw_wp_access where manager_name='$name'";
+    $query="SELECT userlevel FROM tbl_wp_manager where znumber='$name' and userlevel>=4";
     $result=mysqli_query($conn,$query);
-    $while($row=mysqli_fetch_array($result))
+    while($row=mysqli_fetch_array($result))
     {
-      $access_level=$row[0]
+      $access_level=$row[0];
     }
  return $access_level;
 }
+
+function get_wp_access($conn,$name,$project,$task)
+{
+    $access_level=0;
+    $query="SELECT userlevel FROM vw_wp_access where znumber='$name' and project='$project' and task='$task'";
+    $result=mysqli_query($conn,$query);
+    while($row=mysqli_fetch_array($result))
+    {
+      $access_level=$row[0];
+    }
+ return $access_level;
+}
+
 ?>

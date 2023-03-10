@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-require 'include/db.php';
+require 'include/lib.php';
 #require 'template/header.html';
 require 'template/header.html';
 
@@ -211,6 +211,39 @@ function refreshPage(passValue,search){
 if(isset($_POST['search']))
 {
    $name=$_POST['search'];
+   #LOGIN IN display
+   if($verification=="True")
+   {
+       $wp_info = explode(" ", $name);
+       $project=$wp_info[0];
+       $task=$wp_info[1];
+       if(isset($_SERVER['cn']))
+       {
+           $login_name=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $access_level=get_wp_access($conn,$login_name,$project,$task);
+       $admin_level=get_wp_program_access($conn,$login_name);
+       if($admin_level)
+       {
+          $access_level=$admin_level;
+       }
+       if($access_level==0) 
+       {
+         exit("$login_name does not have access to $name");
+       }
+    
+   }
+   #END LOGIN IN display
+
+
+
+
+
+
    if(isset($_GET['currentYear']))
    {
        $currentYear=$_GET['currentYear'];

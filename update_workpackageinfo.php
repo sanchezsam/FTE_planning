@@ -1,7 +1,7 @@
 <?php 
 include_once('config2.php'); 
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-require 'include/db.php';
+require 'include/lib.php';
 require 'template/header.html';
 
 function get_workpackage_info($name,$currentYear)
@@ -95,6 +95,35 @@ function confirmationDelete(anchor)
 <?php
 if($name!="")
 {
+
+   if($verification=="True")
+   {
+       $wp_info = explode(" ", $name);
+       $project=$wp_info[0];
+       $task=$wp_info[1];
+       if(isset($_SERVER['cn']))
+       {
+           $login_name=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $access_level=get_wp_access($conn,$login_name,$project,$task);
+       $admin_level=get_wp_program_access($conn,$login_name);
+       if($admin_level)
+       {
+          $access_level=$admin_level;
+       }
+       if($access_level==0)                   
+       {
+         exit("$login_name does not have access to $name");
+       }
+
+   }
+
+
+
    $termcount=0;
    $previousName="";
    $currentDate=date("Y/m/d");
@@ -193,28 +222,40 @@ if($name!="")
 }
 
 
-      $output_str="<table width = '900' style='border:1px solid black;'>\n";
-      $output_str.="<tbody id='tb'>\n";
-      #$output_str.="<tr bgcolor ='#C1C1E8'>";
-      #$output_str.="<td>&nbsp;</td>";
-      #$output_str.="<td width='125'>Name</td>";
-      #$output_str.="<td>Z Number</td>";
-      #$output_str.="<td>Team-Group</td>";
-      #$output_str.="<td width='4'>FTE</td>";
-      #$output_str.="<td>Start Date</td>";
-      #$output_str.="<td>&nbsp;</td>";
-      #$output_str.="</tr>";
-      $output_str.="</tbody>";
-      $output_str.="<tr>";
-      $output_str.="<td colspan='6'>";
-      $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
-      $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
-      $output_str.="</td>";
-      $output_str.="</tr>";
-      $output_str.="</tbody>";
-      $output_str.="</table>\n";
+   if($verification=="True")
+   {
+       if(isset($_SERVER['cn']))
+       {
+           $login_name=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $admin_level=get_wp_program_access($conn,$login_name);
+       if($admin_level>=4)
+       {
+          $output_str="<table width = '900' style='border:1px solid black;'>\n";
+          $output_str.="<tbody id='tb'>\n";
+          $output_str.="</tbody>";
+          $output_str.="<tr>";
+          $output_str.="<td colspan='6'>";
+          $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
+          $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
+          $output_str.="</td>";
+          $output_str.="</tr>";
+          $output_str.="</tbody>";
+          $output_str.="</table>\n";
+          echo $output_str;
+       }
 
-      echo $output_str;
+   }
+
+
+
+
+
+
 
 
 

@@ -1,7 +1,7 @@
 <?php 
 include_once('config2.php'); 
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-require 'include/db.php';
+require 'include/lib.php';
 require 'template/header.html';
 
 function get_workpackage_activities($name,$currentYear)
@@ -90,6 +90,36 @@ function confirmationDelete(anchor)
 <?php
 if($search_name!="")
 {
+
+   if($verification=="True")
+   {
+       $wp_info = explode(" ", $search_name);
+       $project=$wp_info[0];
+       $task=$wp_info[1];
+       if(isset($_SERVER['cn']))
+       {
+           $login_name=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $access_level=get_wp_access($conn,$login_name,$project,$task);
+       $admin_level=get_wp_program_access($conn,$login_name);
+       if($admin_level)
+       {
+          $access_level=$admin_level;
+       }
+       if($access_level==0)
+       {
+         exit("$login_name does not have access to $search_name");
+       }
+
+   }
+
+
+
+
    $termcount=0;
    $previousRow="";
    $znumbers=array();

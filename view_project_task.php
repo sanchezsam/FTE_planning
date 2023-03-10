@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-require 'include/db.php';
+require 'include/lib.php';
 require 'template/header.html';
 
 function get_project_task($program,$currentYear)
@@ -59,6 +59,29 @@ if(isset($_GET['currentYear']))
 {
      $currentYear=$_GET['currentYear'];
 }
+
+if($verification=="True")
+{
+    if(isset($_SERVER['cn']))
+    {
+        $login_name=$_SERVER['cn'];
+    }
+    if(isset($_SERVER['REMOTE_USER']))
+    {
+        $login_name=$_SERVER['REMOTE_USER'];
+    }
+
+    $access_level=get_wp_program_access($conn,$login_name);
+    if($access_level<4)
+    {
+      exit("Program level or admin access Required");
+    }
+}
+
+
+
+
+
 $drop_down_str=drop_down_year_with_program($conn,'view_project_task');
 echo $drop_down_str;
 

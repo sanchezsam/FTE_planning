@@ -1,5 +1,5 @@
 <?php include_once('config2.php');
-require 'include/db.php';
+require 'include/lib.php';
 
 if(isset($_REQUEST['action']) and $_REQUEST['action']=="addDataRow"){
 $currentYear=date("Y");

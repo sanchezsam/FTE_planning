@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-require 'include/db.php';
+require 'include/lib.php';
 require 'template/header.html';
 
 function get_staff($group,$currentYear)

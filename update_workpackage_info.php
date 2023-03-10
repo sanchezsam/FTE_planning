@@ -1,7 +1,7 @@
 <?php 
 include_once('config2.php'); 
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-require 'include/db.php';
+require 'include/lib.php';
 require 'template/header.html';
 
 function get_workpackage_info($program,$currentYear)
@@ -147,6 +147,22 @@ function confirmationDelete(anchor)
 <input type="hidden" name="currentYear" value="<?php echo $currentYear;?>">
 <?php
 extract($_POST);
+if($verification=="True")
+{
+    if(isset($_SERVER['cn']))
+    {
+        $login_name=$_SERVER['cn'];
+    }
+    if(isset($_SERVER['REMOTE_USER']))
+    {
+        $login_name=$_SERVER['REMOTE_USER'];
+    }
+    $access_level=get_wp_program_access($conn,$login_name);
+    if($access_level<4)
+    {
+      exit("Program level or admin access Required");
+    }
+}
 
 if(isset($_POST['submit']) || isset($_POST['save']) || isset($_GET['program_name']))
 #if(isset($_POST['submit']))
