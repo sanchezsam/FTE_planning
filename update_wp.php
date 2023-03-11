@@ -240,10 +240,6 @@ if(isset($_POST['save'])){
                     #$currentYear=date("Y");
                     $insert_query="INSERT INTO tbl_workpackage (wp_id,workpackage_name,startdate,enddate,manager_id,forcasted_fte_total) VALUES (NULL, '$workpackage_name','$currentDate','$currentYear-$endFYIDate',$manager_id,$forcasted);";
                     #echo "<br>$insert_query";
-#$myfil    e = fopen("newfile.txt", "w") or die("Unable to open file!");
-#$txt=$    insert_query;
-#fwrite    ($myfile, $txt);
-#fclose    ($myfile);
                     $db->query($insert_query);
 
             }

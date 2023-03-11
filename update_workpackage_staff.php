@@ -32,10 +32,6 @@ function cal_cost($conn,$znumber,$percent,$currentYear)
   
   $query="SELECT staff_cost FROM `tbl_staff_info` WHERE znumber='$znumber' and YEAR(enddate)='$currentYear'";
   $result=mysqli_query($conn,$query);
-  #$info= "$percent $query";
-  #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-  #fwrite($myfile, $info);
-  #fclose($myfile);
 
   while($row=mysqli_fetch_array($result))
    {
@@ -221,7 +217,7 @@ if($search_name!="")
        $task=$wp_info[1];
        if(isset($_SERVER['cn']))
        {
-           $login_name=$_SERVER['cn'];
+           $login=$_SERVER['cn'];
        }
        if(isset($_SERVER['REMOTE_USER']))
        {
@@ -235,7 +231,7 @@ if($search_name!="")
        }
        if($access_level==0)      
        {
-         exit("$login_name does not have access to $search_name");
+         exit("$login does not have access to $search_name");
        }
 
    }

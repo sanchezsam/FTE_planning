@@ -28,10 +28,6 @@
     #         FROM vw_staff_mapping  WHERE staff_name like '%$inpText%'
     #        ";
 
-$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-fwrite($myfile, $currentYear);
-fwrite($myfile, "year");
-fclose($myfile);
 
     $stmt = $conn->prepare($sql);
     $stmt->execute(['staff' => '%' . $inpText . '%']);

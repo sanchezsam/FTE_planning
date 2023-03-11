@@ -98,7 +98,7 @@ if($search_name!="")
        $task=$wp_info[1];
        if(isset($_SERVER['cn']))
        {
-           $login_name=$_SERVER['cn'];
+           $login=$_SERVER['cn'];
        }
        if(isset($_SERVER['REMOTE_USER']))
        {
@@ -112,7 +112,7 @@ if($search_name!="")
        }
        if($access_level==0)
        {
-         exit("$login_name does not have access to $search_name");
+         exit("$login does not have access to $search_name");
        }
 
    }
@@ -340,10 +340,6 @@ if(isset($_POST['save'])){
                               WHERE service_id = $key; ";
                #echo "$update_query<br>";
                $db->query($update_query);
-               #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-               #$txt=$update_query;
-               #fwrite($myfile, $txt);
-               #fclose($myfile);
                               
             }
        echo "<meta http-equiv='refresh' content='0'>";

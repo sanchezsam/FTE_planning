@@ -99,7 +99,7 @@ if($search_name!="")
        $task=$wp_info[1];
        if(isset($_SERVER['cn']))
        {   
-           $login_name=$_SERVER['cn'];
+           $login=$_SERVER['cn'];
        }
        if(isset($_SERVER['REMOTE_USER']))
        {
@@ -113,7 +113,7 @@ if($search_name!="")
        }
        if($access_level==0)
        {
-         exit("$login_name does not have access to $search_name");
+         exit("$login does not have access to $search_name");
        }
 
    }

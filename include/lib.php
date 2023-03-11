@@ -3,14 +3,29 @@ $dbhost = 'localhost';
 $dbuser = 'root';
 $dbpass = 'root';
 $dbname = 'FTE_Planning';
+
+#Alternating row colors
+#gray
 $colour0 = '#E3E3E3';
+#white
 $colour1 = '#FFFFFF';
-$old_color='#787878';
+
+#Display header color
 $header_color='#ADD8E6';
-$change_font_color="white";
+
+#column color
 $column_color='#C1C1E8';
+
+#Totals color
 $totals_color='#33ffce';
-#$totals_color='red';
+
+#New column color when adding
+$new_column_color='#90EE90';
+
+$old_color='#787878';
+$change_font_color="white";
+
+#Parsing and cloning variables
 $startFY="2022";
 $endFY="2023";
 $endMonth='10-01';
@@ -18,13 +33,9 @@ $startFYDate="2022-10-01";
 $endFYIDate="9-30";
 $nextStartFYDate="2023-10-01";
 $nextEndFYDate="2024-09-30";
-#$colour0 = 'blue';
-#$colour1 = 'yellow';
-#$old_color='green';
-#$change_font_color="red";
-$new_column_color='#90EE90';
+
 $verification="True";
-$login_name="220350";
+$login_name="";
 #$verification="False";
 
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());

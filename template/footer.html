@@ -14,6 +14,28 @@
 					</form>
 				</section>
 			 -->
+<?php
+
+   #if($verification=="True")
+   #{   
+   #    if(isset($_SERVER['cn']))
+   #    {   
+   #        $login=$_SERVER['cn'];
+   #    }
+   #    if(isset($_SERVER['REMOTE_USER']))
+   #    {   
+   #        $login_name=$_SERVER['REMOTE_USER'];
+   #    }
+   #    $access_level=get_login_access($conn,$login_name);
+   #    if($access_level==0)
+   #    { 
+   #      exit("$login does not have access to this page");
+   #    }
+
+   #}
+?>
+
+
 
 			<!-- Menu -->
 <nav id="menu">
@@ -25,7 +47,7 @@
 		<li>
 			<span class="opener">Staff</span>
 			<ul>
-		                <li><a href="Staff.php">Staff</a></li>
+		                <li><a href="staff.php">Staff</a></li>
 		                <li><a href="update_add_staff.php">Update/Add Staff</a></li>
 		                <li><a href="managers.php">managers</a></li>
 		                <li><a href="update_add_managers.php">Update/Add Manager Access</a></li>

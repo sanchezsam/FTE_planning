@@ -83,7 +83,22 @@ function refreshPage(passValue){
 
 <?php
 
-
+   if($verification=="True")
+   {   
+       if(isset($_SERVER['cn']))
+       {   
+           $login=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {   
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $access_level=get_login_access($conn,$login_name);
+       if($access_level==0)
+       { 
+         exit("$login does not have access to this page");
+       }
+}
 
 
 
@@ -124,4 +139,5 @@ $output_str.="</table>\n";
 $output_str.="</font>\n";
 echo $output_str;
 //echo "</section>";
-require 'template/footer.html2';
+
+require 'template/footer.html';

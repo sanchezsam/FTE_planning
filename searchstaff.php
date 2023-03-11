@@ -75,7 +75,7 @@ function refreshPage(passValue,search){
 </script>
 
   <?php
-    $search_str=display_search_box("Enter workpackage in the search box");
+    $search_str=display_search_box("Enter Staff Name in the search box");
     echo $search_str;
   ?>
   <script src="script_dir/script_search_staff.js"></script>

@@ -357,10 +357,6 @@ if(isset($_POST['save'])){
                             $errorMsg.=" $work_pack,";
                             #echo "Error: " . $query . "<br>" . $conn->error;
                          }
-                           $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-                           $txt=$insert_query;
-                           fwrite($myfile, $txt);
-                           fclose($myfile);
 
                 }
                 if($errorMsg)
@@ -409,10 +405,6 @@ if(isset($_POST['save'])){
                               WHERE wp_staff_id = $key; ";
                #echo "$update_query<br>";
                $db->query($update_query);
-               $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-               $txt=$update_query;
-               fwrite($myfile, $txt);
-               fclose($myfile);
        echo "<meta http-equiv='refresh' content='0'>";
        echo "<script>window.open('update_staff_fte.php?search=$name&currentYear=$currentYear','_self') </script>";
 

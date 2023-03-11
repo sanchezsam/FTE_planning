@@ -1,6 +1,6 @@
 <?php
 
-require '../../include/db.php';
+require '../../include/lib.php';
 
 
 function get_wp_id($conn,$workpackage_name,$startdate,$enddate)

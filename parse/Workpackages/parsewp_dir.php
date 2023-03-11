@@ -1,6 +1,6 @@
 <?php
 
-require '../../include/db.php';
+require '../../include/lib.php';
 
 
 
