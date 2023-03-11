@@ -20,7 +20,6 @@ function get_manager_details($name,$currentYear)
                      enddate as 'End Date'
               FROM vw_wp_access 
               where manager_name LIKE '%$name%'";
-   #echo $query;
    }
    return $query;
 }
@@ -252,38 +251,51 @@ if(isset($_POST['save'])){
         #print_r($_POST);
         $insertMsg="";
         $failedMsg="";
+
         if (is_array($projects) || is_object($projects))
         {
-            $insertMsg="Added $staff_name to ";
-            foreach($projects as $key=>$wp_id){
-                    
-                    #$userlevel=$userlevels[$key];
-                    #$startdate=date("Y/m/d");
+            $query="select manager_id from tbl_wp_manager where manager_name like '%$staff_name%'";
+            $result=mysqli_query($conn,$query);
+            while($row=mysqli_fetch_array($result))
+            {
+               $manager_id=$row[0];
+            }
 
+                foreach($projects as $key=>$wp_id){
+                        
+                        #$userlevel=$userlevels[$key];
+                        #$startdate=date("Y/m/d");
 
-                        $insert_query="INSERT INTO tbl_wp_access
-                                       (access_id,manager_id,wp_id)
-                                        VALUES (NULL,'$manager_id','$wp_id')";
+                        $select_query="select manager_id from tbl_wp_access where manager_id=$manager_id and wp_id=$wp_id";
+                        #echo $select_query;
+                        $select_result=$db->query($select_query);
+                        $count=mysqli_num_rows($select_result);
+                        if($count>0)
+                        {
+                            $failedMsg.="$wp_id,";
+                        }
+                        else{
 
-                        $myfile     = fopen("newfile.txt", "w") or die("Unable to open file!");
-                        $txt=$insert_query;
-                        fwrite(    $myfile, $txt);
-                        fclose(    $myfile);
-                        echo "<br>$insert_query";
-                        $db->query($insert_query);
-                        $insertMsg.="$wp_id,";
+                            $insert_query="INSERT INTO tbl_wp_access
+                                           (access_id,manager_id,wp_id)
+                                            VALUES (NULL,'$manager_id','$wp_id')";
 
+                            #echo "<br>$insert_query";
+                            $db->query($insert_query);
+                            $insertMsg.="$wp_id,";
+
+                        }
             }
             if($insertMsg)
             {
-                 $insertMsg="Added: $insertMsg";
+                 $insertMsg="$staff_name added to $insertMsg";
                  echo ' <script type="text/javascript">
                       alert("'.$insertMsg.'");
                       </script>';
             }
             if($failedMsg)
             {
-                 $failedMsg="Failed Inserting. znumbers exists: $failedMsg";
+                 $failedMsg="Failed Inserting. $staff_name already has access to $failedMsg";
                  echo ' <script type="text/javascript">
                       alert("'.$failedMsg.'");
                       </script>';

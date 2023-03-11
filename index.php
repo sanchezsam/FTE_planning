@@ -124,5 +124,4 @@ $output_str.="</table>\n";
 $output_str.="</font>\n";
 echo $output_str;
 //echo "</section>";
-
-require 'template/footer.html';
+require 'template/footer.html2';
