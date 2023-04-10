@@ -1,7 +1,0 @@
-﻿Contract Description,Start Date,End Date,Contract Owner,Vendor,Pct IC,Risk (0-5),Funded?,Cost,Total Cost,Notes
-RHEL,2021-10-01,2022-09-30,Kathleen Ann (Kaki) Kelly,DLT,0.42,,Yes,106110,44566,All CTS-1 + Woodchuck
-CTS-1 Support,2021-10-01,2022-09-30,Amanda Marie Bonnie,Penguin Systems,0,,No,0,0,CTS-1 is beyond end-of-life
-HPE Support,2021-10-01,2022-09-30,Paul M Weber ,HPE,1,,Yes,55000,55000,Per Jim/Tanya HPE system/analyst support
-HPE Analysts,2021-10-01,2022-09-30,James Lujan,HPE,0.25,,Yes,640000,160000,Per Jim HPE Support should be funded by IC
-CHARM (Virtual Infrastructure),2021-10-01,2022-09-30,Johnathan Patrick Nielsen ,Red Hat,0.5,4,Yes,21000,10500,See Comment; currently split 50/50 between JAJC/PROD and X5VG/COMP/PROD.
-HPC's GitLab Licenses/Support,2021-10-01,2022-09-30,Johnathan Patrick Nielsen ,GitLab Inc.,0.4,4,Yes,25000,10000,See Comment; currently split 30/30/40 among JAJC  JAKC and COMPPROD.

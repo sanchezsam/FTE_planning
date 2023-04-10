@@ -1,2 +1,0 @@
-﻿PROGRAM,PROJECT,TASK,TASK NAME,TASK MANAGER,TASK DESCRIPTION,BURDEN_RATE,TARGET,startdate,enddate
-FOUS,JAFV,SYSTSOFT,CCE System Software subproject in the ASC IP (primarily Slurm Lustre Ansible collaborations) - OFFSITE,Brett Hollander,The CCE working groups and projects focus on a common software stack including but not limited to OS software application development tools resource management HPC monitoring and metrics and common tri-lab environment issues such as configuration management licenses WAN access and multi-realm security.,1,0,2022-10-01,2023-09-30
