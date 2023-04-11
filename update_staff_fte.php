@@ -126,6 +126,34 @@ function get_staff_fte($name,$currentYear)
 
 <body>
   <?php
+   if($verification=="True")
+   {
+       $wp_info = explode(" ", $search_name);
+       $project=$wp_info[0];
+       $task=$wp_info[1];
+       if(isset($_SERVER['cn']))
+       {
+           $login=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $access_level=get_wp_access($conn,$login_name,$project,$task);
+       $admin_level=get_wp_program_access($conn,$login_name);
+       if($admin_level)
+       {
+          $access_level=$admin_level;
+       }
+       if($access_level==0)
+       {
+         exit("$login does not have access to $search_name");
+       }
+
+   }
+
+
+
      $currentYear=date("Y");
      if(isset($_GET['currentYear']))
      {
@@ -347,7 +375,7 @@ if(isset($_POST['save'])){
                                                (wp_id,znumber,name,startdate,enddate,salary_min,salary_max,total_cost,funded,funded_percent,cost,pct_fte) 
                                               VALUES ('$wp_id','$znumber','$staff_name','$currentDate','$endDateValue',
                                                        '$salary_min','$salary_max','$total_cost','Yes','$funded_percent','$total_cost','$funded_percent');";
-                                echo "<br>$insert_query<br>";
+                                #echo "<br>$insert_query<br>";
                                 $db->query($insert_query);
                                 $insertMsg.=" $work_pack,";
                          }

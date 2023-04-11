@@ -36,7 +36,7 @@ $nextEndFYDate="2024-09-30";
 
 $verification="True";
 $login_name="";
-#$verification="False";
+$verification="False";
 
 $conn= mysqli_connect($dbhost,$dbuser,$dbpass,$dbname) or die("Problem connecting: ".mysqli_error());
 
@@ -764,6 +764,19 @@ function get_wp_program_access($conn,$name)
 {
     $access_level=0;
     $query="SELECT userlevel FROM tbl_wp_manager where znumber='$name' and userlevel>=4";
+    $result=mysqli_query($conn,$query);
+    while($row=mysqli_fetch_array($result))
+    {
+      $access_level=$row[0];
+    }
+ return $access_level;
+}
+
+function get_login_access($conn,$name)
+{
+    $access_level=0;
+    $query="SELECT userlevel FROM tbl_wp_manager where znumber='$name'";
+    #echo $query;
     $result=mysqli_query($conn,$query);
     while($row=mysqli_fetch_array($result))
     {

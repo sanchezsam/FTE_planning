@@ -1,1 +1,4 @@
-2023year
+INSERT INTO tbl_wp_info
+                                   (program,project,task,task_name,task_manager,task_description,burden_rate,target,startdate,enddate) 
+                                   VALUES ('IC','test','4744','sam','Sam Sanchez','test',
+                                            '1','11','2023-03-10','2023-10-01');

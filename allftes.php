@@ -17,8 +17,10 @@ function get_all_ftes($currentYear,$group)
               and tbl_staff_info.znumber=tbl_wp_staff.znumber 
               and tbl_staff_info.group_name ='$group' 
               and YEAR(tbl_wp_staff.enddate)=$currentYear
+              and YEAR(tbl_staff_info.enddate)=$currentYear
               group by workpackage, tbl_wp_staff.name
               order by project,task,name;";
+echo $query;
    return $query;
 }
 

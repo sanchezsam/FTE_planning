@@ -103,7 +103,7 @@ if($name!="")
        $task=$wp_info[1];
        if(isset($_SERVER['cn']))
        {
-           $login=$_SERVER['cn'];
+           $login_name=$_SERVER['cn'];
        }
        if(isset($_SERVER['REMOTE_USER']))
        {
@@ -117,7 +117,7 @@ if($name!="")
        }
        if($access_level==0)                   
        {
-         exit("$login does not have access to $name");
+         exit("$login_name does not have access to $name");
        }
 
    }
@@ -207,16 +207,8 @@ if($name!="")
 
       $output_str.="<td valign='top' colspan='3'><input name='task_name_txt[$wp_id]' type='text' value='$task_name'></td>\n";
       $output_str.="<td valign='top' colspan='3'><table><tr><td valign='top' width='95%'><textarea name='task_description_txt[$wp_id]' rows='4'>$task_description</textarea></td>";
-
-
-
-      if($admin_level>=4)
-      {
-         $output_str.="<td valign='top'><a onclick='javascript:confirmationDelete($(this));return false;' href='update_workpackageinfo.php?program_name=$program&currentYear=$currentYear&delete_id=$wp_id'>";
-           $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td>";
-      }
-
-      $output_str.="</tr></table></td>";
+      $output_str.="<td valign='top'><a onclick='javascript:confirmationDelete($(this));return false;' href='update_workpackageinfo.php?program_name=$program&currentYear=$currentYear&delete_id=$wp_id'>";
+      $output_str.="<button type='button' data-toggle='tooltip' data-placement='right' class='btn btn-danger'><i class='fa fa-fw fa-trash-alt'></i></button></a></td></tr></table></td>";
 
       #$cost="$" . number_format(floatval($cost), 2, ".", ",");
       #$output_str.="<td valign='top'><input name='cost_txt[$wp_staff_id]' type='text' value='$cost'></td>\n";
@@ -230,23 +222,34 @@ if($name!="")
 }
 
 
-       #$admin_level=get_wp_program_access($conn,$login_name);
+   if($verification=="True")
+   {
+       if(isset($_SERVER['cn']))
+       {
+           $login_name=$_SERVER['cn'];
+       }
+       if(isset($_SERVER['REMOTE_USER']))
+       {
+           $login_name=$_SERVER['REMOTE_USER'];
+       }
+       $admin_level=get_wp_program_access($conn,$login_name);
+       if($admin_level>=4)
+       {
           $output_str="<table width = '900' style='border:1px solid black;'>\n";
           $output_str.="<tbody id='tb'>\n";
           $output_str.="</tbody>";
           $output_str.="<tr>";
           $output_str.="<td colspan='6'>";
-          if($admin_level>=4)
-          {
-             $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
-          }
+          $output_str.="<a href='javascript:;' class='btn btn-danger' id='addmore'><i class='fa fa-fw fa-plus-circle'></i> Add More</a>";
           $output_str.="<button type='submit' name='save' id='save' value='save' class='btn btn-primary'><i class='fa fa-fw fa-save'></i> Save</button>";
           $output_str.="</td>";
           $output_str.="</tr>";
           $output_str.="</tbody>";
           $output_str.="</table>\n";
           echo $output_str;
+       }
 
+   }
 
 
 
@@ -371,7 +374,7 @@ if(isset($_POST['save'])){
                               burden_rate = '$burden_rate',
                               target = '$target'
                               WHERE wp_id = $key; ";
-               #echo $update_query;
+               echo $update_query;
                $db->query($update_query);
                #$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
                #$txt=$update_query;
@@ -403,4 +406,3 @@ require 'template/footer.html';
     
 </body>
 </html>
-
