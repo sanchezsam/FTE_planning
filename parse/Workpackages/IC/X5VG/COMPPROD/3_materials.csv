@@ -1,5 +1,0 @@
-﻿Property Number,System Description,Service Entry Date,System Owner,Under Maint?,Maintenance PO#,Pct IC,Risk (0-5),Replace/ Fund?,Replacement Cost ($k),Total Cost,Notes
-1,Woodchuck,2022-05-01,Jeff Johnson,No,,,,No,0,0,Decommissioned but may still be scavenged; leaving this here
-2,Grizzly,2022-05-01,Jeff Johnson,No,,,,No,0,0,EOL Scheduled for FY23
-3,Badger,2022-05-01,Jeff Johnson,No,,,,No,0,0,EOL Scheduled for FY23
-4,Bravo Phase 3 (TBD),2022-05-01,Jeff Johnson,Yes,,1,0,Yes,4500,4500,
